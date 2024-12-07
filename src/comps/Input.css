@@ -1,0 +1,130 @@
+
+.popup-input {
+    border: 1px solid #D6E8ED;
+    overflow: visible;
+}
+
+.popup-input p {
+    background-color: var(--primary-color);
+}
+
+
+.popup-error {
+  border: 1px solid var(--primary-error);
+
+    animation: shake 0.5s;
+  
+    animation-iteration-count: 1;
+  }
+
+  @keyframes shake {
+    10%, 90% {
+      transform: translate3d(-1px, 0, 0);
+    }
+    
+    20%, 80% {
+      transform: translate3d(2px, 0, 0);
+    }
+  
+    30%, 50%, 70% {
+      transform: translate3d(-4px, 0, 0);
+    }
+  
+    40%, 60% {
+      transform: translate3d(4px, 0, 0);
+    }
+}
+.popup-error-same {
+  border: 1px solid var(--primary-error);
+
+    animation: shake-same 0.5s;
+  
+    animation-iteration-count: 1;
+  }
+
+  @keyframes shake-same {
+    10%, 90% {
+      transform: translate3d(-1px, 0, 0);
+    }
+    
+    20%, 80% {
+      transform: translate3d(2px, 0, 0);
+    }
+  
+    30%, 50%, 70% {
+      transform: translate3d(-4px, 0, 0);
+    }
+  
+    40%, 60% {
+      transform: translate3d(4px, 0, 0);
+    }
+}
+
+
+.popup-input:has(.info-icon:hover) .bubble  {
+  display: block;
+}
+
+
+.info-icon {
+  display: none;
+  filter: brightness(0) saturate(100%) invert(35%) sepia(61%) saturate(522%) hue-rotate(316deg) brightness(105%) contrast(96%);
+}
+
+.popup-error .info-icon {
+  display: block;
+}
+.popup-error-same .info-icon {
+  display: block;
+}
+
+
+.bubble {
+  margin: 0 auto;
+  top: -32px;
+  left: 0px;
+  font-size: 14px;
+  position: absolute;
+  z-index: 999;
+  padding: 4px 8px;
+  background-color: white;
+  display: none;
+
+}
+.bubble:after {
+  content: "";
+  height: 100%;
+  width: 100%;
+  border-radius: 4px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  box-shadow: 0 1px 14px rgba(0,0,0,.06);
+}
+.bubble:before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  transform: rotate(45deg);
+  box-shadow: 0 1px 14px rgba(0,0,0,.06);
+  background: #fff;
+  position: absolute;
+  z-index: 998;
+}
+
+.bubble.arrow-bottom:before {
+  left: calc(15px);
+  bottom: -4px;
+}
+
+
+
+.bubble-wrapper {
+  border-radius: 4px;
+  background: #fff;
+  position: relative;
+  z-index: 998;  
+}
+
+
+

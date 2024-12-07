@@ -6,3 +6,16 @@
 
 }
 
+.tag-item-cancel {
+    right: 5px;
+    top:  5px;
+    width: 0;
+    filter: brightness(0) saturate(100%) invert(99%) sepia(29%) saturate(2%) hue-rotate(191deg) brightness(108%) contrast(100%);
+}
+
+.tag-item:hover .tag-item-cancel {
+    width: 10px;
+}
+
+
+

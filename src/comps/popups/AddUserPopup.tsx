@@ -17,7 +17,8 @@ return <div  className='filter-popup rounded shadow' onClick={(e) => e.stopPropa
       <BgPattern />
       <div className='absolute z-10 w-full flex flex-col gap-5 px-6 py-8' >
         <div className='self-end -mb-6 cursor-pointer w-fit h-fit' onClick={() => GState.popupVis = false}>
-          <img src={closeIMG} alt="closeIMG" width={16} />
+          <img src={closeIMG} alt="closeIMG" width={16}  />
+          
         </div>
         <h1 className='text-2xl font-bold'>اضافة عضو جديد</h1>
         <section>
