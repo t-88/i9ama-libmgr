@@ -1,0 +1,136 @@
+:root {
+  --primary-color: #367359;  
+
+  --background-color: #FCFCFC;  
+  --text-color: #363636;  
+
+}
+
+#app {
+  background-color: var(--background-color);
+  position: relative;
+}
+.navbar {
+  background-color: var(--primary-color);
+  min-height: 5rem;
+}
+.main-bg {
+  opacity: 0.045;
+}
+
+.logout-icon:hover {
+  filter: brightness(0) saturate(100%) invert(98%) sepia(1%) saturate(1468%) hue-rotate(189deg) brightness(110%) contrast(73%);
+}
+
+.drawer-container {
+  height: 4rem;
+}
+.drawer-container hr {
+  background-color: var(--background-color);
+  width: 2px;
+}
+
+
+
+.nav-item:hover  {
+  background-color: rgb(229 229 229);
+}
+
+.nav-item {
+  background-color: white;
+}
+.nav-item img {
+  filter: brightness(0) saturate(100%)
+
+}
+.nav-active {
+  cursor: default;
+  background-color: var(--primary-color);
+}
+.nav-active:hover { 
+  background-color: var(--primary-color);
+}
+.nav-active img {
+  filter: brightness(0) saturate(100%) invert(100%) sepia(100%) saturate(0%) hue-rotate(9deg) brightness(105%) contrast(101%);
+}
+
+* {
+  font-family: "Noto Sans Arabic", sans-serif;
+  font-optical-sizing: auto;
+}
+
+
+#popup {
+  position: absolute;
+  top: 0;
+  z-index: 20;
+  width: 100%;
+  height: 100%;
+
+}
+#popup-container {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 20;
+  background-color: rgba(50, 50, 50, 0.2);
+
+}
+
+
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.1); 
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+}
+
+
+.popup-input p {
+  background-color: var(--primary-color);
+}
+
+.tags-container p {
+  background-color: var(--primary-color);
+}
+.tags-container p:hover {
+  background-color: #2d614a;
+}
+
+.tags-container {
+  max-height: 220px;
+  overflow-y: scroll;
+}
+
+
+.filter-popup {
+  position: absolute;
+  width: 800px;
+  left: calc((100% - 800px) / 2);
+  height: 600px;
+  top: calc((100% - 600px) / 2);
+  background-color: var(--background-color);
+}
+
+.filter-popup {
+  outline: 1px solid #D6E8ED;
+}
+.popup-input {
+  border: 1px solid #D6E8ED;
+}
+
+.filter-popup h1 {
+  color: var(--text-color);
+}
+
+.add-book:hover {
+  background-color: #2d614a;
+}
