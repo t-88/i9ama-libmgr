@@ -35,7 +35,8 @@ button {
 }
 
 .table-container {
-    max-height: 440px;
+    /* max-height: 440px; */
+    height: 100%;
     overflow: scroll;
     overflow-x: hidden;
 }
@@ -77,4 +78,9 @@ button {
 
 .search-bar-container h1 {
     color: #363636;
+}
+
+
+#filter-tags-container {
+    max-height: 90px !important;
 }

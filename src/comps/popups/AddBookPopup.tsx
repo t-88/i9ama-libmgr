@@ -1,21 +1,28 @@
 import BgPattern from "../BgPattern";
-import Input from "../Input";
+import Input, { InputRef } from "../Input";
 
 import closeIMG from "../../assets/close.png";
 import addIMG from "../../assets/add.png";
-import GState, { addBook, removeBook } from "../../libs/gstate";
+import GState, { addBook, removeBook, updateBook } from "../../libs/gstate";
 import { useEffect, useRef, useState } from "react";
 import { useSnapshot } from "valtio";
 import "./AddBookPopup.css";
+import { validate_inputNotEmpty, validate_inputNumber, validate_noComma } from "../../libs/validation";
+
+
 
 export default function AddBookPopup() {
   function onAddBook() {
-    (titleRef.current as any).checkInput();
+    let titleValid =  (titleRef.current as any).checkInput(validate_inputNotEmpty);
+    let authorValid =  (authorRef.current as any).checkInput(validate_inputNotEmpty);
+    let yearValid =  (yearRef.current as any).checkInput(validate_inputNumber);
+    
+    if(!(titleValid && authorValid && yearValid) ) return;
 
-    // addBook(titleRef.current!.value, authorRef.current!.value, "", yearRef.current!.value, "");
-    // titleRef.current!.value = "";
-    // authorRef.current!.value = "";
-    // yearRef.current!.value = "";
+    addBook(titleRef.current!.getInput(), authorRef.current!.getInput(), yearRef.current!.getInput(),tags.join(","));
+    // titleRef.current!.setInput("");
+    // authorRef.current!.setInput("");
+    // yearRef.current!.setInput("");
   }
 
   function onRemoveBook() {
@@ -23,29 +30,42 @@ export default function AddBookPopup() {
     GState.popupVis = false;
   }
 
+  function onUpateBook() {
+    let titleValid =  (titleRef.current as any).checkInput(validate_inputNotEmpty);
+    let authorValid =  (authorRef.current as any).checkInput(validate_inputNotEmpty);
+    let yearValid =  (yearRef.current as any).checkInput(validate_inputNumber);
+    
+    if(!(titleValid && authorValid && yearValid) ) return;
+
+    updateBook(titleRef.current!.getInput(), authorRef.current!.getInput(), yearRef.current!.getInput(),tags.join(","));
+  } 
+
   function onAddTag() {
-    const tag = tagRef.current!.value;
+    if(!tagRef.current?.checkInput(validate_noComma)) return;
+
+    const tag = tagRef.current!.getInput();
     if (!tag || tags.includes(tag)) return;
     setTags([...tags, tag]);
-    tagRef.current!.value = "";
+    tagRef.current!.setInput("");
   }
-  function onRemoveTag(tag : string) {
-    tags.splice(tags.indexOf(tag),1); 
+  function onRemoveTag(tag: string) {
+    tags.splice(tags.indexOf(tag), 1);
     setTags([...tags]);
   }
   useEffect(() => {
     if (GState.popupType == "edit-book") {
-      titleRef.current!.value = GState.books[GState.editedBookIdx].title;
-      authorRef.current!.value = GState.books[GState.editedBookIdx].author;
-      yearRef.current!.value = GState.books[GState.editedBookIdx].publish_year;
+      titleRef.current!.setInput(GState.books[GState.editedBookIdx].title);
+      authorRef.current!.setInput(GState.books[GState.editedBookIdx].author);
+      yearRef.current!.setInput(GState.books[GState.editedBookIdx].publish_year);
+      setTags(GState.books[GState.editedBookIdx].tags);
     }
   }, [GState.popupType]);
 
 
-  const titleRef = useRef<HTMLInputElement | null>(null);
-  const authorRef = useRef<HTMLInputElement | null>(null);
-  const yearRef = useRef<HTMLInputElement | null>(null);
-  const tagRef = useRef<HTMLInputElement | null>(null);
+  const titleRef = useRef<InputRef | null>(null);
+  const authorRef = useRef<InputRef | null>(null);
+  const yearRef = useRef<InputRef | null>(null);
+  const tagRef = useRef<InputRef>(null);
   const [tags, setTags] = useState<string[]>([]);
   useSnapshot(GState);
 
@@ -60,35 +80,32 @@ export default function AddBookPopup() {
       </div>
       <h1 className='text-2xl font-bold'>اضافة كتاب</h1>
       <section>
-        <Input ref={titleRef} inputConstraint={(text:string) => text.length != 0} title="العنوان" errorMsg="تم ادخال اسم فارغ, يرجي ادخال اسم صحيح" placeholder="ادخل العنوان... "  />
-        <Input ref={authorRef} title="الكاتب" placeholder="ادخل اسم الكاتب... " />
-        <Input ref={yearRef} title="سنة النشر" placeholder="ادخل سنة النشر..." />
+        <Input ref={titleRef}  errorMsg="تم ادخال اسم فارغ, يرجي ادخال اسم صحيح" title="العنوان" placeholder="ادخل العنوان... " />
+        <Input ref={authorRef} errorMsg="تم ادخال اسم فارغ, يرجي ادخال اسم صحيح" title="الكاتب" placeholder="ادخل اسم الكاتب... " />
+        <Input ref={yearRef}  errorMsg="يرجى ادخال عام نشر صحيح" title="سنة النشر" placeholder="ادخل سنة النشر..." />
       </section>
       <h1 className='text-2xl font-bold'>مواضيع</h1>
-      <section className='flex flex-auto overflow-hidden	 w-full flex-col gap-5'>
-        <Input ref={tagRef} className={"my-0 shrink-0"} onEnter={onAddTag} title="موضوع" placeholder="ادخل موضوع..." />
-
+      <section className='flex flex-auto	 w-full flex-col gap-5'>
+        <Input ref={tagRef} errorMsg="يرجي عدم اضافة فاصلة"  className={"my-0 shrink-0"} onEnter={onAddTag} title="موضوع" placeholder="ادخل موضوع..." />
         <div className=' tags-container bg-zinc-50	rounded p-2 flex flex-row flex-wrap gap-2 text-white w-full h-fit overflowy-scroll' style={{ maxHeight: "160px" }}>
           {tags.map(tag =>
-
-
             <section key={tag} className="tag-item relative">
               <p className='rounded px-6 py-2 cursor-default shadow' >{tag}</p>
-              <img  src={closeIMG}  onClick={() => onRemoveTag(tag)} alt="closeIMG" className="tag-item-cancel absolute cursor-pointer" />
-              
+              <img src={closeIMG} onClick={() => onRemoveTag(tag)} alt="closeIMG" className="tag-item-cancel absolute cursor-pointer" />
+
             </section>
           )}
         </div>
       </section>
 
-      <ActionButtons onAddBook={onAddBook} onEditBook={onAddBook} onRemoveBook={onRemoveBook} />
+      <ActionButtons onAddBook={onAddBook} onUpateBook={onUpateBook} onRemoveBook={onRemoveBook} />
 
     </div>
   </div>;
 }
 
 
-function ActionButtons({ onAddBook, onEditBook, onRemoveBook }: { onAddBook: any, onEditBook: any, onRemoveBook: any }) {
+function ActionButtons({ onAddBook, onUpateBook, onRemoveBook }: { onAddBook: any, onUpateBook: any, onRemoveBook: any }) {
 
   if (GState.popupType == "add-book") {
     return <button
@@ -103,7 +120,7 @@ function ActionButtons({ onAddBook, onEditBook, onRemoveBook }: { onAddBook: any
 
   return <div className="flex flex-row self-end gap-4">
     <button
-      onClick={onEditBook}
+      onClick={onUpateBook}
       className='add-book  flex gap-2    rounded py-1 px-4 text-white text-lg shadow'
     >
       <img src={addIMG} height={16} width={16} alt="addIMG" className="self-center" />

@@ -1,6 +1,6 @@
 import GState from "../../libs/gstate";
 import BgPattern from "../BgPattern";
-import Input from "../Input";
+import Input, { InputRef } from "../Input";
 
 import closeIMG from "../../assets/close.png";
 import { useRef } from "react";
@@ -9,8 +9,8 @@ import { useRef } from "react";
 
 
 export default function AddUserPopup() {
-  const fNameRef = useRef<HTMLInputElement | null>(null);
-  const sNameRef = useRef<HTMLInputElement | null>(null);
+  const fNameRef = useRef<InputRef | null>(null);
+  const sNameRef = useRef<InputRef | null>(null);
 
 
 return <div  className='filter-popup rounded shadow' onClick={(e) => e.stopPropagation()} >

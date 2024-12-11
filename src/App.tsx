@@ -17,16 +17,14 @@ function App() {
   return (
     <div id="app" className='w-full h-full flex flex-col gap-5'>
 
-      <PopUp />
+       <PopUp />
       <TopBar />
 
-      <section className='w-full h-full relative'>
         <BgPattern />
-        <div className='absolute z-10 w-full flex flex-col gap-5'>
+        <div className='z-10 my-6 mx-14 h-0 grow flex flex-col gap-5'>
           <NavBar />
           <Outlet />
         </div>
-      </section>
     </div>
   );
 }

@@ -17,7 +17,7 @@ const BorrowBooksDB = {
         )`);
         stmt.run();
     },
-    drop : () => {
+    drop: () => {
         db.prepare(`DROP TABLE borrowbooks`).run();
     },
 }
@@ -38,21 +38,38 @@ const BooksDB = {
             )`);
         stmt.run();
     },
-    insert: (title,author,desc,publish_year,tags) => {
-        const stmt = db.prepare("INSERT INTO books(title,author,desc,publish_year,tags) VALUES (?,?,?,?,?)");
-        stmt.run([title,author,desc,publish_year,tags]);
-    },  
+    insert: (title, author, publish_year, tags) => {
+        const stmt = db.prepare("INSERT INTO books(title,author,publish_year,tags) VALUES (?,?,?,?)");
+        stmt.run([title, author, publish_year, tags]);
+    },
+    update: (id, title, author, publish_year, tags) => {
+        const stmt = db.prepare(`UPDATE books 
+                                 SET title = ? ,author = ? ,publish_year = ? ,tags = ?
+                                 WHERE id = ?
+                                 `);
+        stmt.run([title, author, publish_year, tags, id]);
+    },
+    search: (title, author, publish_year, tags) => {
+        const stmt = db.prepare(`SELECT title , author , publish_year from books
+                                 WHERE title LIKE ? AND
+                                       author LIKE ? AND
+                                       publish_year LIKE ? 
+                                 `);
+        console.log(stmt.all([`%${title}%`, `%${author}%`, `%${publish_year}%`]));
+
+    },
+
+
     remove: (id) => {
-        console.log(id);
         const stmt = db.prepare("DELETE FROM books WHERE id = ?");
-        console.log(stmt.run([id]));
-    }, 
-    drop : () => {
+        stmt.run([id]);
+    },
+    drop: () => {
         try {
             db.prepare(`DROP TABLE books`).run();
-        } catch(e) {
+        } catch (e) {
             console.log("ERROR: couldnt delete books")
-        }        
+        }
     },
     getAll: () => {
         const stmt = db.prepare("SELECT * FROM books");
@@ -73,14 +90,14 @@ const UserDB = {
     insert: (first_name, last_name) => {
         const stmt = db.prepare("INSERT INTO users(first_name, last_name) VALUES (?,?)");
         stmt.run([first_name, last_name]);
-    },    
-    drop : () => {
+    },
+    drop: () => {
         try {
             db.prepare(`DROP TABLE users`).run();
-        } catch(e) {
+        } catch (e) {
             console.log("ERROR: couldnt delete users")
         }
-    },    
+    },
     getAll: () => {
         const stmt = db.prepare("SELECT * FROM users");
         return stmt.all();
@@ -88,11 +105,11 @@ const UserDB = {
 };
 
 const Helper = {
-    listTables : () => {
+    listTables: () => {
         const stmt = db.prepare("SELECT name from sqlite_master where type='table'");
         return stmt.all();
     },
-    initDB :  () =>   {
+    initDB: () => {
         UserDB.drop(); UserDB.create();
         BooksDB.drop(); BooksDB.create();
         BorrowBooksDB.drop(); BorrowBooksDB.create();

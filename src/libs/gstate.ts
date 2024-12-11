@@ -6,6 +6,7 @@ interface Book {
     idx: string,
     title : string,
     author : string,
+    tags : string[],
     publish_year : string,
     available : string,
     desc : string,
@@ -73,21 +74,31 @@ function loadBooks() {
             author:        loadedBooks[i]["author"] ?? "",
             available :   loadedBooks[i]["available"] ?? "",
             publish_year: loadedBooks[i]["publish_year"] ?? "",
+            tags: (loadedBooks[i]["tags"] as string).split(",") ?? [],
             desc: loadedBooks[i]["desc"],
             options_comp: () => OptionsComp({idx : i,id : Number.parseInt(loadedBooks[i]["id"])}),
         });
     }
     GState.books = books;
 }
-function addBook(title : string, author : string, desc: string , publish_year: string  , tags: string) {
-
-    (window as any).db.books.insert(title,author,desc,publish_year,tags);
+function addBook(title : string, author : string , publish_year: string  , tags: string) {
+    (window as any).db.books.insert(title,author,publish_year,tags);
     loadBooks();
 }
 
 function removeBook() {
     (window as any).db.books.remove(GState.books[GState.editedBookIdx].id);
     loadBooks();
+}
+
+function updateBook(title : string, author : string , publish_year: string  , tags: string) {
+    (window as any).db.books.update(GState.books[GState.editedBookIdx].id,title,author,publish_year,tags);
+    loadBooks();
+}
+
+function searchBook(title : string, author : string , publish_year: string  , tags: string) {
+    (window as any).db.books.search(title,author,publish_year,tags);
+
 }
 
 
@@ -101,4 +112,6 @@ export {
     loadBooks,
     addBook,
     removeBook,
+    updateBook,
+    searchBook,
 }

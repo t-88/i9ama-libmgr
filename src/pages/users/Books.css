@@ -35,7 +35,9 @@ button {
 }
 
 .table-container {
-    max-height: 440px;
+    /* max-height: 440px; */
+    height: 100%;
+
     overflow: scroll;
     overflow-x: hidden;
 }
