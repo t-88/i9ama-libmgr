@@ -1,7 +1,7 @@
 import { useSnapshot } from "valtio";
-import moreIMG from "../../assets/more.png";
-import GState, { toggleEditBook } from "../../libs/gstate";
+import moreIMG from "../assets/more.png";
 import { useEffect, useRef } from "react";
+import GState, { toggleEditBook } from "../libs/gstate";
 
 export default function OptionsComp({ id,idx }: { id : number,idx: number }) {
 

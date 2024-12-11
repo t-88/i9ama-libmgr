@@ -21,7 +21,7 @@ function App() {
       <TopBar />
 
         <BgPattern />
-        <div className='z-10 my-6 mx-14 h-0 grow flex flex-col gap-5'>
+        <div className='z-10 my-6 mx-20 h-0 grow flex flex-col gap-5'>
           <NavBar />
           <Outlet />
         </div>

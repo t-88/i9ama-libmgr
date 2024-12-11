@@ -1,0 +1,10 @@
+.users-table [data-column-id="1"] { flex-grow: unset !important; min-width: 5% !important }
+.users-table [data-column-id="2"] { flex-grow: unset !important; min-width: 30% !important }
+.users-table [data-column-id="3"] { flex-grow: unset !important; min-width: 30% !important }
+.users-table [data-column-id="4"] { flex-grow: unset !important; min-width: 30% !important }
+.users-table [data-column-id="5"] { flex-grow: unset; min-width: 5% !important }
+.users-table [data-sort-id="1"] { width: 100% }
+.users-table [data-sort-id="2"] { width: 100% }
+.users-table [data-sort-id="3"] { width: 100% }
+.users-table [data-sort-id="4"] { width: 100% }
+.users-table [data-sort-id="5"] { width: 100% }

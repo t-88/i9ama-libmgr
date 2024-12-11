@@ -9,9 +9,10 @@ const BorrowBooksDB = {
     create: () => {
         const stmt = db.prepare(`CREATE TABLE borrowbooks(
             id INTEGER PRIMARY KEY,
+            responsible VARCHAR(64),
             user_id INTEGER,
-            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
             book_id INTEGER,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY(user_id) REFERENCES users(id)
             FOREIGN KEY(book_id) REFERENCES books(id)
         )`);
@@ -28,8 +29,8 @@ const BooksDB = {
         const stmt = db.prepare(`
             CREATE TABLE books(
                 id INTEGER PRIMARY KEY,
-                author VARCHAR(50) DEFAULT "" NOT NULL,
-                title VARCHAR(50) DEFAULT "" NOT NULL,
+                author VARCHAR(64) DEFAULT "" NOT NULL,
+                title VARCHAR(64) DEFAULT "" NOT NULL,
                 desc TEXT DEFAULT "" NOT NULL,
                 tags TEXT NOT NULL,
                 available INT DEFAULT 1,
@@ -81,8 +82,8 @@ const UserDB = {
     create: () => {
         const stmt = db.prepare(`CREATE TABLE users(
                                     id INTEGER  PRIMARY KEY ,
-                                    first_name  VARCHAR(50) DEFAULT "",
-                                    last_name VARCHAR(50) DEFAULT "",
+                                    first_name  VARCHAR(64) DEFAULT "",
+                                    last_name VARCHAR(64) DEFAULT "",
                                     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
                                 )`);
         stmt.run();

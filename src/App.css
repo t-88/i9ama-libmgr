@@ -60,25 +60,6 @@
 }
 
 
-#popup {
-  position: absolute;
-  top: 0;
-  z-index: 20;
-  width: 100%;
-  height: 100%;
-
-}
-#popup-container {
-  position: absolute;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 20;
-  background-color: rgba(50, 50, 50, 0.2);
-
-}
-
-
 ::-webkit-scrollbar {
   width: 4px;
 }
@@ -94,36 +75,3 @@
 }
 
 
-
-.tags-container p {
-  background-color: var(--primary-color);
-}
-
-
-.tags-container {
-  max-height: 220px;
-  overflow-y: scroll;
-}
-
-
-.filter-popup {
-  position: absolute;
-  width: 800px;
-  left: calc((100% - 800px) / 2);
-  height: 700px;
-  top: calc((100% - 700px) / 2);
-  background-color: var(--background-color);
-}
-
-.filter-popup {
-  outline: 1px solid #D6E8ED;
-}
-
-
-.filter-popup h1 {
-  color: var(--text-color);
-}
-
-.add-book:hover {
-  background-color: #2d614a;
-}

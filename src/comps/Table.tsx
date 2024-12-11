@@ -7,10 +7,4 @@ export default function Table({columns, data} : any) {
     columns={columns}
     data={data}
 />
-    // <section className="rounded w-full">
-        // <br />
-        // <div className="table-container ">
-      
-        // </div>
-    // </section>
 }

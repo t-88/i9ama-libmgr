@@ -4,6 +4,8 @@ import PageTransition from "../../pages/index/PageTransition";
 import FilterBooksPopup from "./FilterBooksPopup";
 import AddUserPopup from "./AddUserPopup";
 import AddBookPopup from "./AddBookPopup";
+import BookBookPopup from "./BookBookPopup";
+import  "./Popup.css";
 
 export default function PopUp() {
     useSnapshot(GState);
@@ -16,10 +18,10 @@ export default function PopUp() {
             (() => {
   
               switch (GState.popupType) {
-                case "filter-books": return <FilterBooksPopup />
                 case "add-book": return <AddBookPopup />
-                case "edit-book": return <AddBookPopup />
+                case "book-book": return <BookBookPopup />
                 case "add-user": return <AddUserPopup />
+                case "edit-book": return <AddBookPopup />
               }
               return <></>
             })()

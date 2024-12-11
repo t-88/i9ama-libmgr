@@ -3,11 +3,12 @@ import Input, { InputRef } from "../Input";
 
 import closeIMG from "../../assets/close.png";
 import addIMG from "../../assets/add.png";
-import GState, { addBook, removeBook, updateBook } from "../../libs/gstate";
+import GState from "../../libs/gstate";
 import { useEffect, useRef, useState } from "react";
 import { useSnapshot } from "valtio";
 import "./AddBookPopup.css";
 import { validate_inputNotEmpty, validate_inputNumber, validate_noComma } from "../../libs/validation";
+import { addBook, removeBook, updateBook } from "../../libs/books";
 
 
 
@@ -72,9 +73,9 @@ export default function AddBookPopup() {
 
 
 
-  return <div id='book-add-edit-popup' className='filter-popup rounded shadow' onClick={(e) => e.stopPropagation()} >
-    <BgPattern />
-    <div className='absolute z-10 w-full h-full flex flex-col gap-5 px-4 py-6' >
+  return <div id='book-add-edit-popup' className='filter-popup rounded shadow w-2/4' onClick={(e) => e.stopPropagation()} >
+      <BgPattern />
+      <div className='relative z-10 w-full h-full flex flex-col gap-5 px-4 py-6' >
       <div className='self-end -mb-6 cursor-pointer w-fit h-fit' onClick={() => GState.popupVis = false}>
         <img src={closeIMG} alt="closeIMG" width={16} />
       </div>
@@ -110,7 +111,7 @@ function ActionButtons({ onAddBook, onUpateBook, onRemoveBook }: { onAddBook: an
   if (GState.popupType == "add-book") {
     return <button
       onClick={onAddBook}
-      className='add-book flex gap-2  self-end  rounded py-1 px-4 text-white text-lg shadow'
+      className='add-book flex gap-2  self-end  cursor-pointer rounded py-1 px-4 text-white text-lg shadow'
     >
       <img src={addIMG} height={16} width={16} alt="addIMG" className="self-center" />
       <p>اضافة</p>

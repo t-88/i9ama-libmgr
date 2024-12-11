@@ -1,0 +1,19 @@
+
+
+.search-bar-container h1 {
+    color: #363636;
+}
+
+
+.search-bar {
+    border: 1px solid #D6E8ED;
+    overflow: hidden;
+}
+
+.search-bar input {
+    outline: none;
+}
+
+.filter-visible {
+    background-color: rgba(220, 220, 220, 0.346);
+}

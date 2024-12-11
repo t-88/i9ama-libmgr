@@ -3,15 +3,16 @@ import Input, { InputRef } from "../Input";
 
 import closeIMG from "../../assets/close.png";
 import addIMG from "../../assets/add.png";
-import GState, { addBook, removeBook, searchBook, updateBook } from "../../libs/gstate";
+import GState from "../../libs/gstate";
 import { useEffect, useRef, useState } from "react";
 import { useSnapshot } from "valtio";
 import "./AddBookPopup.css";
+import { searchBook } from "../../libs/books";
 
 
 function validate_EmptyOrNumber(text: string) {
   var pattern = /^\d+\.?\d*$/;
-  return text.length == 0 || pattern.test(text); 
+  return text.length == 0 || pattern.test(text);
 }
 function validate_noComma(text: string) {
   return !text.includes(",");
@@ -41,7 +42,7 @@ export default function AddBookPopup() {
     tags.splice(tags.indexOf(tag), 1);
     setTags([...tags]);
   }
-  
+
 
   const titleRef = useRef<InputRef | null>(null);
   const authorRef = useRef<InputRef | null>(null);
@@ -53,8 +54,8 @@ export default function AddBookPopup() {
 
 
   return <div id='book-add-edit-popup' className='filter-popup rounded shadow' onClick={(e) => e.stopPropagation()} >
-    <BgPattern />
-    <div className='absolute z-10 w-full h-full flex flex-col gap-5 px-4 py-6' >
+    <div className='w-full h-full flex flex-col gap-5 px-4 py-6' >
+      <BgPattern />
       <div className='self-end -mb-6 cursor-pointer w-fit h-fit' onClick={() => GState.popupVis = false}>
         <img src={closeIMG} alt="closeIMG" width={16} />
       </div>

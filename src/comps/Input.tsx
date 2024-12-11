@@ -7,10 +7,11 @@ interface InputRef {
   getInput: () => string,
   setInput: (text : string) => null,
 };
-const Input = forwardRef(function ({ title , placeholder, onEnter, className, errorMsg }: { title?: string, placeholder: string, className?: string, onEnter?: any,  errorMsg?: string }, ref: ForwardedRef<InputRef>) {
-  function onChange() {
+const Input = forwardRef(function ({ title , placeholder, onEnter, className, errorMsg, children, onChange }: { title?: string, placeholder: string, className?: string, onEnter?: any,  errorMsg?: string, children? : any , onChange? : any }, ref: ForwardedRef<InputRef>) {
+  function _onChange() {
     localRef.current?.classList.remove("popup-error");
     localRef.current?.classList.remove("popup-error-same");
+    onChange(localRef.current?.querySelector("input")?.value);
   }
 
 
@@ -56,14 +57,17 @@ const Input = forwardRef(function ({ title , placeholder, onEnter, className, er
   className = className ?? "";
   errorMsg = errorMsg ?? "";
   title = title ?? "";
+  children = children ?? <></>;
+  onChange = onChange ?? function (title : string) {};
+  
 
 
   return <div ref={localRef} className={'popup-input relative flex  gap-2 text-lg m-4 bg-white rounded shadow overflow-hidden ' + className}>
     {
-      title == "" ? <></> : <p className='text-white flex items-center justify-center cursor-default w-32 font-bold rounded-r'  >{title}</p>
+      title == "" ? <></> : <p className='title text-white flex items-center justify-center cursor-default w-32 font-bold rounded-r'  >{title}</p>
     }
     
-    <input  onChange={onChange} type="text" placeholder={placeholder} className='p-2 w-full outline-none' onKeyDown={(e) => e.key == "Enter" ? onEnter() : function () { }} />
+    <input  onChange={_onChange} type="text" placeholder={placeholder} className='p-2 w-full outline-none' onKeyDown={(e) => e.key == "Enter" ? onEnter() : function () { }} />
 
     <img src={infoIMG} width={35} className="info-icon self-center px-2 cursor-pointer" alt="infoIMG" />
 
@@ -77,7 +81,7 @@ const Input = forwardRef(function ({ title , placeholder, onEnter, className, er
     }
 
 
-
+{children}
   </div>
 });
 
