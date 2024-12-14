@@ -1,0 +1,7 @@
+#img-preview {
+    background-color: rgba(50, 50, 50, 0.2);
+}
+
+#img-preview img {
+    max-height: 60%;
+}

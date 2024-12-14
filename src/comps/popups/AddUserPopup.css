@@ -1,0 +1,20 @@
+.upload-image {
+ filter: brightness(0) saturate(100%) invert(16%) sepia(0%) saturate(1610%) hue-rotate(229deg) brightness(95%) contrast(72%);
+}
+
+.close-icon {
+    top:  -4px;
+    left: -2px;
+    cursor: pointer;
+}
+.title {
+    background-color: var(--primary-color);
+
+
+    
+}
+
+.addImg {
+    filter: brightness(0) saturate(100%) invert(9%) sepia(1%) saturate(0%) hue-rotate(139deg) brightness(92%) contrast(82%);
+}
+

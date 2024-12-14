@@ -1,13 +1,16 @@
-import { ForwardedRef, forwardRef, useImperativeHandle, useRef } from "react";
+import { ForwardedRef, forwardRef, useImperativeHandle, useRef, useState } from "react";
 import "./Input.css";
 import infoIMG from "../assets/info.png";
 
+
+interface inputValid { func: (text: string) => boolean, msg?: string }
+
 interface InputRef {
-  checkInput: (callback? : (text : string) => boolean) => boolean,
+  checkInput: (callback?: inputValid | inputValid[]) => boolean,
   getInput: () => string,
-  setInput: (text : string) => null,
+  setInput: (text: string) => null,
 };
-const Input = forwardRef(function ({ title , placeholder, onEnter, className, errorMsg, children, onChange }: { title?: string, placeholder: string, className?: string, onEnter?: any,  errorMsg?: string, children? : any , onChange? : any }, ref: ForwardedRef<InputRef>) {
+const Input = forwardRef(function ({ title, placeholder, onEnter, className, titleClassName, children, onChange, callbacks }: { title?: string, placeholder: string, className?: string,titleClassName?: string, onEnter?: any, children?: any, onChange?: any, callbacks?: any }, ref: ForwardedRef<InputRef>) {
   function _onChange() {
     localRef.current?.classList.remove("popup-error");
     localRef.current?.classList.remove("popup-error-same");
@@ -20,19 +23,33 @@ const Input = forwardRef(function ({ title , placeholder, onEnter, className, er
 
   useImperativeHandle(ref, (): InputRef => {
     return {
-      checkInput(callback? : (text : string) => boolean) {
-        callback = callback ?? function(text : string) {return true;};
-        if (!callback(localRef.current!.querySelector("input")!.value)) {
-
-          if (localRef.current?.classList.contains("popup-error")) {
-            localRef.current?.classList.remove("popup-error");
-            localRef.current?.classList.add("popup-error-same");
-          } else {
-            localRef.current?.classList.add("popup-error");
-            localRef.current?.classList.remove("popup-error-same");
-          }
-          return false;
+      checkInput(callback?: inputValid | inputValid[]) {
+        callback = callback ?? { func: function (text: string) { return true; } };
+        let callbacks : inputValid[] = []; 
+        
+        if ((callback as any).func != undefined) {
+          // @ts-ignore
+          callbacks = [callback];
+        } else {
+          // @ts-ignore
+          callbacks = callback;
         }
+
+        for (let callback of callbacks as inputValid[]) {
+          if (!callback.func(localRef.current!.querySelector("input")!.value)) {
+            if (localRef.current?.classList.contains("popup-error")) {
+              localRef.current?.classList.remove("popup-error");
+              localRef.current?.classList.add("popup-error-same");
+            } else {
+              localRef.current?.classList.add("popup-error");
+              localRef.current?.classList.remove("popup-error-same");
+            }
+            setErrMsg(callback.msg ?? "");
+            return false;
+          }
+        }
+
+
         localRef.current?.classList.remove("popup-error");
         localRef.current?.classList.remove("popup-error-same");
         return true;
@@ -40,11 +57,11 @@ const Input = forwardRef(function ({ title , placeholder, onEnter, className, er
       getInput() {
         return localRef.current?.querySelector("input")?.value as string;
       },
-      setInput(text  : string) {
-        localRef.current!.querySelector("input")!.value = text; 
+      setInput(text: string) {
+        localRef.current!.querySelector("input")!.value = text;
         return null;
       },
-      
+
     }
 
   });
@@ -55,35 +72,35 @@ const Input = forwardRef(function ({ title , placeholder, onEnter, className, er
   const localRef = useRef<HTMLInputElement | null>(null);
   onEnter = onEnter ?? function () { };
   className = className ?? "";
-  errorMsg = errorMsg ?? "";
+  const [errMsg, setErrMsg] = useState("");
   title = title ?? "";
   children = children ?? <></>;
-  onChange = onChange ?? function (title : string) {};
-  
+  onChange = onChange ?? function (title: string) { };
+  callbacks = callbacks ?? [];
 
 
   return <div ref={localRef} className={'popup-input relative flex  gap-2 text-lg m-4 bg-white rounded shadow overflow-hidden ' + className}>
     {
-      title == "" ? <></> : <p className='title text-white flex items-center justify-center cursor-default w-32 font-bold rounded-r'  >{title}</p>
+      title == "" ? <></> : <p className={`title text-white flex items-center justify-center cursor-default w-32 font-bold rounded-r ${titleClassName}`}  >{title}</p>
     }
-    
-    <input  onChange={_onChange} type="text" placeholder={placeholder} className='p-2 w-full outline-none' onKeyDown={(e) => e.key == "Enter" ? onEnter() : function () { }} />
+
+    <input onChange={_onChange}  {...callbacks} type="text" placeholder={placeholder} className='p-2 w-full outline-none' onKeyDown={(e) => e.key == "Enter" ? onEnter() : function () { }} />
 
     <img src={infoIMG} width={35} className="info-icon self-center px-2 cursor-pointer" alt="infoIMG" />
 
     {
-      !errorMsg ? <></> :
+      !errMsg ? <></> :
         <div className="bubble arrow-bottom">
           <div className="bubble-wrapper ">
-            <span>{errorMsg}</span>
+            <span>{errMsg}</span>
           </div>
         </div>
     }
 
 
-{children}
+    {children}
   </div>
 });
 
 export default Input;
-export {type InputRef};
+export { type InputRef, type inputValid };

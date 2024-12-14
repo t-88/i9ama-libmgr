@@ -22,7 +22,7 @@
 
 }
 
-button {
+.interactive-button {
     background-color: #4A8169;
 }
 
@@ -38,9 +38,7 @@ button {
 .table {
     border: 1px solid #D6E8ED;
     color: #363636;
-    overflow: hidden;
     border-bottom: 1px solid #D6E8ED;
-
 }
 
 .table .rdt_TableRow:nth-child(odd) {
@@ -55,15 +53,14 @@ button {
     position: sticky;
     top: 0;
     z-index: 2;
-    border-top: 1px solid #D6E8ED;
 }
 
 .table .rdt_TableRow {
-    border-top: 1px solid #D6E8ED;
+    border-bottom: 1px solid #D6E8ED;
     font-size: 16px;
     text-overflow: ellipsis;
     color: #363636;
-    
+
 }
 
 

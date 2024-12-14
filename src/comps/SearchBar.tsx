@@ -2,7 +2,7 @@
 import searchIMG from "../assets/search.png";
 import filterIMG from "../assets/slider.png";
 
-import GState, { toggleAddBook, toggleFilterBooks } from "../libs/gstate";
+import GState from "../libs/gstate";
 import { useSnapshot } from "valtio";
 import "./SearchBar.css";
 

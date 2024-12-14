@@ -1,7 +1,6 @@
 import { useSnapshot } from "valtio";
 import GState from "../../libs/gstate";
 import PageTransition from "../../pages/index/PageTransition";
-import FilterBooksPopup from "./FilterBooksPopup";
 import AddUserPopup from "./AddUserPopup";
 import AddBookPopup from "./AddBookPopup";
 import BookBookPopup from "./BookBookPopup";
@@ -19,9 +18,10 @@ export default function PopUp() {
   
               switch (GState.popupType) {
                 case "add-book": return <AddBookPopup />
-                case "book-book": return <BookBookPopup />
                 case "add-user": return <AddUserPopup />
+                case "book-book": return <BookBookPopup />
                 case "edit-book": return <AddBookPopup />
+                case "edit-user": return <AddUserPopup />
               }
               return <></>
             })()

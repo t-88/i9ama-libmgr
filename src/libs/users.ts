@@ -1,16 +1,32 @@
+import { proxy } from "valtio";
 import OptionsComp from "../comps/OptionsComp";
-import GState from "./gstate";
-
+import GState, { toggleEditUser } from "./gstate";
 
 interface User {
     id: string,
-    idx : string,
-    first_name : string,
-    last_name : string,
-    options_comp : any,
+    idx: string,
+    first_name: string,
+    last_name: string,
+    school : string,
+    reserved_book: boolean,
+    img: string, 
+    idImg: string, 
+    schoolIdImg: string, 
+    schoolPaper: string,
+    imgsUUID : string,
+    options_comp: any,
+
 }
 
-function loadUsers() {
+interface UserStateObj {
+    users: User[],
+};
+let UsersState: UserStateObj = proxy({
+    users: [],
+});
+
+
+function loadAll() {
     const fetched = (window as any).db.users.getAll();
     let users: User[] = [];
     for (let i = 0; i < fetched.length; i++) {
@@ -19,77 +35,44 @@ function loadUsers() {
             idx: i.toString(),
             first_name: fetched[i]["first_name"] ?? "",
             last_name: fetched[i]["last_name"] ?? "",
-            options_comp: () => OptionsComp({ idx: i, id: Number.parseInt(fetched[i]["id"]) }),
+            school: fetched[i]["school"] ?? "",
+            imgsUUID: fetched[i]["imgsUUID"] ?? "",
+            reserved_book: fetched[i]["reserved_book"] ?? false,
+            img : "",
+            idImg : "",
+            schoolIdImg : "",
+            schoolPaper : "",
+            options_comp: () => OptionsComp({ idx: i, onClick : () => toggleEditUser(i) }),
         });
+        let {img,idImg,schoolIdImg,schoolPaper, } = (window as any).utils.loadImgs(users[i].imgsUUID);
+        users[i].img = img;
+        users[i].idImg = idImg;
+        users[i].schoolIdImg = schoolIdImg;
+        users[i].schoolPaper = schoolPaper;
     }
-    GState.users = users;
+    UsersState.users = users;
 }
-function addUser() {
-    const data = [
-        { "first_name": "محمد", "last_name": "أحمد" },
-        { "first_name": "علي", "last_name": "حسن" },
-        { "first_name": "فاطمة", "last_name": "عبدالله" },
-        { "first_name": "خالد", "last_name": "سعيد" },
-        { "first_name": "نور", "last_name": "الدين" },
-        { "first_name": "زينب", "last_name": "عمر" },
-        { "first_name": "عبدالرحمن", "last_name": "يوسف" },
-        { "first_name": "عائشة", "last_name": "محمود" },
-        { "first_name": "يحيى", "last_name": "إبراهيم" },
-        { "first_name": "سارة", "last_name": "عبدالرحيم" },
-        { "first_name": "عمر", "last_name": "عبدالكريم" },
-        { "first_name": "مريم", "last_name": "أمين" },
-        { "first_name": "حسين", "last_name": "مصطفى" },
-        { "first_name": "ليلى", "last_name": "جميل" },
-        { "first_name": "سلمان", "last_name": "الطاهر" },
-        { "first_name": "هند", "last_name": "عبدالغفور" },
-        { "first_name": "طارق", "last_name": "عصام" },
-        { "first_name": "هدى", "last_name": "العلي" },
-        { "first_name": "إيمان", "last_name": "فتحي" },
-        { "first_name": "عبدالعزيز", "last_name": "عبداللطيف" },
-        { "first_name": "خلود", "last_name": "الزهراني" },
-        { "first_name": "ماهر", "last_name": "السيد" },
-        { "first_name": "نايف", "last_name": "الشريف" },
-        { "first_name": "سمير", "last_name": "خالد" },
-        { "first_name": "روان", "last_name": "مجدي" },
-        { "first_name": "باسم", "last_name": "حمدي" },
-        { "first_name": "دينا", "last_name": "سليمان" },
-        { "first_name": "يوسف", "last_name": "الهاشمي" },
-        { "first_name": "رنا", "last_name": "الغامدي" },
-        { "first_name": "أيمن", "last_name": "الناصر" }
-    ];
-        for(let item of data) {
-        (window as any).db.users.insert(item.first_name,item.last_name);
+
+const UserAction = {
+    loadAll: loadAll,
+    search: (fname: string, lname: string) => (window as any).db.users.search(fname, lname),
+    remove: () => { },
+    update: (id : string,imgsUUID : string,fname: string, lname: string, school: string, img: string, idImg: string, schoolIdImg: string, schoolPaper: string) => { 
+        (window as any).db.users.update(id,imgsUUID,fname, lname, school, img, idImg, schoolIdImg, schoolPaper);
+        UserAction.loadAll();
+
+    },
+    add: (fname: string, lname: string, school: string, img: string, idImg: string, schoolIdImg: string, schoolPaper: string) => {
+        (window as any).db.users.insert(fname, lname, school, img, idImg, schoolIdImg, schoolPaper);
+        UserAction.loadAll();
     }
+};
 
 
-    // (window as any).db.users.insert(fname, lname);
-    // loadUsers();
-
-}
-
-
-
-function removeUser() {
-    // (window as any).db.users.remove(GState.users[GState.editedBookIdx].id);
-    loadUsers();
-}
-
-function updateUser(fname: string, lname: string) {
-    // (window as any).db.users.update(GState.users[GState.editedBookIdx].id, title, author, publish_year, tags);
-    loadUsers();
-}
-
-function searchUser(fname: string, lname: string) {
-    (window as any).db.users.search(fname, lname);
-}
-
+export default UsersState;
 
 export {
-    loadUsers,
-    addUser,
-    removeUser,
-    updateUser,
-    searchUser,
+    UserAction,
 }
 
-export type {User};
+export type { User };

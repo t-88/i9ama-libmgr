@@ -1,12 +1,12 @@
 import { proxy } from "valtio";
 import { Book } from "./books";
 import { User } from "./users";
+import { Borrowed } from "./booking";
+import { devtools } from 'valtio/utils'
 
 interface FilterState {
     visible: boolean,
 }
-
-
 
 interface BookMoreOptionsMenu {
     show: boolean,
@@ -14,58 +14,66 @@ interface BookMoreOptionsMenu {
 }
 
 
-type PopupType = "book-book" | "filter-users" | "add-book" | "edit-book" | "add-user"
+type PopupType = "book-book" | "edit-user" | "add-book" | "edit-book" | "add-user"
 interface GStateObj {
     tabIdx: number,
     popupVis: boolean,
     popupType: PopupType,
-    books: Book[],
-    users: User[],
+    borrowed: Borrowed[],
     bookMoreOptionsMenu: BookMoreOptionsMenu,
     editedBookIdx: number,
+    editedUserIdx: number,
     filterState: FilterState,
 }
+
+
+
 
 let GState: GStateObj = proxy({
     tabIdx: 0,
     popupVis: false,
     popupType: "book-book",
-    books: [],
-    users: [],
+    borrowed: [],
     bookMoreOptionsMenu: { show: false, idx: 0 },
     editedBookIdx: 0,
+    editedUserIdx: 0,
     filterState: { visible: false },
 
 });
 
-function toggleFilterBooks() {
+
+
+function toggleBookABook() {
     GState.popupVis = true;
     GState.popupType = "book-book";
-}
-function toggleFilterUsers() {
-    GState.popupVis = true;
-    GState.popupType = "filter-users";
 }
 function toggleAddBook() {
     GState.popupVis = true;
     GState.popupType = "add-book";
-}
-function toggleEditBook(idx: number) {
-    GState.popupVis = true;
-    GState.popupType = "edit-book";
-    GState.editedBookIdx = idx;
 }
 function toggleAddUser() {
     GState.popupVis = true;
     GState.popupType = "add-user";
 }
 
+function toggleEditBook(idx: number) {
+    GState.popupVis = true;
+    GState.popupType = "edit-book";
+    GState.editedBookIdx = idx;
+}
+function toggleEditUser(idx: number) {
+    GState.popupVis = true;
+    GState.popupType = "edit-user";
+    GState.editedUserIdx = idx;
+}
+
+
 
 export default GState;
 export {
-    toggleFilterBooks,
-    toggleFilterUsers,
+    toggleBookABook,
     toggleAddBook,
     toggleAddUser,
     toggleEditBook,
+    toggleEditUser,
 }

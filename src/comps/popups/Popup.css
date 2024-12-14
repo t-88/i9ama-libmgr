@@ -38,6 +38,7 @@
     align-items: center;
     justify-content: center;
     background-color: var(--background-color);
+    color: var(--text-color);
 }
 
 .filter-popup {
@@ -45,9 +46,7 @@
 }
 
 
-.filter-popup h1 {
-    color: var(--text-color);
-}
+
 
 .add-book:hover {
     background-color: #2d614a;

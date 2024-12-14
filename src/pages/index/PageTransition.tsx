@@ -1,9 +1,10 @@
 import { AnimatePresence, motion } from "framer-motion";
 
 
-export default function PageTransition({ children, cond, className }: { children: any, cond: boolean, className?: string }) {
+export default function PageTransition({ children, cond, className, onClick }: { children: any, cond: boolean, className?: string, onClick?: any  }) {
     className = className ?? "";
-    return <AnimatePresence mode="wait">
+    onClick = onClick  ?? function() {};
+    return <AnimatePresence mode="wait" >
         {!cond &&
 
             <motion.div className={className}
@@ -11,6 +12,7 @@ export default function PageTransition({ children, cond, className }: { children
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.15 }}
+                onClick={onClick}
             >
                 {children}
 
