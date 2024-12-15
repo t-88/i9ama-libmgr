@@ -10,9 +10,9 @@ import addIMG from "../../assets/add.png";
 import sendIMG from "../../assets/send.png";
 import UsersState, {  User } from "../../libs/users";
 import StatusSvg from "../../comps/StatusSvg";
-import { loadBookings } from "../../libs/booking";
-import GState, { toggleAddUser, toggleBookABook } from "../../libs/gstate";
+import GState  from "../../libs/gstate";
 import BookState from "../../libs/books";
+import { toggleAddUser, toggleBookABook } from "../../libs/popup";
 
 
 function ReversedBookInfo({ user }: { user: User }) {
@@ -70,7 +70,7 @@ function Users() {
 
 
     useEffect(() => {
-        GState.tabIdx = 1;
+        GState.tabIdx = "users";
     }, []);
 
     const authorRef = useRef<InputRef | null>(null);
@@ -82,32 +82,20 @@ function Users() {
 
     const inputStyle = "text-sm m-1";
 
-    function UsersFilter() {
-        return <div className="w-3/12 px-8 py-4 bg-white rounded shadow flex flex-col gap-4 h-fit">
-            <div className="flex flex-col gap-1">
-                <h1>الاسم</h1>
-                <Input ref={authorRef} className={inputStyle} placeholder="ادخل اسم... " />
-            </div>
-            <div className="flex flex-col gap-1">
-                <h1>اللقب</h1>
-                <Input ref={yearRef} className={inputStyle} placeholder="ادخل سنة النشر..." />
-            </div>
-        </div>
-    }
-
+    
     return <PageTransition cond={false} className="users-table h-full flex flex-col  overflow-hidden overflowy-scroll gap-4">
-        <h1 className="text-3xl font-bold">الاعضاء:</h1>
+        <h1 className="tab-title text-3xl font-bold">الاعضاء:</h1>
         <StatusCards />
     <br />
 
         <div className="flex flex-row align-center justify-between gap-80">
-            <SearchBar placeholder="ابحث عن عضو..." />
+            <SearchBar placeholder="ابحث عن عضو..."  showFilter={false}/>
             <section className="flex flex-row gap-2">
                 <button className="interactive-button px-4  py-3 rounded shadow text-white flex gap-4 align-center justify-center h-fit" onClick={toggleAddUser}>
                     <img src={addIMG} height={16} width={16} alt="addIMG" className="self-center" />
                     <p className="text-2sm text-bold ">اضف عضو</p>
                 </button>
-                <button className="interactive-button px-4  py-3 rounded shadow text-white flex gap-4 align-center justify-center h-fit" onClick={toggleBookABook}>
+            <button className="interactive-button px-4  py-3 rounded shadow text-white flex gap-4 align-center justify-center h-fit" onClick={toggleBookABook}>
                     <img src={sendIMG} height={18} width={18} alt="addIMG" className="self-center" />
                     <p className="text-2sm text-bold ">حجز كتاب</p>
                 </button>
@@ -121,9 +109,6 @@ function Users() {
             </div>
         </div>
         <div className="flex w-full gap-8 h-0 grow">
-            {
-                GState.filterState.visible ? <UsersFilter /> : <></>
-            }
             <Table columns={columns} data={!UsersPageState.filterBookers ?  UsersState.users : UsersState.users.filter(user => user.reserved_book)} />
         </div>
     </PageTransition>

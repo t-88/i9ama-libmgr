@@ -8,6 +8,7 @@ import path from 'path';
 import Books from './pages/books/Books';
 import Users from './pages/users/Users';
 import { useAnimatedRoutes } from 'react-animated-router';
+import Admins from './pages/admins/Admins';
 
 
 const root = ReactDOM.createRoot(
@@ -27,8 +28,11 @@ const routes = createBrowserRouter([
       {
         path: "/users",
         element: <Users/>
-  
-      }
+      },
+      {
+        path: "/admins",
+        element: <Admins/>
+      }      
 
     ]
   }

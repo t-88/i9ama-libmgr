@@ -1,0 +1,8 @@
+.admins-table [data-column-id="1"] { flex-grow: unset !important; min-width: 10% !important }
+.admins-table [data-column-id="2"] { flex-grow: unset !important; min-width: 42.5% !important }
+.admins-table [data-column-id="3"] { flex-grow: unset !important; min-width: 42.5% !important }
+.admins-table [data-column-id="4"] { flex-grow: unset !important; min-width: 5% !important }
+.admins-table [data-sort-id="1"] { width: 100% }
+.admins-table [data-sort-id="2"] { width: 100% }
+.admins-table [data-sort-id="3"] { width: 100% }
+.admins-table [data-sort-id="4"] { width: 100% }

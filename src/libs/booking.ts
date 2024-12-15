@@ -1,20 +1,12 @@
 import GState from "./gstate";
 
-
-
 interface Borrowed {
     id: string,
-    user_id : string,
-    book_id : string,
+    user_id: string,
+    book_id: string,
 }
 
-
-function addBooking(res :  string, bookID : string, userID  : string) {
-    
-    (window as any).db.borrowed.insert(res,bookID,userID);
-}
-
-function loadBookings() {
+function loadAll() {
     const loaded = (window as any).db.borrowed.getAll();
     let borrowed: Borrowed[] = [];
     for (let i = 0; i < loaded.length; i++) {
@@ -28,8 +20,15 @@ function loadBookings() {
 }
 
 
+const BookingAction = {
+    loadAll: loadAll,
+    add: (res: string, bookID: string, userID: string) => {
+        (window as any).db.borrowed.insert(res, bookID, userID);
+        BookingAction.loadAll();
+    }
+};
+
 export {
-    addBooking,
-    loadBookings
+    BookingAction
 }
-export type {Borrowed};
+export type { Borrowed };

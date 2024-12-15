@@ -1,6 +1,6 @@
 import { proxy } from "valtio";
 import OptionsComp from "../comps/OptionsComp";
-import GState, { toggleEditUser } from "./gstate";
+import { popupState, toggleEditUser } from "./popup";
 
 interface User {
     id: string,
@@ -44,7 +44,7 @@ function loadAll() {
             schoolPaper : "",
             options_comp: () => OptionsComp({ idx: i, onClick : () => toggleEditUser(i) }),
         });
-        let {img,idImg,schoolIdImg,schoolPaper, } = (window as any).utils.loadImgs(users[i].imgsUUID);
+        let {img,idImg,schoolIdImg,schoolPaper, } = (window as any).utils.loadUserImgs(users[i].imgsUUID);
         users[i].img = img;
         users[i].idImg = idImg;
         users[i].schoolIdImg = schoolIdImg;
@@ -56,7 +56,11 @@ function loadAll() {
 const UserAction = {
     loadAll: loadAll,
     search: (fname: string, lname: string) => (window as any).db.users.search(fname, lname),
-    remove: () => { },
+    remove: (id : string) => { (window as any).db.users.remove(id); },
+    removeCurr: () => { 
+        UserAction.remove(UsersState.users[popupState.editedAdminIdx].id);
+        UserAction.loadAll();
+    },
     update: (id : string,imgsUUID : string,fname: string, lname: string, school: string, img: string, idImg: string, schoolIdImg: string, schoolPaper: string) => { 
         (window as any).db.users.update(id,imgsUUID,fname, lname, school, img, idImg, schoolIdImg, schoolPaper);
         UserAction.loadAll();

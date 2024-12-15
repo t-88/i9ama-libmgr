@@ -1,7 +1,7 @@
 import { useSnapshot } from "valtio";
 import moreIMG from "../assets/more.png";
 import { useEffect, useRef } from "react";
-import GState, { toggleEditBook } from "../libs/gstate";
+import GState from "../libs/gstate";
 
 export default function OptionsComp({ idx, onClick }: { idx: number, onClick? : any }) {
 
@@ -15,7 +15,7 @@ export default function OptionsComp({ idx, onClick }: { idx: number, onClick? : 
     onClick = onClick ?? function() {}; 
 
     return <div ref={ref}>
-            <img src={moreIMG} alt="moreIMG" className="cursor-pointer" onClick={onClickMore} />
+            <img src={moreIMG} alt="moreIMG" className="w-4 cursor-pointer" onClick={onClickMore} />
 
 
     </div>

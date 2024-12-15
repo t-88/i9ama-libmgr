@@ -3,20 +3,43 @@ import Input, { InputRef, inputValid } from "../Input";
 
 import closeIMG from "../../assets/close.png";
 import addIMG from "../../assets/add.png";
-import GState  from "../../libs/gstate";
-import { useEffect, useRef, useState } from "react";
+import moreIMG from "../../assets/more.png";
+import GState from "../../libs/gstate";
+import { ChangeEvent, ForwardedRef, forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { useSnapshot } from "valtio";
 import "./BookBookPopup.css";
-import BookState, { Book } from "../../libs/books";
+import BookState, { Book, BookAction } from "../../libs/books";
 import UsersState, { User } from "../../libs/users";
 import { validate_inputNotEmpty } from "../../libs/validation";
-import { addBooking, loadBookings } from "../../libs/booking";
+import { popupState } from "../../libs/popup";
+import { BookingAction } from "../../libs/booking";
 
+
+
+const INPUT_WIDTH = "w-40";
+type DateSelOption = "manual" | "week" | "2week" | "month";
+
+
+function getDate(offset?: any) {
+    offset = offset ?? 0;
+    const today = new Date();
+    const offseted = new Date();
+    offseted.setDate(today.getDate() + offset);
+
+    const yyyy = offseted.getFullYear();
+    let mm: any = offseted.getMonth() + 1; // Months start at 0!
+    let dd: any = offseted.getDate();
+
+    if (dd < 10) dd = '0' + dd;
+    if (mm < 10) mm = '0' + mm;
+
+    return yyyy + "/" + mm + "/" + dd;
+}
 
 export default function BookBookPopup() {
     function onChangeTitle(text?: string) {
         text = text ?? bookRef.current?.getInput();
-        if (!text ||  !text.length) {
+        if (!text || !text.length) {
             setBooks([]);
             return;
         }
@@ -41,6 +64,8 @@ export default function BookBookPopup() {
             return false;
         }));
     }
+
+
     function onSelectUser(user: User) {
         setUsers([]);
         setSelectedUser(user);
@@ -90,38 +115,60 @@ export default function BookBookPopup() {
                 </section>
             );
         }
-
         return <div className="absolute top-12 z-1  w-full flex flex-col bg-white rounded shadow max-h-60 overflow-y-scroll"> {comps} </div>
     }
-    
-    function onBlur(e : any) {
-        e.stopPropagation(); 
+
+
+    function DateSelector() {
+
+        function selectDate(option: DateSelOption) {
+            setDateOption(option);
+            switch (option) {
+                case "week": setDateInput({ title: "بعد اسبوع", date: getDate(7) }); break;
+                case "2week": setDateInput({ title: "بعد اسبوعين", date: getDate(14) }); break;
+                case "month": setDateInput({ title: "بعد شهر", date: getDate(30) }); break;
+            }
+            setDateRec(false);
+        }
+
+        const sharedStyle = "cursor-pointer py-2 px-4 border-b hover:bg-stone-100 flex items-center justify-between";
+        return <div className="date-selection absolute top-12 left-0 z-1  w-full flex flex-col bg-white rounded shadow max-h-60 overflow-y-scroll">
+            <p onClick={() => selectDate("manual")} className={sharedStyle}>اختر تاريخ محدد</p>
+            <p onClick={() => selectDate("week")} className={sharedStyle}>بعد اسبوع</p>
+            <p onClick={() => selectDate("2week")} className={sharedStyle}>بعد اسبوعين</p>
+            <p onClick={() => selectDate("month")} className={sharedStyle}>بعد شهر</p>
+        </div>
+    }
+
+
+
+    function onBlur(e: any) {
+        e.stopPropagation();
         setUsers([]);
         setBooks([]);
+        setDateRec(false);
     }
 
     function onBooking() {
         const isBookValid = bookRef.current?.checkInput([
-            {func : validate_inputNotEmpty, msg : "تم ادخال اسم فارغ, يرجي ادخال اسم صحيح"},
-            {func : () => { return selectedBook != undefined && bookRef.current?.getInput() == selectedBook.title;  }, msg : "تم ادخال كتاب غير معروف, تحقق من الاسم"},
+            { func: validate_inputNotEmpty, msg: "تم ادخال اسم فارغ, يرجي ادخال اسم صحيح" },
+            { func: () => { return selectedBook != undefined && bookRef.current?.getInput() == selectedBook.title; }, msg: "تم ادخال كتاب غير معروف, تحقق من الاسم" },
         ]);
         const isUserValid = userRef.current?.checkInput([
-            {func : validate_inputNotEmpty, msg : "تم ادخال اسم فارغ, يرجي ادخال اسم صحيح"},
-            {func : () => { return selectedUser != undefined && userRef.current?.getInput() == selectedUser.first_name + " " + selectedUser.last_name ;  }, msg : "تم ادخال عضو غير معروف, تحقق من الاسم"},
+            { func: validate_inputNotEmpty, msg: "تم ادخال اسم فارغ, يرجي ادخال اسم صحيح" },
+            { func: () => { return selectedUser != undefined && userRef.current?.getInput() == selectedUser.first_name + " " + selectedUser.last_name; }, msg: "تم ادخال عضو غير معروف, تحقق من الاسم" },
         ]);
-        const isRefValid = resRef.current?.checkInput({func: validate_inputNotEmpty, msg: "يرجى ادخال اسم المسئول"});
+        const isRefValid = resRef.current?.checkInput({ func: validate_inputNotEmpty, msg: "يرجى ادخال اسم المسئول" });
 
-        if(!(isBookValid && isUserValid && isRefValid)) {
+        if (!(isBookValid && isUserValid && isRefValid)) {
             return;
         }
 
-        addBooking(
+        BookingAction.add(
             resRef.current!.getInput(),
             selectedBook!.id,
             selectedUser!.id,
         );
-
-
         resRef.current?.setInput("");
         userRef.current?.setInput("");
         bookRef.current?.setInput("");
@@ -130,43 +177,77 @@ export default function BookBookPopup() {
         setSelectedBook(null);
         setSelectedUser(null);
 
-
-        loadBookings();
     }
 
     const resRef = useRef<InputRef | null>(null);
     const bookRef = useRef<InputRef | null>(null);
     const userRef = useRef<InputRef | null>(null);
+    const dateRef = useRef();
+
     const [books, setBooks] = useState<Book[]>([]);
     const [selectedBook, setSelectedBook] = useState<Book | null>(null);
     const [users, setUsers] = useState<User[]>([]);
     const [selectedUser, setSelectedUser] = useState<User | null>(null);
+    const [dateRec, setDateRec] = useState(false);
+    const [dateOption, setDateOption] = useState("week");
+    const [dateInput, setDateInput] = useState({ title: "بعد اسبوع", date: getDate(7) });
+
+
 
 
     useSnapshot(GState);
 
 
 
-
     return <div id='book-a-book' className='filter-popup rounded shadow' onClick={(e) => { onBlur(e); }} >
         <BgPattern />
         <div className='relative z-10 w-full h-full flex flex-col gap-5 px-4 py-6' >
-            <div className='self-end -mb-6 cursor-pointer w-fit h-fit' onClick={() => GState.popupVis = false}>
+            <div className='self-end -mb-6 cursor-pointer w-fit h-fit' onClick={() => popupState.popupVis = false}>
                 <img src={closeIMG} alt="closeIMG" width={16} />
             </div>
             <h1 className='text-2xl font-bold'>حجز كتاب</h1>
             <section>
-                <Input ref={resRef}  title="المسئول" placeholder="ادخل اسم المسئول... " />
-                <Input ref={userRef} onChange={onChangeName}
+                <Input titleClassName={`${INPUT_WIDTH}`} ref={resRef} title="المسئول" placeholder="ادخل اسم المسئول... " />
+                <Input titleClassName={`${INPUT_WIDTH}`} ref={userRef} onChange={onChangeName}
                     callbacks={{ onClick: (e: any) => e.stopPropagation(), onFocus: (e: any) => onChangeName() }}
-                     title="العضو" placeholder="ادخل اسم العضو... ">
+                    title="العضو" placeholder="ادخل اسم العضو... ">
                     <UserItems />
                 </Input>
-                <Input ref={bookRef}
+                <Input titleClassName={`${INPUT_WIDTH}`} ref={bookRef}
                     callbacks={{ onClick: (e: any) => e.stopPropagation(), onFocus: (e: any) => onChangeTitle() }}
                     onChange={onChangeTitle} title="العنوان" placeholder="ادخل العنوان... ">
                     <BookItems />
                 </Input>
+
+
+                <div
+                    className="popup-input relative flex  gap-2 text-lg m-4 pl-1 bg-white rounded shadow overflow-hidden"
+                    onClick={(e: any) => e.stopPropagation()}
+                >
+                    <p className={`title text-white font-bold flex items-center justify-center cursor-default  rounded-r ${INPUT_WIDTH}`}  >تاريخ الارجاع</p>
+                    <div className="flex item-center p-2 w-full" >
+                        {
+                            dateOption == "manual" ? <DateInput ref={dateRef} /> : <>
+                                <p>{dateInput.title}</p>
+                                <p className="text-end flex-1 mx-2 justify-self-end">{dateInput.date}</p>
+
+                            </>
+                        }
+
+
+
+
+                        {dateRec ? <DateSelector /> : <></>}
+
+                    </div>
+                    <div className="self-center pl-2 cursor-pointer" onClick={(e: any) => setDateRec(true)}>
+                        <img className="w-6" src={moreIMG} alt="moreIMG" />
+                    </div>
+                </div>
+
+
+
+
             </section>
 
             <button
@@ -180,3 +261,27 @@ export default function BookBookPopup() {
     </div>
 }
 
+
+
+const DateInput = forwardRef(function ({ }, ref: ForwardedRef<any>) {
+    useImperativeHandle(ref, (): any => {
+        return {
+            getInput: (): { day: string, month: string, year: string } => {
+                return { day: dayRef.current!.value, month: monthRef.current!.value, year: yearRef.current!.value };
+            }
+        };
+    });
+
+    const dayRef = useRef<HTMLInputElement | null>(null);
+    const monthRef = useRef<HTMLInputElement | null>(null);
+    const yearRef = useRef<HTMLInputElement | null>(null);
+
+    const [year, month, day] = getDate().split("/")
+
+    let limitInput = (ref: any, max: number) => ref.current!.value = Math.max(1, Math.min(max, Number.parseInt(ref.current!.value)));
+    return <div className="w-64 flex flex-row gap-1">
+        <input ref={dayRef} onChange={(e) => limitInput(dayRef, 30)} maxLength={2} className="w-12 text-center  border rounded px-2" defaultValue={day} placeholder="dd" type="text" />/
+        <input ref={monthRef} onChange={(e) => limitInput(monthRef, 12)} maxLength={2} className="w-12 text-center  border rounded px-2" defaultValue={month} placeholder="mm" type="text" />/
+        <input ref={yearRef} maxLength={4} className="w-16 text-center border rounded px-2" defaultValue={year} placeholder="yyyy" type="text" />
+    </div>
+});

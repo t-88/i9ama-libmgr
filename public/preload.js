@@ -158,10 +158,85 @@ const UserDB = {
         const stmt = db.prepare("SELECT * FROM users");
         return stmt.all();
     },
+
+    remove: (id) => {
+        const stmt = db.prepare("DELETE FROM users WHERE id = ?");
+        stmt.run([id]);
+    },
 };
 
 
-function loadImgs(imgsUUID) {
+
+const AdminDB = {
+    create: () => {
+        const stmt = db.prepare(`CREATE TABLE admins(
+                                    id INTEGER  PRIMARY KEY ,
+                                    first_name  VARCHAR(64),
+                                    last_name VARCHAR(64),
+                                    imgsUUID VARCHAR(64),
+                                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+                                )`);
+        stmt.run();
+    },
+    insert: (fname, lname, img) => {
+        const fileUUID = randomUUID();
+        const data = {name: fname + " " + lname, img};
+        try {
+            if (!fs.existsSync("admins")) {
+                fs.mkdirSync("admins");
+            }
+            fs.writeFileSync(`admins/${fileUUID}.json`, JSON.stringify(data));
+            const stmt = db.prepare("INSERT INTO admins(first_name, last_name, imgsUUID) VALUES (?,?,?)");
+            stmt.run([fname, lname, fileUUID]);
+        } catch (e) {
+            console.error("ERROR: failed to save admin", e);
+        }
+
+    },
+    update: (id, imgsUUID, fname, lname, img) => {
+        const data = {
+            name: fname + " " + lname,
+            img
+        };
+        try {
+            if (!fs.existsSync("admins")) {
+                fs.mkdirSync("admins");
+            }
+            fs.writeFileSync(`admins/${imgsUUID}.json`, JSON.stringify(data));
+            const stmt = db.prepare(`UPDATE admins 
+                SET  first_name = ? , last_name = ? 
+                WHERE id = ?
+            `);
+            stmt.run([fname, lname, id]);
+
+        } catch (e) {
+            console.error("ERROR: failed to save admins", e);
+        }
+    },
+    drop: () => {
+        try {
+            db.prepare(`DROP TABLE admins`).run();
+        } catch (e) {
+            console.log("ERROR: couldnt delete admins")
+        }
+    },
+    getAll: () => {
+        const stmt = db.prepare("SELECT * FROM admins");
+        return stmt.all();
+    },
+    remove: (id) => {
+        const stmt = db.prepare("DELETE FROM admins WHERE id = ?");
+        stmt.run([id]);
+    },
+};
+
+
+
+
+
+
+
+function loadUserImgs(imgsUUID) {
     try {
         if (!fs.existsSync("users")) {
             fs.mkdirSync("users");
@@ -173,6 +248,20 @@ function loadImgs(imgsUUID) {
     }
 }
 
+function loadAdminImgs(imgsUUID) {
+    try {
+        if (!fs.existsSync("admins")) {
+            fs.mkdirSync("admins");
+        }
+        let buffer = fs.readFileSync(`admins/${imgsUUID}.json`);
+        return JSON.parse(new TextDecoder("utf-8").decode(buffer));
+    } catch (e) {
+        console.error("ERROR: failed to load user imgs", e);
+    }
+}
+
+
+
 const Helper = {
     listTables: () => {
         const stmt = db.prepare("SELECT name from sqlite_master where type='table'");
@@ -182,6 +271,8 @@ const Helper = {
         BorrowBooksDB.drop(); BorrowBooksDB.create();
         UserDB.drop(); UserDB.create();
         BooksDB.drop(); BooksDB.create();
+        AdminDB.drop(); AdminDB.create();
+        
     },
     books_fillDB: books_fillDB,
     users_fillDB: users_fillDB,
@@ -191,6 +282,7 @@ const Helper = {
 contextBridge.exposeInMainWorld("db", {
     users: UserDB,
     books: BooksDB,
+    admins: AdminDB,
     borrowed: BorrowBooksDB,
     helper: Helper,
 
@@ -198,7 +290,8 @@ contextBridge.exposeInMainWorld("db", {
 
 contextBridge.exposeInMainWorld('utils', {
     open: () => ipcRenderer.invoke('open-file-explorer'),
-    loadImgs: (imgsUUID) => loadImgs(imgsUUID)
+    loadUserImgs: (imgsUUID) => loadUserImgs(imgsUUID),
+    loadAdminImgs: (imgsUUID) => loadAdminImgs(imgsUUID)
 })
 
 

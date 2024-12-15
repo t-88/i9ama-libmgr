@@ -9,6 +9,7 @@ import "./AddUserPopup.css"
 import ImgUpload from "../ImgUpload";
 import { useEffect, useRef } from "react";
 import UsersState, { UserAction } from "../../libs/users";
+import { popupState } from "../../libs/popup";
 
 const INPUT_TITLE_WIDTH = "w-48";
 
@@ -68,7 +69,7 @@ export default function AddUserPopup() {
     )) { return; }
 
 
-    let user = UsersState.users[GState.editedUserIdx];
+    let user = UsersState.users[popupState.editedUserIdx];
 
     UserAction.update(
       user.id,
@@ -90,8 +91,8 @@ export default function AddUserPopup() {
 
 
   useEffect(() => {
-    if(GState.popupType == "edit-user") {
-      let user = UsersState.users[GState.editedUserIdx];
+    if(popupState.popupType == "edit-user") {
+      let user = UsersState.users[popupState.editedUserIdx];
       fNameRef.current!.setInput(user.first_name);
       lNameRef.current!.setInput(user.last_name);
       collegeRef.current!.setInput(user.school);
@@ -121,7 +122,7 @@ export default function AddUserPopup() {
   return <div className='filter-popup rounded shadow w-2/4' onClick={(e) => e.stopPropagation()} >
     <BgPattern />
     <div className='relative z-10 w-full flex flex-col gap-5 px-6 py-8' >
-      <div className='self-end -mb-6 cursor-pointer w-fit h-fit' onClick={() => GState.popupVis = false}>
+      <div className='self-end -mb-6 cursor-pointer w-fit h-fit' onClick={() => popupState.popupVis = false}>
         <img src={closeIMG} alt="closeIMG" width={16} />
       </div>
       <h1 className='text-2xl font-bold'>اضافة عضو جديد</h1>
@@ -145,7 +146,7 @@ export default function AddUserPopup() {
 
 
 function ActionButtons({onAddUser, onDeleteUser, onSaveUser} : {onAddUser : any,onDeleteUser : any, onSaveUser : any}) {
-  if (GState.popupType == 'add-user') {
+  if (popupState.popupType == 'add-user') {
     return <button onClick={onAddUser} className='interactive-button flex gap-2  self-end  rounded py-1 px-4 text-white text-lg shadow' >
       <img src={addIMG} height={16} width={16} alt="addIMG" className="self-center" />
       <p>اضافة</p>

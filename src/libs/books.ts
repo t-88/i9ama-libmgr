@@ -1,6 +1,7 @@
 import { proxy } from "valtio";
 import OptionsComp from "../comps/OptionsComp";
-import GState, { toggleEditBook }  from "./gstate";
+import GState  from "./gstate";
+import { popupState, toggleEditBook } from "./popup";
 
 
 
@@ -25,7 +26,7 @@ let BookState :  BookStateObj = proxy({
 });
 
 
-function loadBooks() {
+function loadAll() {
     const loadedBooks = (window as any).db.books.getAll();
     let books: Book[] = [];
     for (let i = 0; i < loadedBooks.length; i++) {
@@ -43,35 +44,36 @@ function loadBooks() {
     }
     BookState.books = books;
 }
-function addBook(title: string, author: string, publish_year: string, tags: string) {
+
+
+
+
+const BookAction = {
+    loadAll: loadAll,
+    search :  (title: string, author: string, publish_year: string, tags: string) => {
+        (window as any).db.books.search(title, author, publish_year, tags);
+    },
+    remove: (id : string) => { (window as any).db.users.remove(id); },
+    removeCurr: () => { 
+        BookAction.remove(BookState.books[popupState.editedAdminIdx].id);
+        BookAction.loadAll();
+    },
+    update: (title: string, author: string, publish_year: string, tags: string) => { 
+    (window as any).db.books.update(BookState.books[popupState.editedBookIdx].id, title, author, publish_year, tags);
+        BookAction.loadAll();
+
+    },
+    add: (title: string, author: string, publish_year: string, tags: string) => {
     (window as any).db.books.insert(title, author, publish_year, tags);
-    loadBooks();
-}
-
-function removeBook() {
-    (window as any).db.books.remove(BookState.books[GState.editedBookIdx].id);
-    loadBooks();
-}
-
-function updateBook(title: string, author: string, publish_year: string, tags: string) {
-    (window as any).db.books.update(BookState.books[GState.editedBookIdx].id, title, author, publish_year, tags);
-    loadBooks();
-}
-
-function searchBook(title: string, author: string, publish_year: string, tags: string) {
-    (window as any).db.books.search(title, author, publish_year, tags);
-}
-
-
+        BookAction.loadAll();
+    }
+};
 
 export default BookState;
 
 export {
-    loadBooks,
-    addBook,
-    removeBook,
-    updateBook,
-    searchBook,
+    loadAll,
+    BookAction,
 }
 
 export type {Book};

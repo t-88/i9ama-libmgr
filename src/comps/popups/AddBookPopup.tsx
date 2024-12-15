@@ -8,7 +8,8 @@ import { useEffect, useRef, useState } from "react";
 import { useSnapshot } from "valtio";
 import "./AddBookPopup.css";
 import { validate_inputNotEmpty, validate_inputNumber, validate_noComma } from "../../libs/validation";
-import BookState, { addBook, removeBook, updateBook } from "../../libs/books";
+import BookState, { BookAction } from "../../libs/books";
+import { popupState } from "../../libs/popup";
 
 
 
@@ -19,15 +20,15 @@ export default function AddBookPopup() {
     let yearValid =  yearRef.current?.checkInput({func: validate_inputNumber, msg: "يرجى ادخال عام نشر صحيح"});
     if(!(titleValid && authorValid && yearValid) ) return;
 
-    addBook(titleRef.current!.getInput(), authorRef.current!.getInput(), yearRef.current!.getInput(),tags.join(","));
+    BookAction.add(titleRef.current!.getInput(), authorRef.current!.getInput(), yearRef.current!.getInput(),tags.join(","));
     titleRef.current!.setInput("");
     authorRef.current!.setInput("");
     yearRef.current!.setInput("");
   }
 
   function onRemoveBook() {
-    removeBook();
-    GState.popupVis = false;
+    BookAction.removeCurr();
+    popupState.popupVis = false;
   }
 
   function onUpateBook() {
@@ -37,7 +38,7 @@ export default function AddBookPopup() {
     
     if(!(titleValid && authorValid && yearValid) ) return;
 
-    updateBook(titleRef.current!.getInput(), authorRef.current!.getInput(), yearRef.current!.getInput(),tags.join(","));
+    BookAction.update(titleRef.current!.getInput(), authorRef.current!.getInput(), yearRef.current!.getInput(),tags.join(","));
   } 
 
   function onAddTag() {
@@ -53,13 +54,13 @@ export default function AddBookPopup() {
     setTags([...tags]);
   }
   useEffect(() => {
-    if (GState.popupType == "edit-book") {
-      titleRef.current!.setInput(BookState.books[GState.editedBookIdx].title);
-      authorRef.current!.setInput(BookState.books[GState.editedBookIdx].author);
-      yearRef.current!.setInput(BookState.books[GState.editedBookIdx].publish_year);
-      setTags(BookState.books[GState.editedBookIdx].tags);
+    if (popupState.popupType == "edit-book") {
+      titleRef.current!.setInput(BookState.books[popupState.editedBookIdx].title);
+      authorRef.current!.setInput(BookState.books[popupState.editedBookIdx].author);
+      yearRef.current!.setInput(BookState.books[popupState.editedBookIdx].publish_year);
+      setTags(BookState.books[popupState.editedBookIdx].tags);
     }
-  }, [GState.popupType]);
+  }, [popupState.popupType]);
 
 
   const titleRef = useRef<InputRef | null>(null);
@@ -75,7 +76,7 @@ export default function AddBookPopup() {
   return <div id='book-add-edit-popup' className='filter-popup rounded shadow w-2/4' onClick={(e) => e.stopPropagation()} >
       <BgPattern />
       <div className='relative z-10 w-full h-full flex flex-col gap-5 px-4 py-6' >
-      <div className='self-end -mb-6 cursor-pointer w-fit h-fit' onClick={() => GState.popupVis = false}>
+      <div className='self-end -mb-6 cursor-pointer w-fit h-fit' onClick={() => popupState.popupVis = false}>
         <img src={closeIMG} alt="closeIMG" width={16} />
       </div>
       <h1 className='text-2xl font-bold'>اضافة كتاب</h1>
@@ -106,7 +107,7 @@ export default function AddBookPopup() {
 
 function ActionButtons({ onAddBook, onUpateBook, onRemoveBook }: { onAddBook: any, onUpateBook: any, onRemoveBook: any }) {
 
-  if (GState.popupType == "add-book") {
+  if (popupState.popupType == "add-book") {
     return <button
       onClick={onAddBook}
       className='interactive-button add-book flex gap-2  self-end  cursor-pointer rounded py-1 px-4 text-white text-lg shadow'

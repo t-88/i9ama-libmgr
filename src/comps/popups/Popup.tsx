@@ -5,23 +5,27 @@ import AddUserPopup from "./AddUserPopup";
 import AddBookPopup from "./AddBookPopup";
 import BookBookPopup from "./BookBookPopup";
 import  "./Popup.css";
+import { popupState } from "../../libs/popup";
+import AddAdminPopup from "./AddAdminPopup";
 
 export default function PopUp() {
-    useSnapshot(GState);
+    useSnapshot(popupState);
   
-    return <div id='popup' onClick={() => GState.popupVis = false} style={{ pointerEvents: !GState.popupVis ? "none" : "auto" }}>
+    return <div id='popup' onClick={() => popupState.popupVis = false} style={{ pointerEvents: !popupState.popupVis ? "none" : "auto" }}>
       
-      <PageTransition cond={!GState.popupVis}>
+      <PageTransition cond={!popupState.popupVis}>
         <div id='popup-container'>
           {
             (() => {
   
-              switch (GState.popupType) {
+              switch (popupState.popupType) {
                 case "add-book": return <AddBookPopup />
-                case "add-user": return <AddUserPopup />
-                case "book-book": return <BookBookPopup />
                 case "edit-book": return <AddBookPopup />
+                case "add-user": return <AddUserPopup />
                 case "edit-user": return <AddUserPopup />
+                case "add-admin": return <AddAdminPopup />
+                case "edit-admin": return <AddAdminPopup />
+                case "book-book": return <BookBookPopup />
               }
               return <></>
             })()

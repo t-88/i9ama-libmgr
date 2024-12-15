@@ -1,0 +1,34 @@
+/* 
+.nav-item:hover  {
+  background-color: var(--primary-color);
+
+}
+.nav-item {
+  background-color: var(--primary-color);
+}
+.nav-item img {
+  filter: brightness(0) saturate(100%) invert(100%) sepia(100%) saturate(0%) hue-rotate(9deg) brightness(105%) contrast(101%);
+
+}
+
+.nav-active {
+  cursor: default;
+
+  background-color: white;
+
+}
+.nav-active:hover { 
+  
+  background-color: rgb(255 255 255);
+}
+.nav-active img {
+  filter: brightness(0) saturate(100%)
+} */
+
+
+.nav-active {
+  background-color: #f3f3f4;
+  color: var(--primary-color);
+  cursor: default;
+  font-weight: bold;
+}

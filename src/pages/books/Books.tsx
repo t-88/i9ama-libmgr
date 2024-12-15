@@ -3,17 +3,17 @@ import PageTransition from "../index/PageTransition";
 import SearchBar from "../../comps/SearchBar";
 import Table from "../../comps/Table";
 import { MouseEventHandler, useEffect, useRef, useState } from "react";
-import GState, { toggleAddBook, toggleBookABook } from "../../libs/gstate";
+import GState from "../../libs/gstate";
 import { proxy, useSnapshot } from "valtio";
 import Input, { InputRef } from "../../comps/Input";
 import closeIMG from "../../assets/close.png";
 import { validate_noComma } from "../../libs/validation";
 import addIMG from "../../assets/add.png";
 import sendIMG from "../../assets/send.png";
-import BookState, { Book, loadBooks } from "../../libs/books";
+import BookState, { Book } from "../../libs/books";
 import StatusSvg from "../../comps/StatusSvg";
-import { loadBookings } from "../../libs/booking";
 import UsersState from "../../libs/users";
+import { toggleAddBook, toggleBookABook } from "../../libs/popup";
 
 
 
@@ -62,7 +62,7 @@ function Books() {
     }
 
     useEffect(() => {
-        GState.tabIdx = 0;
+        GState.tabIdx = "books";
     }, []);
 
 
@@ -82,7 +82,7 @@ function Books() {
     function BooksFilter() {
         return <div className="w-3/12 px-8 py-4 bg-white rounded shadow flex flex-col gap-4 h-fit">
             <div className="flex flex-col gap-1">
-                <h1>كاتب</h1>
+                <h1 >كاتب</h1>
                 <Input ref={authorRef} className={inputStyle} placeholder="ادخل اسم الكاتب... " />
             </div>
             <div className="flex flex-col gap-1">
@@ -113,7 +113,9 @@ function Books() {
         <div className="flex flex-row align-center justify-between gap-80">
             <SearchBar placeholder="ابحث عن كتاب..." />
             <section className="flex flex-row gap-2">
-                <button className="interactive-button px-4  py-3 rounded shadow text-white flex gap-4 align-center justify-center h-fit" onClick={toggleAddBook}>
+                <button className="interactive-button px-4  py-3 rounded shadow text-white flex gap-4 align-center justify-center h-fit" onClick={toggleAddBook
+
+                }>
                     <img src={addIMG} height={16} width={16} alt="addIMG" className="self-center" />
                     <p className="text-2sm text-bold ">اضف كتاب</p>
                 </button>
