@@ -43,7 +43,7 @@ function toggleAddUser() {
 function toggleEditUser(idx: number) {
     popupState.popupVis = true;
     popupState.popupType = "edit-user";
-    popupState.editedAdminIdx = idx;
+    popupState.editedUserIdx = idx;
 }
 
 function toggleAddAdmin() {
@@ -56,6 +56,11 @@ function toggleEditAdmin(idx: number) {
     popupState.editedAdminIdx = idx;
 }
 
+
+function hidePopup() {
+    popupState.popupVis = false;
+}
+
 export {
     toggleBookABook,
     toggleAddBook,
@@ -64,6 +69,7 @@ export {
     toggleEditBook,
     toggleEditUser,
     toggleEditAdmin,
+    hidePopup,
     popupState,
 }
 

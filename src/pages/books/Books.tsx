@@ -14,6 +14,7 @@ import BookState, { Book } from "../../libs/books";
 import StatusSvg from "../../comps/StatusSvg";
 import UsersState from "../../libs/users";
 import { toggleAddBook, toggleBookABook } from "../../libs/popup";
+import BookingsState from "../../libs/booking";
 
 
 
@@ -25,15 +26,17 @@ let BooksPageState: BooksPageStateObj = proxy({
 });
 
 function BookAvaible({ book }: { book: Book }) {
-    useSnapshot(GState);
+    useSnapshot(BookingsState);
     if (book.available) return <>/</>
-    const user_id = GState.borrowed.find(borrow => borrow.book_id == book.id)?.user_id;
+    const booked_info = BookingsState.borrowed.find(borrow => borrow.book_id == book.id)!;
+    const user_id = booked_info.user_id;
     const user = UsersState.users.find((user) => user.id == user_id);
-    return <> {user?.first_name + "    " + user?.last_name}</>
+    let passed_release = new Date() >= new Date(booked_info.return_date);
+    return <p className={`${passed_release ? "text-red-600" : ""}`}> {user?.first_name + "    " + user?.last_name}</p>
 }
 
 const columns = [
-    { name: '#', selector: (row: any) => row.idx, style: { "max-width": "5%", }, },
+    { name: '#', selector: (row: any) => row.idx, style: { "max-width": "5%" }, },
     { name: 'عنوان', selector: (row: any) => row.title, style: { "max-width": "22.5%" }, },
     { name: 'الكاتب', selector: (row: any) => row.author, style: { "max-width": "22.5%" }, },
     { name: 'سنة النشر', selector: (row: any) => row.publish_year, style: { "max-width": "22.5%" }, },
@@ -77,6 +80,7 @@ function Books() {
 
     useSnapshot(BooksPageState);
     useSnapshot(BookState);
+    useSnapshot(BookingsState);
 
     const inputStyle = "text-sm m-1";
     function BooksFilter() {

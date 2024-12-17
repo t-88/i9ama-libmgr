@@ -49,7 +49,6 @@ const Input = forwardRef(function ({ title, placeholder, onEnter, className, tit
           }
         }
 
-
         localRef.current?.classList.remove("popup-error");
         localRef.current?.classList.remove("popup-error-same");
         return true;

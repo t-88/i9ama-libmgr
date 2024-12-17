@@ -12,19 +12,21 @@ const BorrowBooksDB = {
     create: () => {
         const stmt = db.prepare(`CREATE TABLE borrowbooks(
             id INTEGER PRIMARY KEY,
-            res VARCHAR(64),
             user_id INTEGER,
             book_id INTEGER,
+            admin_id INTGER,
+            return_date DATETIME,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY(user_id) REFERENCES users(id)
             FOREIGN KEY(book_id) REFERENCES books(id)
+            FOREIGN KEY(admin_id) REFERENCES admins(id)
         )`);
         stmt.run();
     },
     drop: () => {
         db.prepare(`DROP TABLE borrowbooks`).run();
     },
-    insert: (res, bookID, userID) => {
+    insert: (bookID, userID,adminID,return_date) => {
 
         const update_user = db.prepare(`UPDATE users SET reserved_book = 1 WHERE id = ?`);
         update_user.run([userID]);
@@ -32,8 +34,8 @@ const BorrowBooksDB = {
         const update_books = db.prepare(`UPDATE books SET available = 0 WHERE id = ?`);
         update_books.run([bookID]);
 
-        const stmt = db.prepare("INSERT INTO borrowbooks(res,book_id,user_id) VALUES (?,?,?)");
-        stmt.run([res, bookID, userID]);
+        const stmt = db.prepare("INSERT INTO borrowbooks(book_id,user_id,admin_id,return_date) VALUES (?,?,?,?)");
+        stmt.run([bookID, userID,adminID,return_date]);
     },
     getAll: () => {
         const stmt = db.prepare("SELECT * FROM borrowbooks");
@@ -74,8 +76,6 @@ const BooksDB = {
                                        author LIKE ? AND
                                        publish_year LIKE ? 
                                  `);
-        console.log(stmt.all([`%${title}%`, `%${author}%`, `%${publish_year}%`]));
-
     },
 
 

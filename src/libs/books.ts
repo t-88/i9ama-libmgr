@@ -1,6 +1,5 @@
 import { proxy } from "valtio";
 import OptionsComp from "../comps/OptionsComp";
-import GState  from "./gstate";
 import { popupState, toggleEditBook } from "./popup";
 
 
@@ -30,6 +29,7 @@ function loadAll() {
     const loadedBooks = (window as any).db.books.getAll();
     let books: Book[] = [];
     for (let i = 0; i < loadedBooks.length; i++) {
+        let tags = loadedBooks[i]["tags"].length == 0 ? []  : (loadedBooks[i]["tags"] as string).split(",")
         books.push({
             id: loadedBooks[i]["id"],
             idx: i.toString(),
@@ -37,7 +37,7 @@ function loadAll() {
             author: loadedBooks[i]["author"] ?? "",
             available: loadedBooks[i]["available"] ?? "",
             publish_year: loadedBooks[i]["publish_year"] ?? "",
-            tags: (loadedBooks[i]["tags"] as string).split(",") ?? [],
+            tags:  tags,
             desc: loadedBooks[i]["desc"],
             options_comp: () => OptionsComp({ idx: i, onClick: () => toggleEditBook(i)}),
         });

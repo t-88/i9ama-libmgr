@@ -2,6 +2,7 @@ import { useSnapshot } from "valtio";
 import moreIMG from "../assets/more.png";
 import { useEffect, useRef } from "react";
 import GState from "../libs/gstate";
+import UsersState from "../libs/users";
 
 export default function OptionsComp({ idx, onClick }: { idx: number, onClick? : any }) {
 

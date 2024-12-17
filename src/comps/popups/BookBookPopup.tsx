@@ -11,36 +11,23 @@ import "./BookBookPopup.css";
 import BookState, { Book, BookAction } from "../../libs/books";
 import UsersState, { User } from "../../libs/users";
 import { validate_inputNotEmpty } from "../../libs/validation";
-import { popupState } from "../../libs/popup";
+import { hidePopup, popupState } from "../../libs/popup";
 import { BookingAction } from "../../libs/booking";
+import AdminsState, { Admin } from "../../libs/admins";
+import { DateSelOption, getDate } from "../../libs/utils";
+import DateInput from "../DateInput";
 
 
 
 const INPUT_WIDTH = "w-40";
-type DateSelOption = "manual" | "week" | "2week" | "month";
 
-
-function getDate(offset?: any) {
-    offset = offset ?? 0;
-    const today = new Date();
-    const offseted = new Date();
-    offseted.setDate(today.getDate() + offset);
-
-    const yyyy = offseted.getFullYear();
-    let mm: any = offseted.getMonth() + 1; // Months start at 0!
-    let dd: any = offseted.getDate();
-
-    if (dd < 10) dd = '0' + dd;
-    if (mm < 10) mm = '0' + mm;
-
-    return yyyy + "/" + mm + "/" + dd;
-}
 
 export default function BookBookPopup() {
-    function onChangeTitle(text?: string) {
+    function onChangeBook(text?: string) {
+        onBlur();
         text = text ?? bookRef.current?.getInput();
         if (!text || !text.length) {
-            setBooks([]);
+            setBooks(BookState.books);
             return;
         }
         setBooks(BookState.books.filter(book => book.title.includes(text!)));
@@ -50,10 +37,11 @@ export default function BookBookPopup() {
         setSelectedBook(book);
         bookRef.current?.setInput(book.title);
     }
-    function onChangeName(text?: string) {
+    function onChangeUser(text?: string) {
+        onBlur();
         text = text ?? userRef.current?.getInput();
         if (!text || !text.length) {
-            setUsers([]);
+            setUsers(UsersState.users);
             return;
         }
         setUsers(UsersState.users.filter(user => {
@@ -64,14 +52,49 @@ export default function BookBookPopup() {
             return false;
         }));
     }
-
-
     function onSelectUser(user: User) {
         setUsers([]);
         setSelectedUser(user);
         userRef.current?.setInput(user.first_name + ' ' + user.last_name);
     }
 
+    function onChangeAdmin(text?: string) {
+        onBlur();
+        text = text ?? adminRef.current?.getInput();
+        if (!text || !text.length) {
+            setAdmins(AdminsState.admins);
+            return;
+        }
+        setAdmins(AdminsState.admins.filter(admin => {
+            let names = text!.split(" ");
+            for (let name of names) {
+                if (admin.first_name.includes(name) || admin.last_name.includes(name)) return true;
+            }
+            return false;
+        }));
+    }
+    function onSelectAdmin(admin: Admin) {
+        setAdmins([]);
+        setSelectedAdmin(admin);
+        adminRef.current?.setInput(admin.first_name + ' ' + admin.last_name);
+    }    
+    function AdminItems() {
+        let comps = [];
+        for (let admin of Object.values(admins)) {
+            comps.push(
+                <section
+                    onClick={() => onSelectAdmin(admin)}
+                    key={admin.id}
+                    className={`cursor-pointer py-2 px-4 border-b hover:bg-stone-100 flex items-center justify-between`}
+                >
+                    <p >
+                        {admin.first_name + " " + admin.last_name}
+                    </p>
+                </section>
+            );
+        }
+        return <div className="absolute top-12 z-10  w-full flex flex-col bg-white rounded shadow max-h-60 overflow-y-scroll"> {comps}</div>
+    }
 
 
     function UserItems() {
@@ -115,12 +138,11 @@ export default function BookBookPopup() {
                 </section>
             );
         }
-        return <div className="absolute top-12 z-1  w-full flex flex-col bg-white rounded shadow max-h-60 overflow-y-scroll"> {comps} </div>
+        return <div className="absolute top-12 z-10  w-full flex flex-col bg-white rounded shadow max-h-60 overflow-y-scroll"> {comps} </div>
     }
 
 
     function DateSelector() {
-
         function selectDate(option: DateSelOption) {
             setDateOption(option);
             switch (option) {
@@ -132,7 +154,7 @@ export default function BookBookPopup() {
         }
 
         const sharedStyle = "cursor-pointer py-2 px-4 border-b hover:bg-stone-100 flex items-center justify-between";
-        return <div className="date-selection absolute top-12 left-0 z-1  w-full flex flex-col bg-white rounded shadow max-h-60 overflow-y-scroll">
+        return <div className="date-selection absolute top-12 left-0 z-10  w-full flex flex-col bg-white rounded shadow max-h-60 overflow-y-scroll">
             <p onClick={() => selectDate("manual")} className={sharedStyle}>اختر تاريخ محدد</p>
             <p onClick={() => selectDate("week")} className={sharedStyle}>بعد اسبوع</p>
             <p onClick={() => selectDate("2week")} className={sharedStyle}>بعد اسبوعين</p>
@@ -142,10 +164,12 @@ export default function BookBookPopup() {
 
 
 
-    function onBlur(e: any) {
-        e.stopPropagation();
+    function onBlur(e?: any) {
+        if(e) { e.stopPropagation(); }
+
         setUsers([]);
         setBooks([]);
+        setAdmins([]);
         setDateRec(false);
     }
 
@@ -158,28 +182,33 @@ export default function BookBookPopup() {
             { func: validate_inputNotEmpty, msg: "تم ادخال اسم فارغ, يرجي ادخال اسم صحيح" },
             { func: () => { return selectedUser != undefined && userRef.current?.getInput() == selectedUser.first_name + " " + selectedUser.last_name; }, msg: "تم ادخال عضو غير معروف, تحقق من الاسم" },
         ]);
-        const isRefValid = resRef.current?.checkInput({ func: validate_inputNotEmpty, msg: "يرجى ادخال اسم المسئول" });
+        const isAdminValid = adminRef.current?.checkInput([
+            { func: validate_inputNotEmpty, msg: "تم ادخال اسم فارغ, يرجي ادخال اسم صحيح" },
+            { func: () => { return selectedAdmin != undefined && adminRef.current?.getInput() == selectedAdmin.first_name + " " + selectedAdmin.last_name; }, msg: "تم ادخال عضو غير معروف, تحقق من الاسم" },
+        ]);
 
-        if (!(isBookValid && isUserValid && isRefValid)) {
+        if (!(isBookValid && isUserValid && isAdminValid)) {
             return;
         }
 
         BookingAction.add(
-            resRef.current!.getInput(),
             selectedBook!.id,
             selectedUser!.id,
+            selectedAdmin!.id,
+            dateOption == "manual" ? (dateRef.current as any).getInput() : dateInput.date,
         );
-        resRef.current?.setInput("");
+        adminRef.current?.setInput("");
         userRef.current?.setInput("");
         bookRef.current?.setInput("");
         selectedBook!.available = false;
         selectedUser!.reserved_book = true;
         setSelectedBook(null);
         setSelectedUser(null);
+        setSelectedAdmin(null);
 
     }
 
-    const resRef = useRef<InputRef | null>(null);
+    const adminRef = useRef<InputRef | null>(null);
     const bookRef = useRef<InputRef | null>(null);
     const userRef = useRef<InputRef | null>(null);
     const dateRef = useRef();
@@ -188,6 +217,8 @@ export default function BookBookPopup() {
     const [selectedBook, setSelectedBook] = useState<Book | null>(null);
     const [users, setUsers] = useState<User[]>([]);
     const [selectedUser, setSelectedUser] = useState<User | null>(null);
+    const [admins, setAdmins] = useState<Admin[]>([]);
+    const [selectedAdmin, setSelectedAdmin] = useState<Admin | null>(null);
     const [dateRec, setDateRec] = useState(false);
     const [dateOption, setDateOption] = useState("week");
     const [dateInput, setDateInput] = useState({ title: "بعد اسبوع", date: getDate(7) });
@@ -198,24 +229,30 @@ export default function BookBookPopup() {
     useSnapshot(GState);
 
 
-
     return <div id='book-a-book' className='filter-popup rounded shadow' onClick={(e) => { onBlur(e); }} >
         <BgPattern />
         <div className='relative z-10 w-full h-full flex flex-col gap-5 px-4 py-6' >
-            <div className='self-end -mb-6 cursor-pointer w-fit h-fit' onClick={() => popupState.popupVis = false}>
+            <div className='self-end -mb-6 cursor-pointer w-fit h-fit' onClick={() => hidePopup()}>
                 <img src={closeIMG} alt="closeIMG" width={16} />
             </div>
             <h1 className='text-2xl font-bold'>حجز كتاب</h1>
             <section>
-                <Input titleClassName={`${INPUT_WIDTH}`} ref={resRef} title="المسئول" placeholder="ادخل اسم المسئول... " />
-                <Input titleClassName={`${INPUT_WIDTH}`} ref={userRef} onChange={onChangeName}
-                    callbacks={{ onClick: (e: any) => e.stopPropagation(), onFocus: (e: any) => onChangeName() }}
+
+                <Input titleClassName={`${INPUT_WIDTH}`} ref={adminRef} title="المسئول" placeholder="ادخل اسم المسئول... "
+                    onChange={onChangeAdmin}
+                  callbacks={{ onClick: (e: any) => e.stopPropagation(), onFocus: (e: any) => onChangeAdmin() }}>
+                    <AdminItems />
+                </Input>
+
+                <Input titleClassName={`${INPUT_WIDTH}`} ref={userRef} onChange={onChangeUser}
+                    callbacks={{ onClick: (e: any) => e.stopPropagation(), onFocus: (e: any) => onChangeUser() }}
                     title="العضو" placeholder="ادخل اسم العضو... ">
                     <UserItems />
                 </Input>
+
                 <Input titleClassName={`${INPUT_WIDTH}`} ref={bookRef}
-                    callbacks={{ onClick: (e: any) => e.stopPropagation(), onFocus: (e: any) => onChangeTitle() }}
-                    onChange={onChangeTitle} title="العنوان" placeholder="ادخل العنوان... ">
+                    callbacks={{ onClick: (e: any) => e.stopPropagation(), onFocus: (e: any) => onChangeBook() }}
+                    onChange={onChangeBook} title="العنوان" placeholder="ادخل العنوان... ">
                     <BookItems />
                 </Input>
 
@@ -229,16 +266,11 @@ export default function BookBookPopup() {
                         {
                             dateOption == "manual" ? <DateInput ref={dateRef} /> : <>
                                 <p>{dateInput.title}</p>
-                                <p className="text-end flex-1 mx-2 justify-self-end">{dateInput.date}</p>
+                                <p className="text-end flex-1 mx-2 justify-self-end">{dateInput.date.split(" ")[0]}</p>
 
                             </>
                         }
-
-
-
-
                         {dateRec ? <DateSelector /> : <></>}
-
                     </div>
                     <div className="self-center pl-2 cursor-pointer" onClick={(e: any) => setDateRec(true)}>
                         <img className="w-6" src={moreIMG} alt="moreIMG" />
@@ -262,26 +294,3 @@ export default function BookBookPopup() {
 }
 
 
-
-const DateInput = forwardRef(function ({ }, ref: ForwardedRef<any>) {
-    useImperativeHandle(ref, (): any => {
-        return {
-            getInput: (): { day: string, month: string, year: string } => {
-                return { day: dayRef.current!.value, month: monthRef.current!.value, year: yearRef.current!.value };
-            }
-        };
-    });
-
-    const dayRef = useRef<HTMLInputElement | null>(null);
-    const monthRef = useRef<HTMLInputElement | null>(null);
-    const yearRef = useRef<HTMLInputElement | null>(null);
-
-    const [year, month, day] = getDate().split("/")
-
-    let limitInput = (ref: any, max: number) => ref.current!.value = Math.max(1, Math.min(max, Number.parseInt(ref.current!.value)));
-    return <div className="w-64 flex flex-row gap-1">
-        <input ref={dayRef} onChange={(e) => limitInput(dayRef, 30)} maxLength={2} className="w-12 text-center  border rounded px-2" defaultValue={day} placeholder="dd" type="text" />/
-        <input ref={monthRef} onChange={(e) => limitInput(monthRef, 12)} maxLength={2} className="w-12 text-center  border rounded px-2" defaultValue={month} placeholder="mm" type="text" />/
-        <input ref={yearRef} maxLength={4} className="w-16 text-center border rounded px-2" defaultValue={year} placeholder="yyyy" type="text" />
-    </div>
-});

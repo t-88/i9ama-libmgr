@@ -5,7 +5,6 @@ import Table from "../../comps/Table";
 import { useEffect, useRef, useState } from "react";
 import { proxy, useSnapshot } from "valtio";
 import Input, { InputRef } from "../../comps/Input";
-import { validate_noComma } from "../../libs/validation";
 import addIMG from "../../assets/add.png";
 import sendIMG from "../../assets/send.png";
 import UsersState, {  User } from "../../libs/users";
@@ -13,14 +12,17 @@ import StatusSvg from "../../comps/StatusSvg";
 import GState  from "../../libs/gstate";
 import BookState from "../../libs/books";
 import { toggleAddUser, toggleBookABook } from "../../libs/popup";
+import BookingsState from "../../libs/booking";
 
 
 function ReversedBookInfo({ user }: { user: User }) {
-    useSnapshot(GState);
+    useSnapshot(BookingsState);
     if (!user.reserved_book) return <>/</>
-    const book_id = GState.borrowed.find(borrow => borrow.user_id == user.id)?.book_id;
+    const booked_info = BookingsState.borrowed.find(borrow => borrow.user_id == user.id)!;
+    const book_id = BookingsState.borrowed.find(borrow => borrow.user_id == user.id)?.book_id;
     const book = BookState.books.find((book) => book.id == book_id);
-    return <> {book?.title}</>
+    let passed_release = new Date() >= new Date(booked_info.return_date);
+    return <p className={`${passed_release ? "text-red-600" : ""}`}> {book!.title} </p>
 }
 
 const columns = [

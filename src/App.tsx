@@ -13,6 +13,7 @@ import "./pages/index/Nav.css";
 import NavBar from './pages/index/Nav';
 import { AdminAction } from './libs/admins';
 import { BookAction } from './libs/books';
+import { BookingAction } from './libs/booking';
 // TODO: logout animations
 
 function App() {
@@ -21,7 +22,7 @@ function App() {
     BookAction.loadAll();
     UserAction.loadAll();
     AdminAction.loadAll();
-    BookAction.loadAll();
+    BookingAction.loadAll();
   })
 
   return (

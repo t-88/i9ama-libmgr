@@ -18,3 +18,7 @@
     filter: brightness(0) saturate(100%) invert(9%) sepia(1%) saturate(0%) hue-rotate(139deg) brightness(92%) contrast(82%);
 }
 
+
+.img-frame {
+    border-color: var(--primary-color);
+}

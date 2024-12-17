@@ -11,12 +11,13 @@ import Table from "../../comps/Table";
 import addIMG from "../../assets/add.png";
 import { toggleAddAdmin } from "../../libs/popup";
 import AdminsState from "../../libs/admins";
+import BookingsState from "../../libs/booking";
 
 
 function ReversedBookInfo({ user }: { user: User }) {
     useSnapshot(GState);
     if (!user.reserved_book) return <>/</>
-    const book_id = GState.borrowed.find(borrow => borrow.user_id == user.id)?.book_id;
+    const book_id = BookingsState.borrowed.find(borrow => borrow.user_id == user.id)?.book_id;
     const book = BookState.books.find((book) => book.id == book_id);
     return <> {book?.title}</>
 }

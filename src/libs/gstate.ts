@@ -18,7 +18,6 @@ type NavTabName = "books" | "users" | "admins";
 
 interface GStateObj {
     tabIdx: NavTabName,
-    borrowed: Borrowed[],
     bookMoreOptionsMenu: BookMoreOptionsMenu,
     filterState: FilterState,
 }
