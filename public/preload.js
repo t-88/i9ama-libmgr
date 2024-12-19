@@ -1,12 +1,111 @@
-// const sqlite3 = require('sqlite3');
 const sqlite3 = require("better-sqlite3");
 const { contextBridge, ipcRenderer } = require("electron");
 const fs = require('node:fs');
 const { randomUUID } = require("node:crypto");
 
+
 const db = new sqlite3("main.db");
 
 
+function ignoreError(callback) {
+    try { callback(); }
+    catch(e) {}
+}
+
+
+const TagsDB = {
+    create: () => {
+        const stmt = db.prepare(`CREATE TABLE tags(
+            id INTEGER PRIMARY KEY,
+            name TEXT
+        )`);
+        stmt.run();
+    },
+    drop: () => {
+        ignoreError(() => {
+            db.prepare(`DROP TABLE tags`).run()
+        } );
+    },
+    get: (name) => {
+        const stmt = db.prepare(`SELECT * from tags
+                                 WHERE name LIKE ?
+                                 `);
+        return stmt.all([name]);
+    },
+    insert: (tag) => {
+        // insert if not found
+        // tags found
+        found = TagsDB.get(tag); 
+        if(found.length != 0) { return Object.values(found).map(item => item.id); }
+        const stmt = db.prepare("INSERT INTO tags(name) VALUES (?)");
+        return stmt.run([tag]).lastInsertRowid
+    },
+    insertAll: (tags) => {
+        tags_ids = [];
+        // insert all tags
+        for(let tag of tags) { 
+            let tag_id =  TagsDB.insert(tag);
+            
+            // can return inserted item id, or list of already existing items 
+            if(typeof(tag_id) == "number") { tags_ids.push(Number.parseInt(tag_id)) }
+            else { 
+                tags_ids = tags_ids.concat(tag_id.map(id => Number.parseInt(id))); 
+            }
+
+        }
+        return tags_ids;
+    },
+    getAll: () => {
+        const stmt = db.prepare("SELECT * FROM tags");
+        return stmt.all();
+    },
+};
+
+const BookTagsDB = {
+    create: () => {
+        const stmt = db.prepare(`CREATE TABLE book_tags(
+            id INTEGER PRIMARY KEY,
+            book_id INTEGER,
+            tag_id INTEGER,
+            FOREIGN KEY(book_id) REFERENCES books(id)
+            FOREIGN KEY(tag_id) REFERENCES tags(id)
+        )`);
+        stmt.run();
+    },
+    drop: () => {
+        ignoreError(() =>  db.prepare(`DROP TABLE book_tags`).run()); 
+    },
+    insert: (book_id,tags_ids) => {
+
+        for(let tag_id of tags_ids) {
+            const stmt = db.prepare("INSERT INTO book_tags(book_id,tag_id) VALUES (?,?)");
+            stmt.run([book_id,tag_id]);
+        }
+    },
+
+    getAll: () => {
+        const stmt = db.prepare("SELECT * FROM book_tags");
+        return stmt.all();
+    },
+
+    getTagsOfBook: (book_id) => {
+        const stmt = db.prepare(`SELECT t.name  
+            FROM book_tags bt JOIN tags t 
+            ON bt.tag_id = t.id 
+            WHERE bt.book_id = ?`);
+        return stmt.all([book_id]).map(tag => tag.name);
+
+        // const stmt = db.prepare("SELECT tag_id FROM book_tags WHERE book_id = ?");
+        // let query =  stmt.all([book_id]);
+        // console.log(query);
+    },
+    update : (id, tags) => {
+        // delete all tags related to that book 
+        db.prepare("delete from book_tags where book_id = ?").run([id]);
+        let tags_ids = TagsDB.insertAll(tags);
+        BookTagsDB.insert(id,tags_ids);
+    }
+}
 
 const BorrowBooksDB = {
     create: () => {
@@ -24,7 +123,9 @@ const BorrowBooksDB = {
         stmt.run();
     },
     drop: () => {
-        db.prepare(`DROP TABLE borrowbooks`).run();
+        ignoreError(() => {
+            db.prepare(`DROP TABLE borrowbooks`).run();
+        })
     },
     insert: (bookID, userID,adminID,return_date) => {
 
@@ -41,9 +142,7 @@ const BorrowBooksDB = {
         const stmt = db.prepare("SELECT * FROM borrowbooks");
         return stmt.all();
     },
-}
-
-
+};
 const BooksDB = {
     create: () => {
         const stmt = db.prepare(`
@@ -52,7 +151,6 @@ const BooksDB = {
                 author VARCHAR(64) DEFAULT "" NOT NULL,
                 title VARCHAR(64) DEFAULT "" NOT NULL,
                 desc TEXT DEFAULT "" NOT NULL,
-                tags TEXT NOT NULL,
                 available INT DEFAULT 1,
                 publish_year VARCHAR(10), 
                 created_at DATETIME DEFAULT CURRENT_TIMESTAMP
@@ -60,15 +158,20 @@ const BooksDB = {
         stmt.run();
     },
     insert: (title, author, publish_year, tags) => {
-        const stmt = db.prepare("INSERT INTO books(title,author,publish_year,tags) VALUES (?,?,?,?)");
-        stmt.run([title, author, publish_year, tags]);
+        let tags_ids = TagsDB.insertAll(tags);
+        
+        const stmt = db.prepare("INSERT INTO books(title,author,publish_year) VALUES (?,?,?)");
+        let book_id =  stmt.run([title, author, publish_year]).lastInsertRowid;
+
+        BookTagsDB.insert(book_id,tags_ids);
     },
     update: (id, title, author, publish_year, tags) => {
-        const stmt = db.prepare(`UPDATE books 
-                                 SET title = ? ,author = ? ,publish_year = ? ,tags = ?
-                                 WHERE id = ?
-                                 `);
-        stmt.run([title, author, publish_year, tags, id]);
+        BookTagsDB.update(id,tags);
+        // const stmt = db.prepare(`UPDATE books 
+        //                          SET title = ? ,author = ? ,publish_year = ?
+        //                          WHERE id = ?
+        //                          `);
+        // stmt.run([title, author, publish_year, id]);
     },
     search: (title, author, publish_year, tags) => {
         const stmt = db.prepare(`SELECT title , author , publish_year from books
@@ -77,8 +180,6 @@ const BooksDB = {
                                        publish_year LIKE ? 
                                  `);
     },
-
-
     remove: (id) => {
         const stmt = db.prepare("DELETE FROM books WHERE id = ?");
         stmt.run([id]);
@@ -94,8 +195,7 @@ const BooksDB = {
         const stmt = db.prepare("SELECT * FROM books");
         return stmt.all();
     },
-}
-
+};
 const UserDB = {
     create: () => {
         const stmt = db.prepare(`CREATE TABLE users(
@@ -164,9 +264,6 @@ const UserDB = {
         stmt.run([id]);
     },
 };
-
-
-
 const AdminDB = {
     create: () => {
         const stmt = db.prepare(`CREATE TABLE admins(
@@ -247,7 +344,6 @@ function loadUserImgs(imgsUUID) {
         console.error("ERROR: failed to load user imgs", e);
     }
 }
-
 function loadAdminImgs(imgsUUID) {
     try {
         if (!fs.existsSync("admins")) {
@@ -268,10 +364,18 @@ const Helper = {
         return stmt.all();
     },
     initDB: () => {
-        BorrowBooksDB.drop(); BorrowBooksDB.create();
-        UserDB.drop(); UserDB.create();
-        BooksDB.drop(); BooksDB.create();
-        AdminDB.drop(); AdminDB.create();
+        try {
+            // remove constraints first
+            BookTagsDB.drop(); BookTagsDB.create();
+            BorrowBooksDB.drop(); BorrowBooksDB.create();
+
+            TagsDB.drop();  TagsDB.create();
+            AdminDB.drop(); AdminDB.create();
+            UserDB.drop(); UserDB.create();
+            BooksDB.drop(); BooksDB.create();
+        } catch(e) {
+            console.log("[ERROR]" ,e);
+        }
         
     },
     books_fillDB: books_fillDB,
@@ -284,6 +388,8 @@ contextBridge.exposeInMainWorld("db", {
     books: BooksDB,
     admins: AdminDB,
     borrowed: BorrowBooksDB,
+    tags: TagsDB,
+    book_tags: BookTagsDB,
     helper: Helper,
 
 });
@@ -373,3 +479,7 @@ function users_fillDB() {
         UserDB.insert(item.first_name, item.last_name);
     }
 }
+
+
+
+

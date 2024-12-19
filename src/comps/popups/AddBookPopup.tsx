@@ -25,7 +25,7 @@ export default function AddBookPopup() {
     let yearValid = yearRef.current?.checkInput({ func: validate_inputNumber, msg: "يرجى ادخال عام نشر صحيح" });
     if (!(titleValid && authorValid && yearValid)) return;
 
-    BookAction.add(titleRef.current!.getInput(), authorRef.current!.getInput(), yearRef.current!.getInput(), tags.join(","));
+    BookAction.add(titleRef.current!.getInput(), authorRef.current!.getInput(), yearRef.current!.getInput(), tags);
     titleRef.current!.setInput("");
     authorRef.current!.setInput("");
     yearRef.current!.setInput("");
@@ -43,7 +43,7 @@ export default function AddBookPopup() {
 
     if (!(titleValid && authorValid && yearValid)) return;
 
-    BookAction.update(titleRef.current!.getInput(), authorRef.current!.getInput(), yearRef.current!.getInput(), tags.join(","));
+    BookAction.update(titleRef.current!.getInput(), authorRef.current!.getInput(), yearRef.current!.getInput(), tags);
   }
 
   function onAddTag() {
@@ -120,15 +120,18 @@ export default function AddBookPopup() {
   useSnapshot(GState);
 
 
+  useEffect(() => {
+    if (popupState.popupType == "edit-book") {
+      (dateRef.current! as any).setInput(...dateInput.date.split("/"));
+    }
 
+  }, []);
 
   const [dateRec, setDateRec] = useState(false);
   const [dateOption, setDateOption] = useState("manual");
-  const [dateInput, setDateInput] = useState({ title: "manual", date:  popupState.popupType != "edit-book" ? "" : BookingAction.getFromBookId(BookState.books[popupState.editedBookIdx].id)!.return_date.split(" ")[0] });
+  // const [dateInput, setDateInput] = useState({ title: "manual", date: popupState.popupType == "edit-book" && !BookState.books[popupState.editedBookIdx].available ? "" : BookingAction.getFromBookId(BookState.books[popupState.editedBookIdx].id)!.return_date.split(" ")[0] });
+  const [dateInput, setDateInput] = useState({ title: "week", date: getDate(7)});
   const dateRef = useRef();
-  if(popupState.popupType == "edit-book") {
-    (dateRef.current! as any).setInput(...dateInput.date.split("/"));
-  }
 
 
   return <div id='book-add-edit-popup' className='filter-popup rounded shadow w-2/4' onClick={(e) => e.stopPropagation()} >

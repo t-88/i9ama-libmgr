@@ -10,7 +10,7 @@ app.whenReady().then(() => {
       preload: __dirname + "/preload.js",
       nodeIntegration: true,
       // contextIsolation: false,
-      enableRemoteModule: true,
+      // enableRemoteModule: true,
       // webSecurity: false
 
 

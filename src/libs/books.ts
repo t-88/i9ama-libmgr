@@ -18,10 +18,10 @@ interface Book {
 
 
 interface BookStateObj {
-    books : Book[],
+    books: Book[],
 };
-let BookState :  BookStateObj = proxy({
-    books : [],
+let BookState: BookStateObj = proxy({
+    books: [],
 });
 
 
@@ -29,18 +29,21 @@ function loadAll() {
     const loadedBooks = (window as any).db.books.getAll();
     let books: Book[] = [];
     for (let i = 0; i < loadedBooks.length; i++) {
-        let tags = loadedBooks[i]["tags"].length == 0 ? []  : (loadedBooks[i]["tags"] as string).split(",")
+
+        // let tags = loadedBooks[i]["tags"].length == 0 ? []  : (loadedBooks[i]["tags"] as string).split(",")
         books.push({
             id: loadedBooks[i]["id"],
             idx: i.toString(),
             title: loadedBooks[i]["title"] ?? "",
             author: loadedBooks[i]["author"] ?? "",
             available: loadedBooks[i]["available"] ?? "",
-            publish_year: loadedBooks[i]["publish_year"] ?? "",
-            tags:  tags,
+            publish_year: Number.parseInt(loadedBooks[i]["publish_year"]).toString() ?? "",
+            tags: [],
             desc: loadedBooks[i]["desc"],
-            options_comp: () => OptionsComp({ idx: i, onClick: () => toggleEditBook(i)}),
+            options_comp: () => OptionsComp({ idx: i, onClick: () => toggleEditBook(i) }),
         });
+        books[i].tags = (window as any).db.book_tags.getTagsOfBook(books[i].id);
+
     }
     BookState.books = books;
 }
@@ -50,21 +53,21 @@ function loadAll() {
 
 const BookAction = {
     loadAll: loadAll,
-    search :  (title: string, author: string, publish_year: string, tags: string) => {
+    search: (title: string, author: string, publish_year: string, tags: string) => {
         (window as any).db.books.search(title, author, publish_year, tags);
     },
-    remove: (id : string) => { (window as any).db.users.remove(id); },
-    removeCurr: () => { 
+    remove: (id: string) => { (window as any).db.users.remove(id); },
+    removeCurr: () => {
         BookAction.remove(BookState.books[popupState.editedAdminIdx].id);
         BookAction.loadAll();
     },
-    update: (title: string, author: string, publish_year: string, tags: string) => { 
-    (window as any).db.books.update(BookState.books[popupState.editedBookIdx].id, title, author, publish_year, tags);
+    update: (title: string, author: string, publish_year: string, tags: string[]) => {
+        (window as any).db.books.update(BookState.books[popupState.editedBookIdx].id, title, author, publish_year, [...tags]);
         BookAction.loadAll();
 
     },
-    add: (title: string, author: string, publish_year: string, tags: string) => {
-    (window as any).db.books.insert(title, author, publish_year, tags);
+    add: (title: string, author: string, publish_year: string, tags: string[]) => {
+        (window as any).db.books.insert(title, author, publish_year, tags);
         BookAction.loadAll();
     }
 };
@@ -76,4 +79,4 @@ export {
     BookAction,
 }
 
-export type {Book};
+export type { Book };
