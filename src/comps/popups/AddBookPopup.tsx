@@ -187,7 +187,7 @@ function ActionButtons({ onAddBook, onUpateBook, onRemoveBook }: { onAddBook: an
     >
       <img src={addIMG} height={16} width={16} alt="addIMG" className="self-center" />
       <p>اضافة</p>
-    </button>;
+    </button>
 
   }
 

@@ -25,26 +25,31 @@ let BookState: BookStateObj = proxy({
 });
 
 
-function loadAll() {
-    const loadedBooks = (window as any).db.books.getAll();
-    let books: Book[] = [];
-    for (let i = 0; i < loadedBooks.length; i++) {
+function parseData(data: any): any {
+    let out: any[] = []
+    for (let i = 0; i < data.length; i++) {
 
         // let tags = loadedBooks[i]["tags"].length == 0 ? []  : (loadedBooks[i]["tags"] as string).split(",")
-        books.push({
-            id: loadedBooks[i]["id"],
+        out.push({
+            id: data[i]["id"],
             idx: i.toString(),
-            title: loadedBooks[i]["title"] ?? "",
-            author: loadedBooks[i]["author"] ?? "",
-            available: loadedBooks[i]["available"] ?? "",
-            publish_year: Number.parseInt(loadedBooks[i]["publish_year"]).toString() ?? "",
+            title: data[i]["title"] ?? "",
+            author: data[i]["author"] ?? "",
+            available: data[i]["available"] ?? "",
+            publish_year: Number.parseInt(data[i]["publish_year"]).toString() ?? "",
             tags: [],
-            desc: loadedBooks[i]["desc"],
+            desc: data[i]["desc"],
             options_comp: () => OptionsComp({ idx: i, onClick: () => toggleEditBook(i) }),
         });
-        books[i].tags = (window as any).db.book_tags.getTagsOfBook(books[i].id);
+        out[i].tags = (window as any).db.book_tags.getTagsOfBook(out[i].id);
 
     }
+    return out
+}
+
+function loadAll() {
+    const loadedBooks = (window as any).db.books.getAll();
+    let books: Book[] = parseData(loadedBooks);
     BookState.books = books;
 }
 
@@ -69,6 +74,20 @@ const BookAction = {
     add: (title: string, author: string, publish_year: string, tags: string[]) => {
         (window as any).db.books.insert(title, author, publish_year, tags);
         BookAction.loadAll();
+    },
+    filter: ({ title, author, year, tags }: { title?: string, author?: string, year?: string, tags?: string[] }) => {
+        title = title ?? "";
+        author = author ?? "";
+        year = year ?? "";
+        tags = tags ?? [];
+
+
+
+
+    let filtered = (window as any).db.books.filter(title, author, year, tags);
+        let books: Book[] = parseData(filtered);
+        BookState.books = books;
+
     }
 };
 

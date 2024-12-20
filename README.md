@@ -8,7 +8,7 @@ libary manager desktop app for i9ama
 - admin list of booked books
 - edit book booked info
 - [x] fix tag, many to many
-    - [] fix book filter
+    - [x] fix book filter
 ### EASY (30 mins max)
 - [x] user img on top
 - [x] color book if time is out

@@ -9,7 +9,7 @@ const db = new sqlite3("main.db");
 
 function ignoreError(callback) {
     try { callback(); }
-    catch(e) {}
+    catch (e) { }
 }
 
 
@@ -24,7 +24,7 @@ const TagsDB = {
     drop: () => {
         ignoreError(() => {
             db.prepare(`DROP TABLE tags`).run()
-        } );
+        });
     },
     get: (name) => {
         const stmt = db.prepare(`SELECT * from tags
@@ -35,21 +35,21 @@ const TagsDB = {
     insert: (tag) => {
         // insert if not found
         // tags found
-        found = TagsDB.get(tag); 
-        if(found.length != 0) { return Object.values(found).map(item => item.id); }
+        found = TagsDB.get(tag);
+        if (found.length != 0) { return Object.values(found).map(item => item.id); }
         const stmt = db.prepare("INSERT INTO tags(name) VALUES (?)");
         return stmt.run([tag]).lastInsertRowid
     },
     insertAll: (tags) => {
         tags_ids = [];
         // insert all tags
-        for(let tag of tags) { 
-            let tag_id =  TagsDB.insert(tag);
-            
+        for (let tag of tags) {
+            let tag_id = TagsDB.insert(tag);
+
             // can return inserted item id, or list of already existing items 
-            if(typeof(tag_id) == "number") { tags_ids.push(Number.parseInt(tag_id)) }
-            else { 
-                tags_ids = tags_ids.concat(tag_id.map(id => Number.parseInt(id))); 
+            if (typeof (tag_id) == "number") { tags_ids.push(Number.parseInt(tag_id)) }
+            else {
+                tags_ids = tags_ids.concat(tag_id.map(id => Number.parseInt(id)));
             }
 
         }
@@ -59,6 +59,11 @@ const TagsDB = {
         const stmt = db.prepare("SELECT * FROM tags");
         return stmt.all();
     },
+    getByNames: (tags) => {
+        let placeholders = tags.map(() => '?').join(', ');
+        const stmt = db.prepare(`SELECT * FROM tags where name IN (${placeholders})`);
+        return stmt.all(tags);
+    }
 };
 
 const BookTagsDB = {
@@ -73,13 +78,13 @@ const BookTagsDB = {
         stmt.run();
     },
     drop: () => {
-        ignoreError(() =>  db.prepare(`DROP TABLE book_tags`).run()); 
+        ignoreError(() => db.prepare(`DROP TABLE book_tags`).run());
     },
-    insert: (book_id,tags_ids) => {
+    insert: (book_id, tags_ids) => {
 
-        for(let tag_id of tags_ids) {
+        for (let tag_id of tags_ids) {
             const stmt = db.prepare("INSERT INTO book_tags(book_id,tag_id) VALUES (?,?)");
-            stmt.run([book_id,tag_id]);
+            stmt.run([book_id, tag_id]);
         }
     },
 
@@ -94,17 +99,23 @@ const BookTagsDB = {
             ON bt.tag_id = t.id 
             WHERE bt.book_id = ?`);
         return stmt.all([book_id]).map(tag => tag.name);
-
-        // const stmt = db.prepare("SELECT tag_id FROM book_tags WHERE book_id = ?");
-        // let query =  stmt.all([book_id]);
-        // console.log(query);
     },
-    update : (id, tags) => {
+    update: (id, tags) => {
         // delete all tags related to that book 
         db.prepare("delete from book_tags where book_id = ?").run([id]);
         let tags_ids = TagsDB.insertAll(tags);
-        BookTagsDB.insert(id,tags_ids);
+        BookTagsDB.insert(id, tags_ids);
+    },
+    filter: (tags) => {
+        let tagsStmt = TagsDB.getByNames(tags);
+        let placeholders = tagsStmt.map(() => '?').join(', ');
+        let stmt = db.prepare(`SELECT * 
+                               FROM book_tags bt JOIN books b 
+                               ON bt.tag_id = b.id 
+                               WHERE bt.tag_id in (${placeholders})`);
+        return stmt.all(tagsStmt.map(tag => tag.id));
     }
+
 }
 
 const BorrowBooksDB = {
@@ -127,7 +138,7 @@ const BorrowBooksDB = {
             db.prepare(`DROP TABLE borrowbooks`).run();
         })
     },
-    insert: (bookID, userID,adminID,return_date) => {
+    insert: (bookID, userID, adminID, return_date) => {
 
         const update_user = db.prepare(`UPDATE users SET reserved_book = 1 WHERE id = ?`);
         update_user.run([userID]);
@@ -136,7 +147,7 @@ const BorrowBooksDB = {
         update_books.run([bookID]);
 
         const stmt = db.prepare("INSERT INTO borrowbooks(book_id,user_id,admin_id,return_date) VALUES (?,?,?,?)");
-        stmt.run([bookID, userID,adminID,return_date]);
+        stmt.run([bookID, userID, adminID, return_date]);
     },
     getAll: () => {
         const stmt = db.prepare("SELECT * FROM borrowbooks");
@@ -159,26 +170,19 @@ const BooksDB = {
     },
     insert: (title, author, publish_year, tags) => {
         let tags_ids = TagsDB.insertAll(tags);
-        
-        const stmt = db.prepare("INSERT INTO books(title,author,publish_year) VALUES (?,?,?)");
-        let book_id =  stmt.run([title, author, publish_year]).lastInsertRowid;
 
-        BookTagsDB.insert(book_id,tags_ids);
+        const stmt = db.prepare("INSERT INTO books(title,author,publish_year) VALUES (?,?,?)");
+        let book_id = stmt.run([title, author, publish_year]).lastInsertRowid;
+
+        BookTagsDB.insert(book_id, tags_ids);
     },
     update: (id, title, author, publish_year, tags) => {
-        BookTagsDB.update(id,tags);
-        // const stmt = db.prepare(`UPDATE books 
-        //                          SET title = ? ,author = ? ,publish_year = ?
-        //                          WHERE id = ?
-        //                          `);
-        // stmt.run([title, author, publish_year, id]);
-    },
-    search: (title, author, publish_year, tags) => {
-        const stmt = db.prepare(`SELECT title , author , publish_year from books
-                                 WHERE title LIKE ? AND
-                                       author LIKE ? AND
-                                       publish_year LIKE ? 
+        BookTagsDB.update(id, tags);
+        const stmt = db.prepare(`UPDATE books 
+                                 SET title = ? ,author = ? ,publish_year = ?
+                                 WHERE id = ?
                                  `);
+        stmt.run([title, author, publish_year, id]);
     },
     remove: (id) => {
         const stmt = db.prepare("DELETE FROM books WHERE id = ?");
@@ -194,6 +198,31 @@ const BooksDB = {
     getAll: () => {
         const stmt = db.prepare("SELECT * FROM books");
         return stmt.all();
+    },
+    filter: (title, author, year, tags) => {
+
+        const tagsFilter = BookTagsDB.filter(tags);
+        let stmt = "";
+        if (tagsFilter.length != 0) {
+            const placeholders = tags.map(_ => "?").join(",");
+            stmt = db.prepare(`SELECT * from books
+                where
+                    title LIKE ? and 
+                    author like ? and
+                    publish_year LIKE ? and
+                    id not in (${placeholders})
+                `);
+                return [...stmt.all([`%${title}%`, `%${author}%`, `%${year}%`, tagsFilter.map(tag => tag.id).join()]), ...tagsFilter];
+        } else {
+            stmt = db.prepare(`SELECT * from books
+                where
+                    title LIKE ? and 
+                    author like ? and
+                    publish_year LIKE ?
+                `);
+                return stmt.all([`%${title}%`, `%${author}%`, `%${year}%`]);
+            }
+
     },
 };
 const UserDB = {
@@ -277,7 +306,7 @@ const AdminDB = {
     },
     insert: (fname, lname, img) => {
         const fileUUID = randomUUID();
-        const data = {name: fname + " " + lname, img};
+        const data = { name: fname + " " + lname, img };
         try {
             if (!fs.existsSync("admins")) {
                 fs.mkdirSync("admins");
@@ -369,14 +398,14 @@ const Helper = {
             BookTagsDB.drop(); BookTagsDB.create();
             BorrowBooksDB.drop(); BorrowBooksDB.create();
 
-            TagsDB.drop();  TagsDB.create();
+            TagsDB.drop(); TagsDB.create();
             AdminDB.drop(); AdminDB.create();
             UserDB.drop(); UserDB.create();
             BooksDB.drop(); BooksDB.create();
-        } catch(e) {
-            console.log("[ERROR]" ,e);
+        } catch (e) {
+            console.log("[ERROR]", e);
         }
-        
+
     },
     books_fillDB: books_fillDB,
     users_fillDB: users_fillDB,
