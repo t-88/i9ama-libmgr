@@ -137,15 +137,16 @@ export default function AddUserPopup() {
       }
 
       <div 
+      onClick={ async ()  => setMainImg(await onUploadImg())}
         className={`img-frame flex items-center justify-center  
                     w-28 h-28 bg-white self-center rounded-full overflow-hidden border-4
                     ${popupState.popupType == "edit-user" ? "" : "cursor-pointer bg-zinc-200"}
                   `}>
         {
           popupState.popupType == "edit-user" || mainImg.length != 0 ?
-            <img  src={mainImg} alt="img" onClick={ async ()  => setMainImg(await onUploadImg())} />
+            <img  src={mainImg} alt="img"  />
            :
-           <img src={userIMG}  width={50} onClick={ async ()  => setMainImg(await onUploadImg())} alt="img" />
+           <img src={userIMG}  width={50} alt="img" />
         }
 
 

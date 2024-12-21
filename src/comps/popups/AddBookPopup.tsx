@@ -3,17 +3,20 @@ import Input, { InputRef } from "../Input";
 
 import closeIMG from "../../assets/close.png";
 import addIMG from "../../assets/add.png";
+import subIMG from "../../assets/sub.png";
+
 import GState from "../../libs/gstate";
 import { useEffect, useRef, useState } from "react";
 import { useSnapshot } from "valtio";
 import "./AddBookPopup.css";
 import { validate_inputNotEmpty, validate_inputNumber, validate_noComma } from "../../libs/validation";
 import BookState, { BookAction } from "../../libs/books";
-import { hidePopup, popupState } from "../../libs/popup";
+import { hidePopup, popupState, toggleEditUser, toggleEditUserID } from "../../libs/popup";
 import { DateSelOption, getDate } from "../../libs/utils";
 import DateInput from "../DateInput";
 import moreIMG from "../../assets/more.png";
-import { BookingAction } from "../../libs/booking";
+import BookingsState, { BookingAction } from "../../libs/booking";
+import UsersState from "../../libs/users";
 
 const INPUT_WIDTH = "w-40";
 
@@ -33,6 +36,12 @@ export default function AddBookPopup() {
 
   function onRemoveBook() {
     BookAction.removeCurr();
+    popupState.popupVis = false;
+  }
+
+  function onReturnBook() {
+    BookingAction.returnCurBook();
+
     popupState.popupVis = false;
   }
 
@@ -64,52 +73,16 @@ export default function AddBookPopup() {
       authorRef.current!.setInput(BookState.books[popupState.editedBookIdx].author);
       yearRef.current!.setInput(BookState.books[popupState.editedBookIdx].publish_year);
       setTags(BookState.books[popupState.editedBookIdx].tags);
+
+
+
+
     }
   }, [popupState.popupType]);
 
 
-  function DateSelector() {
-    function selectDate(option: DateSelOption) {
-      setDateOption(option);
-      switch (option) {
-        case "week": setDateInput({ title: "بعد اسبوع", date: getDate(7) }); break;
-        case "2week": setDateInput({ title: "بعد اسبوعين", date: getDate(14) }); break;
-        case "month": setDateInput({ title: "بعد شهر", date: getDate(30) }); break;
-      }
-      setDateRec(false);
-    }
 
-    const sharedStyle = "cursor-pointer py-2 px-4 border-b hover:bg-stone-100 flex items-center justify-between";
-    return <div className="date-selection absolute top-12 left-0 z-10  w-full flex flex-col bg-white rounded shadow max-h-60 overflow-y-scroll">
-      <p onClick={() => selectDate("manual")} className={sharedStyle}>اختر تاريخ محدد</p>
-      <p onClick={() => selectDate("week")} className={sharedStyle}>بعد اسبوع</p>
-      <p onClick={() => selectDate("2week")} className={sharedStyle}>بعد اسبوعين</p>
-      <p onClick={() => selectDate("month")} className={sharedStyle}>بعد شهر</p>
-    </div>
-  }
 
-  function BookDateInput() {
-    if (popupState.popupType != "edit-book") { return <></>; }
-    return <div
-      className="popup-input relative flex  gap-2 text-lg m-4 pl-1 bg-white rounded shadow overflow-hidden"
-      onClick={(e: any) => e.stopPropagation()}
-    >
-      <p className={`title text-white font-bold flex items-center justify-center cursor-default  rounded-r ${INPUT_WIDTH}`}  >تاريخ الارجاع</p>
-      <div className="flex item-center p-2 w-full" >
-        {
-          dateOption == "manual" ? <DateInput ref={dateRef} /> : <>
-            <p>{dateInput.title}</p>
-            <p className="text-end flex-1 mx-2 justify-self-end">{dateInput.date.split(" ")[0]}</p>
-
-          </>
-        }
-        {dateRec ? <DateSelector /> : <></>}
-      </div>
-      <div className="self-center pl-2 cursor-pointer" onClick={(e: any) => setDateRec(true)}>
-        <img className="w-6" src={moreIMG} alt="moreIMG" />
-      </div>
-    </div>
-  }
 
 
   const titleRef = useRef<InputRef | null>(null);
@@ -120,18 +93,7 @@ export default function AddBookPopup() {
   useSnapshot(GState);
 
 
-  useEffect(() => {
-    if (popupState.popupType == "edit-book") {
-      (dateRef.current! as any).setInput(...dateInput.date.split("/"));
-    }
 
-  }, []);
-
-  const [dateRec, setDateRec] = useState(false);
-  const [dateOption, setDateOption] = useState("manual");
-  // const [dateInput, setDateInput] = useState({ title: "manual", date: popupState.popupType == "edit-book" && !BookState.books[popupState.editedBookIdx].available ? "" : BookingAction.getFromBookId(BookState.books[popupState.editedBookIdx].id)!.return_date.split(" ")[0] });
-  const [dateInput, setDateInput] = useState({ title: "week", date: getDate(7)});
-  const dateRef = useRef();
 
 
   return <div id='book-add-edit-popup' className='filter-popup rounded shadow w-2/4' onClick={(e) => e.stopPropagation()} >
@@ -147,17 +109,14 @@ export default function AddBookPopup() {
           :
           <h1 className='text-2xl font-bold'>اضافة كتاب</h1>
       }
-
       <section>
-        <Input ref={titleRef} title="العنوان" placeholder="ادخل العنوان... " />
-        <Input ref={authorRef} title="الكاتب" placeholder="ادخل اسم الكاتب... " />
-        <Input ref={yearRef} title="سنة النشر" placeholder="ادخل سنة النشر..." />
 
-
-
-        <BookDateInput />
-
+        <Input titleClassName={INPUT_WIDTH} ref={titleRef} title="العنوان" placeholder="ادخل العنوان... " />
+        <Input titleClassName={INPUT_WIDTH} ref={authorRef} title="الكاتب" placeholder="ادخل اسم الكاتب... " />
+        <Input titleClassName={INPUT_WIDTH} ref={yearRef} title="سنة النشر" placeholder="ادخل سنة النشر..." />
+        <ReservedBookExtraInfo />
       </section>
+
       <h1 className='text-2xl font-bold'>مواضيع</h1>
       <section className='flex flex-auto	 w-full flex-col gap-5'>
         <Input ref={tagRef} className={"my-0 shrink-0"} onEnter={onAddTag} title="موضوع" placeholder="ادخل موضوع..." />
@@ -171,14 +130,14 @@ export default function AddBookPopup() {
         </div>
       </section>
 
-      <ActionButtons onAddBook={onAddBook} onUpateBook={onUpateBook} onRemoveBook={onRemoveBook} />
+      <ActionButtons onAddBook={onAddBook} onUpateBook={onUpateBook} onRemoveBook={onRemoveBook} onReturnBook={onReturnBook} />
 
     </div>
   </div>;
 }
 
 
-function ActionButtons({ onAddBook, onUpateBook, onRemoveBook }: { onAddBook: any, onUpateBook: any, onRemoveBook: any }) {
+function ActionButtons({ onAddBook, onUpateBook, onRemoveBook, onReturnBook }: { onAddBook: any, onUpateBook: any, onRemoveBook: any, onReturnBook: any }) {
 
   if (popupState.popupType == "add-book") {
     return <button
@@ -199,13 +158,102 @@ function ActionButtons({ onAddBook, onUpateBook, onRemoveBook }: { onAddBook: an
       <img src={addIMG} height={16} width={16} alt="addIMG" className="self-center" />
       <p>حفظ</p>
     </button>
-    <button
-      onClick={onRemoveBook}
-      className='delete-book   flex gap-2  self-end  rounded py-1 px-4 text-white text-lg shadow'
-    >
-      <img src={addIMG} height={16} width={16} alt="addIMG" className="self-center" />
-      <p>حدف</p>
-    </button>
+    {
+      BookAction.editedBook().available ?
+        <button
+          onClick={onRemoveBook}
+          className='delete-book   flex gap-2  self-end  rounded py-1 px-4 text-white text-lg shadow'
+        >
+          <img src={addIMG} height={16} width={16} alt="addIMG" className="self-center" />
+          <p>حدف</p>
+        </button>
+
+
+        : <button
+          onClick={onReturnBook}
+          className='interactive-button add-book flex gap-2  self-end  rounded py-1 px-4 text-white text-lg shadow'
+        >
+          <img src={subIMG} height={16} width={16} alt="subIMG" className="self-center" />
+          <p>ارجاع</p>
+        </button>
+
+    }
 
   </div>
+}
+
+
+function BookDateInput() {
+  function DateSelector() {
+    function selectDate(option: DateSelOption) {
+      setDateOption(option);
+      switch (option) {
+        case "week": setDateInput({ title: "بعد اسبوع", date: getDate(7) }); break;
+        case "2week": setDateInput({ title: "بعد اسبوعين", date: getDate(14) }); break;
+        case "month": setDateInput({ title: "بعد شهر", date: getDate(30) }); break;
+      }
+      setDateRec(false);
+    }
+
+    const sharedStyle = "cursor-pointer py-2 px-4 border-b hover:bg-stone-100 flex items-center justify-between";
+    return <div className="date-selection absolute top-12 left-0 z-10  w-full flex flex-col bg-white rounded shadow max-h-60 overflow-y-scroll">
+      <p onClick={() => selectDate("manual")} className={sharedStyle}>اختر تاريخ محدد</p>
+      <p onClick={() => selectDate("week")} className={sharedStyle}>بعد اسبوع</p>
+      <p onClick={() => selectDate("2week")} className={sharedStyle}>بعد اسبوعين</p>
+      <p onClick={() => selectDate("month")} className={sharedStyle}>بعد شهر</p>
+    </div>
+  }
+
+  useEffect(() => {
+    if(dateRef.current) {
+      const [year, month, day] = BookingAction.getFromBookId(BookAction.editedBook().id)?.return_date.split("/")!;
+      (dateRef.current! as any).setInput(year, month, day);
+      }
+  })
+
+  const [dateRec, setDateRec] = useState(false);
+  const [dateOption, setDateOption] = useState("manual");
+  const dateRef = useRef();
+  const [dateInput, setDateInput] = useState({ title: "week", date: getDate(7) });
+
+  return <div
+    className={`popup-input relative flex  gap-2 text-lg m-4 pl-1 bg-white rounded shadow overflow-hidden`}
+    onClick={(e: any) => e.stopPropagation()}
+  >
+    <p className={`title text-white font-bold flex items-center justify-center cursor-default  rounded-r ${INPUT_WIDTH}`}  >تاريخ الارجاع</p>
+    <div className="flex item-center justify-between p-2 w-full" >
+      {
+        dateOption == "manual" ?
+          <DateInput ref={dateRef} />
+          : <>
+            <p>{dateInput.title}</p>
+            <p className="text-end flex-1 mx-2 justify-self-end">{dateInput.date.split(" ")[0]}</p>
+
+          </>
+      }
+      {dateRec ? <DateSelector /> : <></>}
+      <div className="self-center p-1 cursor-pointer" onClick={(e: any) => setDateRec(true)}>
+        <img className="w-4" src={moreIMG} alt="moreIMG" />
+      </div>
+
+    </div>
+  </div>
+}
+
+
+
+
+function ReservedBookExtraInfo() {
+  if (popupState.popupType != "edit-book" || (popupState.popupType == "edit-book" && BookState.books[popupState.editedBookIdx].available)) { return <></>; }
+  let user = UsersState.users.find(user => user.id == BookingAction.getFromBookId(BookState.books[popupState.editedBookIdx].id)?.user_id)!;
+  return <>
+    <hr />
+    <BookDateInput />
+    <div className={'popup-input relative flex  gap-2 text-lg m-4 bg-white rounded shadow overflow-hidden cursor-pointer'}
+      onClick={() => toggleEditUserID(user.id)}
+    >
+      <p className={`title text-white flex items-center justify-center w-32 font-bold rounded-r ` + INPUT_WIDTH}>العضو</p>
+      <p className="p-2 w-full">{user.first_name + " " + user.last_name}</p>
+    </div>
+  </>
 }

@@ -86,6 +86,7 @@ function Books() {
         <div className="flex flex-row align-center justify-between gap-80">
             <SearchBar placeholder="ابحث عن كتاب..." ref={searcBarRef} onEnter={onFilter} />
             <section className="flex flex-row gap-2">
+
                 <button className="interactive-button px-4  py-3 rounded shadow text-white flex gap-4 align-center justify-center h-fit" onClick={toggleAddBook
 
                 }>

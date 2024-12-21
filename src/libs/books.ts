@@ -88,6 +88,10 @@ const BookAction = {
         let books: Book[] = parseData(filtered);
         BookState.books = books;
 
+    },
+
+    editedBook : function() : Book  {
+        return BookState.books[popupState.editedBookIdx]
     }
 };
 

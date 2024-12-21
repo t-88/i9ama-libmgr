@@ -1,5 +1,8 @@
 import { proxy } from "valtio";
 import GState from "./gstate";
+import { popupState } from "./popup";
+import { BookAction } from "./books";
+import { UserAction } from "./users";
 
 interface Borrowed {
     id: string,
@@ -42,6 +45,12 @@ const BookingAction = {
     getFromBookId : (book_id : string) => {
         return  BookingsState.borrowed.find((booked)=>  booked.book_id == book_id);
         
+    },
+    returnCurBook : () => {
+        (window as any).db.borrowed.returnBook(BookAction.editedBook().id);
+        BookingAction.loadAll();
+        BookAction.loadAll();
+        UserAction.loadAll();
     }
 };
 

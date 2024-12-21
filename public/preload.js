@@ -139,7 +139,6 @@ const BorrowBooksDB = {
         })
     },
     insert: (bookID, userID, adminID, return_date) => {
-
         const update_user = db.prepare(`UPDATE users SET reserved_book = 1 WHERE id = ?`);
         update_user.run([userID]);
 
@@ -153,6 +152,12 @@ const BorrowBooksDB = {
         const stmt = db.prepare("SELECT * FROM borrowbooks");
         return stmt.all();
     },
+    returnBook : (book_id) => {
+        let info = db.prepare(`SELECT * FROM borrowbooks where book_id = ?`).get(book_id);
+        db.prepare(`DELETE FROM  borrowbooks where book_id = ?`).run(book_id);
+        db.prepare(`UPDATE users SET reserved_book = 0 WHERE id = ?`).run(info.user_id);
+        db.prepare(`UPDATE books SET available = 1 WHERE id = ?`).run(info.book_id);
+    }
 };
 const BooksDB = {
     create: () => {
