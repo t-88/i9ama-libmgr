@@ -157,6 +157,16 @@ const BorrowBooksDB = {
         db.prepare(`DELETE FROM  borrowbooks where book_id = ?`).run(book_id);
         db.prepare(`UPDATE users SET reserved_book = 0 WHERE id = ?`).run(info.user_id);
         db.prepare(`UPDATE books SET available = 1 WHERE id = ?`).run(info.book_id);
+    },
+    queryAdmin : (admin_id) =>  {
+        return db.prepare(`
+            SELECT * FROM borrowbooks JOIN books 
+            on borrowbooks.book_id = books.id
+            where borrowbooks.admin_id = ?
+        `).all([admin_id]);
+    },
+    updateDate: (id, date) => {
+        console.log(db.prepare("UPDATE borrowbooks SET return_date = ? where borrowbooks.book_id = ?").run([date,id]));
     }
 };
 const BooksDB = {
@@ -181,7 +191,12 @@ const BooksDB = {
 
         BookTagsDB.insert(book_id, tags_ids);
     },
-    update: (id, title, author, publish_year, tags) => {
+    update: (id, title, author, publish_year, tags,date) => {
+        if(date) {
+            BorrowBooksDB.updateDate(id,date);
+        }
+
+
         BookTagsDB.update(id, tags);
         const stmt = db.prepare(`UPDATE books 
                                  SET title = ? ,author = ? ,publish_year = ?

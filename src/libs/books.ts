@@ -1,6 +1,7 @@
 import { proxy } from "valtio";
 import OptionsComp from "../comps/OptionsComp";
 import { popupState, toggleEditBook } from "./popup";
+import { BookingAction } from "./booking";
 
 
 
@@ -66,9 +67,10 @@ const BookAction = {
         BookAction.remove(BookState.books[popupState.editedAdminIdx].id);
         BookAction.loadAll();
     },
-    update: (title: string, author: string, publish_year: string, tags: string[]) => {
-        (window as any).db.books.update(BookState.books[popupState.editedBookIdx].id, title, author, publish_year, [...tags]);
+    update: (title: string, author: string, publish_year: string, tags: string[],date?:  string) => {
+        (window as any).db.books.update(BookState.books[popupState.editedBookIdx].id, title, author, publish_year, [...tags],date);
         BookAction.loadAll();
+        BookingAction.loadAll();
 
     },
     add: (title: string, author: string, publish_year: string, tags: string[]) => {

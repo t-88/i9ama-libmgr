@@ -7,9 +7,10 @@ import { validate_inputNotEmpty } from "../../libs/validation";
 import "./AddAdminPopup.css"
 import ImgUpload from "../ImgUpload";
 import { useEffect, useRef, useState } from "react";
-import { hidePopup, popupState } from "../../libs/popup";
+import { hidePopup, popupState, toggleEditBookID } from "../../libs/popup";
 import AdminsState, { AdminAction } from "../../libs/admins";
 import userIMG from "../../assets/user.png";
+import BookingsState, { BookingAction } from "../../libs/booking";
 
 
 const INPUT_TITLE_WIDTH = "w-48";
@@ -62,6 +63,10 @@ export default function AddAdminPopup() {
     popupState.popupVis = false;
   }
 
+  function showBookPopup(book : any) {
+    toggleEditBookID(book.id);
+  }
+
   useEffect(() => {
     if (popupState.popupType == "edit-admin") {
       let admin = AdminsState.admins[popupState.editedAdminIdx];
@@ -76,19 +81,23 @@ export default function AddAdminPopup() {
   }
 
 
-
   const fNameRef = useRef<InputRef | null>(null);
   const lNameRef = useRef<InputRef | null>(null);
+  const [adminBooks, setAdminBooks] = useState<any>([]);
 
   const [mainImg, setMainImg] = useState<any>([]);
   if (popupState.popupType == 'edit-admin' && mainImg.length == 0) {
     let admin = AdminsState.admins[popupState.editedAdminIdx];
     setMainImg([admin.img]);
+
+    let admin_books = BookingAction.queryAdmin(admin.id);
+    setAdminBooks(admin_books);
   }
+
 
   return <div className='filter-popup rounded shadow w-2/4' onClick={(e) => e.stopPropagation()} >
     <BgPattern />
-    <div className='relative z-10 w-full flex flex-col gap-5 px-6 py-8' >
+    <div className='relative z-10 w-full flex flex-col gap-2 px-6 py-8' >
       <div className='self-end -mb-6 cursor-pointer w-fit h-fit' onClick={() => popupState.popupVis = false}>
         <img src={closeIMG} alt="closeIMG" width={16} onClick={() => hidePopup()} />
       </div>
@@ -102,10 +111,10 @@ export default function AddAdminPopup() {
       }
 
       <div
-      onClick={async () => setMainImg(await onUploadImg())}
+        onClick={async () => setMainImg(await onUploadImg())}
         className={`img-frame flex items-center justify-center  
                     w-28 h-28 bg-white self-center rounded-full overflow-hidden border-4
-                    ${popupState.popupType || mainImg  == "edit-admin" ? "" : "cursor-pointer bg-zinc-200"}
+                    ${popupState.popupType || mainImg == "edit-admin" ? "" : "cursor-pointer bg-zinc-200"}
                   `}>
         {
           popupState.popupType == "edit-admin" || mainImg.length != 0 ?
@@ -122,8 +131,24 @@ export default function AddAdminPopup() {
         <Input titleClassName={INPUT_TITLE_WIDTH} ref={fNameRef} title="الاسم" placeholder="ادخل الاسم... " />
         <Input titleClassName={INPUT_TITLE_WIDTH} ref={lNameRef} title="اللقب" placeholder="ادخل اللقب... " />
 
-        {/* <ImgUpload ref={mainImgRef} titleClassName={INPUT_TITLE_WIDTH} title="صورة" onUploadImg={onUploadImg} /> */}
+
       </section>
+      <section className="m-4 flex flex-col gap-4 max-h-32">
+        <h1 className='text-xl font-bold'>الكتب المحجوزة من طرف المسئول</h1>
+        <div className="mx-4 overflow-y-scroll p-2 flex flex-col">
+          {
+            adminBooks.map((book : any,idx : number) => {
+              return <div key={book.id} onClick={() => showBookPopup(book)} className={`cursor-pointer hover:bg-gray-50 bg-white rounded`}>
+                <h1 className="py-2">{book.title}</h1>
+                <hr />
+              </div>
+            })
+          }
+
+        </div>
+      </section>
+
+
       <ActionButtons onAddAdmin={onAddAdmin} onDeleteAdmin={onDeleteAdmin} onSaveAdmin={onSaveAdmin} />
 
     </div>

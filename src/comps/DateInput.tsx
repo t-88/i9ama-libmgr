@@ -6,7 +6,7 @@ const DateInput = forwardRef(function ({ }, ref: ForwardedRef<any>) {
         return {
             getInput: (): string => {
                 const date =  new Date(yearRef.current!.value + "-" + monthRef.current!.value + "-"  + dayRef.current!.value);
-                return date.toISOString().split(" ")[1].slice(0, 19).replace('T', ' ').replaceAll("-","/");
+                return date.toISOString().replace('T', ' ').split(" ")[0].replaceAll("-","/");
             },
             setInput: (year : string,month: string ,day: string) => {
                 dayRef.current!.value = day; 
@@ -22,12 +22,15 @@ const DateInput = forwardRef(function ({ }, ref: ForwardedRef<any>) {
 
 
     let limitInput = (ref: any, max: number) => {
+        if(ref.current!.value == "" || Number.isNaN(Number.parseInt(ref.current!.value))) {
+            ref.current!.value = "1";
+        }
         ref.current!.value = Math.max(1, Math.min(max, Number.parseInt(ref.current!.value)));
     } 
     return <div className="w-64 flex flex-row gap-1">
         <input ref={dayRef} onChange={(e) => limitInput(dayRef, 30)} maxLength={2} className="w-12 text-center  border rounded px-2" placeholder="dd" type="text" />/
         <input ref={monthRef} onChange={(e) => limitInput(monthRef, 12)} maxLength={2} className="w-12 text-center  border rounded px-2" placeholder="mm" type="text" />/
-        <input ref={yearRef} maxLength={4} className="w-16 text-center border rounded px-2" placeholder="yyyy" type="text" />
+        <input ref={yearRef}  onChange={(e) => limitInput(yearRef, 5000)} maxLength={4} className="w-16 text-center border rounded px-2" placeholder="yyyy" type="text" />
     </div>
 });
 

@@ -1,5 +1,6 @@
 import { proxy } from "valtio";
 import UsersState from "./users";
+import BookState from "./books";
 
 
 type PopupType = "book-book" 
@@ -37,6 +38,15 @@ function toggleEditBook(idx: number) {
     popupState.popupType = "edit-book";
     popupState.editedBookIdx = idx;
 }
+function toggleEditBookID(id: string) {
+    for(let i = 0; i <   BookState.books.length; i++) {
+        if(BookState.books[i].id == id) {
+            toggleEditBook(i);
+            break;
+        }
+    }
+}
+
 function toggleAddUser() {
     popupState.popupVis = true;
     popupState.popupType = "add-user";
@@ -80,7 +90,7 @@ export {
     toggleEditAdmin,
     toggleEditUserID,
     hidePopup,
-    
+    toggleEditBookID,
     popupState,
 }
 

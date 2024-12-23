@@ -51,6 +51,9 @@ const BookingAction = {
         BookingAction.loadAll();
         BookAction.loadAll();
         UserAction.loadAll();
+    },
+    queryAdmin: (admin_id : string) => {
+        return (window as any).db.borrowed.queryAdmin(admin_id);
     }
 };
 

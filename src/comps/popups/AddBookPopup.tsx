@@ -6,7 +6,7 @@ import addIMG from "../../assets/add.png";
 import subIMG from "../../assets/sub.png";
 
 import GState from "../../libs/gstate";
-import { useEffect, useRef, useState } from "react";
+import { ForwardedRef, forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { useSnapshot } from "valtio";
 import "./AddBookPopup.css";
 import { validate_inputNotEmpty, validate_inputNumber, validate_noComma } from "../../libs/validation";
@@ -49,10 +49,9 @@ export default function AddBookPopup() {
     let titleValid = titleRef.current?.checkInput({ func: validate_inputNotEmpty, msg: "تم ادخال اسم فارغ, يرجي ادخال اسم صحيح" });
     let authorValid = authorRef.current?.checkInput({ func: validate_inputNotEmpty, msg: "تم ادخال اسم فارغ, يرجي ادخال اسم صحيح" });
     let yearValid = yearRef.current?.checkInput({ func: validate_inputNumber, msg: "يرجى ادخال عام نشر صحيح" });
-
     if (!(titleValid && authorValid && yearValid)) return;
 
-    BookAction.update(titleRef.current!.getInput(), authorRef.current!.getInput(), yearRef.current!.getInput(), tags);
+    BookAction.update(titleRef.current!.getInput(), authorRef.current!.getInput(), yearRef.current!.getInput(), tags,(dateRef.current! as any).getInput());
   }
 
   function onAddTag() {
@@ -67,15 +66,28 @@ export default function AddBookPopup() {
     tags.splice(tags.indexOf(tag), 1);
     setTags([...tags]);
   }
+
+  function ReservedBookExtraInfo() {
+    if (popupState.popupType != "edit-book" || (popupState.popupType == "edit-book" && BookState.books[popupState.editedBookIdx].available)) { return <></>; }
+    let user = UsersState.users.find(user => user.id == BookingAction.getFromBookId(BookState.books[popupState.editedBookIdx].id)?.user_id)!;
+    return <>
+      <hr />
+      <BookDateInput ref={dateRef} />
+      <div className={'popup-input relative flex  gap-2 text-lg m-4 bg-white rounded shadow overflow-hidden cursor-pointer'}
+        onClick={() => toggleEditUserID(user.id)}
+      >
+        <p className={`title text-white flex items-center justify-center w-32 font-bold rounded-r ` + INPUT_WIDTH}>العضو</p>
+        <p className="p-2 w-full">{user.first_name + " " + user.last_name}</p>
+      </div>
+    </>
+  }
+
   useEffect(() => {
     if (popupState.popupType == "edit-book") {
       titleRef.current!.setInput(BookState.books[popupState.editedBookIdx].title);
       authorRef.current!.setInput(BookState.books[popupState.editedBookIdx].author);
       yearRef.current!.setInput(BookState.books[popupState.editedBookIdx].publish_year);
       setTags(BookState.books[popupState.editedBookIdx].tags);
-
-
-
 
     }
   }, [popupState.popupType]);
@@ -90,6 +102,7 @@ export default function AddBookPopup() {
   const yearRef = useRef<InputRef | null>(null);
   const tagRef = useRef<InputRef>(null);
   const [tags, setTags] = useState<string[]>([]);
+  const dateRef = useRef();
   useSnapshot(GState);
 
 
@@ -183,7 +196,7 @@ function ActionButtons({ onAddBook, onUpateBook, onRemoveBook, onReturnBook }: {
 }
 
 
-function BookDateInput() {
+const BookDateInput = forwardRef(function({},ref : ForwardedRef<any> ) {
   function DateSelector() {
     function selectDate(option: DateSelOption) {
       setDateOption(option);
@@ -210,6 +223,19 @@ function BookDateInput() {
       (dateRef.current! as any).setInput(year, month, day);
       }
   })
+
+  useImperativeHandle(ref,() => {
+    return {
+      getInput : () =>  {
+        if(dateRef.current) {
+          return (dateRef.current! as any).getInput();
+        } else {
+          return dateInput.date;
+        }
+      }
+    }
+
+  });
 
   const [dateRec, setDateRec] = useState(false);
   const [dateOption, setDateOption] = useState("manual");
@@ -238,22 +264,7 @@ function BookDateInput() {
 
     </div>
   </div>
-}
+});
 
 
 
-
-function ReservedBookExtraInfo() {
-  if (popupState.popupType != "edit-book" || (popupState.popupType == "edit-book" && BookState.books[popupState.editedBookIdx].available)) { return <></>; }
-  let user = UsersState.users.find(user => user.id == BookingAction.getFromBookId(BookState.books[popupState.editedBookIdx].id)?.user_id)!;
-  return <>
-    <hr />
-    <BookDateInput />
-    <div className={'popup-input relative flex  gap-2 text-lg m-4 bg-white rounded shadow overflow-hidden cursor-pointer'}
-      onClick={() => toggleEditUserID(user.id)}
-    >
-      <p className={`title text-white flex items-center justify-center w-32 font-bold rounded-r ` + INPUT_WIDTH}>العضو</p>
-      <p className="p-2 w-full">{user.first_name + " " + user.last_name}</p>
-    </div>
-  </>
-}
