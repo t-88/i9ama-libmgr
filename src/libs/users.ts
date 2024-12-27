@@ -44,7 +44,7 @@ function loadAll() {
             schoolPaper : "",
             options_comp: () => OptionsComp({ idx: i, onClick : toggleEditUser }),
         });
-        let {img,idImg,schoolIdImg,schoolPaper, } = (window as any).utils.loadUserImgs(users[i].imgsUUID);
+        let {img,idImg,schoolIdImg,schoolPaper} = (window as any).utils.loadUserImgs(users[i].imgsUUID);
         users[i].img = img;
         users[i].idImg = idImg;
         users[i].schoolIdImg = schoolIdImg;
