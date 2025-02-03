@@ -91,6 +91,10 @@
   margin-bottom: calc(var(--spacing) * -6);
 }
 
+.mb-6 {
+  margin-bottom: calc(var(--spacing) * 6);
+}
+
 .block {
   display: block;
 }
@@ -427,6 +431,10 @@
   background-color: var(--color-gray-200);
 }
 
+.bg-red-300 {
+  background-color: var(--color-red-300);
+}
+
 .bg-white {
   background-color: var(--color-white);
 }
@@ -441,6 +449,10 @@
 
 .bg-zinc-200 {
   background-color: var(--color-zinc-200);
+}
+
+.object-fill {
+  object-fit: fill;
 }
 
 .p-1 {
@@ -546,6 +558,11 @@
 .text-xl {
   font-size: var(--text-xl);
   line-height: var(--tw-leading, var(--text-xl--line-height));
+}
+
+.text-xs {
+  font-size: var(--text-xs);
+  line-height: var(--tw-leading, var(--text-xs--line-height));
 }
 
 .font-bold {

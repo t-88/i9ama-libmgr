@@ -10,6 +10,7 @@ import { useEffect, useRef, useState } from "react";
 import { hidePopup, popupState, toggleEditBookID } from "../../libs/popup";
 import AdminsState, { AdminAction } from "../../libs/admins";
 import userIMG from "../../assets/user.png";
+import profile from "../../assets/profile.svg";
 import BookingsState, { BookingAction } from "../../libs/booking";
 import { Bounce, Flip, toast } from "react-toastify";
 
@@ -21,44 +22,56 @@ export default function AddAdminPopup() {
 
 
   function onAddAdmin() {
-    const fNameValid = fNameRef.current?.checkInput({ func: validate_inputNotEmpty, msg: "" });
-    const lNameValid = lNameRef.current?.checkInput({ func: validate_inputNotEmpty, msg: "" });
+		const fNameValid = fNameRef.current?.checkInput({
+			func: validate_inputNotEmpty,
+			msg: "",
+		});
+		const lNameValid = lNameRef.current?.checkInput({
+			func: validate_inputNotEmpty,
+			msg: "",
+		});
 
+		if (!(fNameValid && lNameValid)) {
+			return;
+		}
 
-    if (!(fNameValid && lNameValid)) { return; }
+		AdminAction.add(
+			fNameRef.current!.getInput(),
+			lNameRef.current!.getInput(),
+			mainImg,
+		);
 
-    AdminAction.add(
-      fNameRef.current!.getInput(),
-      lNameRef.current!.getInput(),
-      mainImg,
-    );
-
-
-    fNameRef.current!.setInput("");
-    lNameRef.current!.setInput("");
-    setMainImg([]);
+		fNameRef.current!.setInput("");
+		lNameRef.current!.setInput("");
+		setMainImg([]);
+		hidePopup();
   }
 
-  function onSaveAdmin() {
-    const fNameValid = fNameRef.current?.checkInput({ func: validate_inputNotEmpty, msg: "" });
-    const lNameValid = lNameRef.current?.checkInput({ func: validate_inputNotEmpty, msg: "" });
+  async function onSaveAdmin() {
+		const fNameValid = fNameRef.current?.checkInput({
+			func: validate_inputNotEmpty,
+			msg: "",
+		});
+		const lNameValid = lNameRef.current?.checkInput({
+			func: validate_inputNotEmpty,
+			msg: "",
+		});
 
+		if (!(fNameValid && lNameValid)) return;
 
-    if (!(fNameValid && lNameValid)) { return; }
+		const admin = AdminsState.admins[popupState.editedAdminIdx];
 
+		AdminAction.update(
+			admin.id,
+			admin.imgsUUID,
+			fNameRef.current!.getInput(),
+			lNameRef.current!.getInput(),
+			mainImg, // This holds the current image
+		);
 
-    let admin = AdminsState.admins[popupState.editedAdminIdx];
-
-    AdminAction.update(
-      admin.id,
-      admin.imgsUUID,
-      fNameRef.current!.getInput(),
-      lNameRef.current!.getInput(),
-      mainImg,
-    );
-
+		hidePopup();
   }
-
+  
   function onDeleteAdmin() {
     if (adminBooks.length == 0) {
       AdminAction.removeCurr();
@@ -106,8 +119,9 @@ export default function AddAdminPopup() {
 
 
   async function onUploadImg() {
-    const imgBase64 = await (window as any).utils.open();
-    return imgBase64;
+		const imgBase64 = await (window as any).utils.open();
+
+		return imgBase64;
   }
 
 
@@ -120,65 +134,94 @@ export default function AddAdminPopup() {
 
 
 
+  return (
+		<div
+			className="filter-popup rounded shadow w-2/4"
+			onClick={(e) => e.stopPropagation()}
+		>
+			<BgPattern />
+			<div className="  w-full flex z-10  flex-col gap-2 px-6 py-8">
+				<div className="self-end mb-6 cursor-pointer  w-fit h-fit">
+					<img
+						src={closeIMG}
+						alt="closeIMG"
+						width={16}
+						onClick={() => hidePopup()}
+					/>
+				</div>
 
-  return <div className='filter-popup rounded shadow w-2/4' onClick={(e) => e.stopPropagation()} >
-    <BgPattern />
-    <div className='relative z-10 w-full flex flex-col gap-2 px-6 py-8' >
-      <div className='self-end -mb-6 cursor-pointer w-fit h-fit' onClick={() => popupState.popupVis = false}>
-        <img src={closeIMG} alt="closeIMG" width={16} onClick={() => hidePopup()} />
-      </div>
+				{popupState.popupType == "edit-admin" ? (
+					<h1 className="text-2xl font-bold">
+						تعديل معلومات المسؤول
+					</h1>
+				) : (
+					<h1 className="text-2xl font-bold">اضافة مسؤول جديد</h1>
+				)}
 
-
-      {
-        popupState.popupType == "edit-admin" ?
-          <h1 className='text-2xl font-bold'>تعديل معلومات المسؤول</h1>
-          :
-          <h1 className='text-2xl font-bold'>اضافة مسؤول جديد</h1>
-      }
-
-      <div
-        onClick={async () => setMainImg(await onUploadImg())}
-        className={`img-frame flex items-center justify-center  
+				<div
+					onClick={async () => setMainImg(await onUploadImg())}
+					className={`img-frame flex items-center justify-center  
                     w-28 h-28 bg-white self-center rounded-full overflow-hidden border-4
                     ${popupState.popupType || mainImg == "edit-admin" ? "" : "cursor-pointer bg-zinc-200"}
-                  `}>
-        {
-          popupState.popupType == "edit-admin" || mainImg.length != 0 ?
-            <img src={mainImg} alt="img" />
-            :
-            <img src={userIMG} width={50} alt="img" />
-        }
+                  `}
+				>
+					{popupState.popupType == "edit-admin" ||
+					mainImg.length != 0 ? (
+						<img className="object-fill" src={mainImg} alt="img" />
+					) : (
+						<div className="flex flex-col items-center gap-2">
+							<img
+								className="self-center"
+								src={profile}
+								width={50}
+								alt="img"
+							/>
+							<span className="text-xs">اضف صورة</span>
+						</div>
+					)}
+				</div>
+				<section>
+					<Input
+						titleClassName={INPUT_TITLE_WIDTH}
+						ref={fNameRef}
+						title="الاسم"
+						placeholder="ادخل الاسم... "
+					/>
+					<Input
+						titleClassName={INPUT_TITLE_WIDTH}
+						ref={lNameRef}
+						title="اللقب"
+						placeholder="ادخل اللقب... "
+					/>
+				</section>
+				<section className="m-4 flex flex-col gap-4 max-h-32">
+					<h1 className="text-xl font-bold">
+						الكتب المحجوزة من طرف المسئول
+					</h1>
+					<div className="mx-4 overflow-y-scroll p-2 flex flex-col">
+						{adminBooks.map((book: any, idx: number) => {
+							return (
+								<div
+									key={book.id}
+									onClick={() => showBookPopup(book)}
+									className={`cursor-pointer hover:bg-gray-50 bg-white rounded`}
+								>
+									<h1 className="py-2">{book.title}</h1>
+									<hr className="bg-gray-200" />
+								</div>
+							);
+						})}
+					</div>
+				</section>
 
-
-      </div>
-
-
-      <section>
-        <Input titleClassName={INPUT_TITLE_WIDTH} ref={fNameRef} title="الاسم" placeholder="ادخل الاسم... " />
-        <Input titleClassName={INPUT_TITLE_WIDTH} ref={lNameRef} title="اللقب" placeholder="ادخل اللقب... " />
-
-
-      </section>
-      <section className="m-4 flex flex-col gap-4 max-h-32">
-        <h1 className='text-xl font-bold'>الكتب المحجوزة من طرف المسئول</h1>
-        <div className="mx-4 overflow-y-scroll p-2 flex flex-col">
-          {
-            adminBooks.map((book: any, idx: number) => {
-              return <div key={book.id} onClick={() => showBookPopup(book)} className={`cursor-pointer hover:bg-gray-50 bg-white rounded`}>
-                <h1 className="py-2">{book.title}</h1>
-                <hr className="bg-gray-200" />
-              </div>
-            })
-          }
-
-        </div>
-      </section>
-
-
-      <ActionButtons onAddAdmin={onAddAdmin} onDeleteAdmin={onDeleteAdmin} onSaveAdmin={onSaveAdmin} />
-
-    </div>
-  </div>
+				<ActionButtons
+					onAddAdmin={onAddAdmin}
+					onDeleteAdmin={onDeleteAdmin}
+					onSaveAdmin={onSaveAdmin}
+				/>
+			</div>
+		</div>
+  );
 }
 
 
@@ -189,17 +232,35 @@ function ActionButtons({ onAddAdmin, onDeleteAdmin, onSaveAdmin }: { onAddAdmin:
       <p>اضافة</p>
     </button>
   }
-  return <section className="flex gap-2 self-end">
-    <button onClick={onDeleteAdmin} className='delete-book flex gap-2  self-end  rounded py-1 px-4 text-white text-lg shadow' >
-      <img src={addIMG} height={16} width={16} alt="addIMG" className="self-center" />
-      <p>حدف</p>
-    </button>
+  return (
+		<section className="flex gap-2 self-end">
+			<button
+				onClick={onDeleteAdmin}
+				className="delete-book flex gap-2  self-end  rounded py-1 px-4 text-white text-lg shadow"
+			>
+				<img
+					src={addIMG}
+					height={16}
+					width={16}
+					alt="addIMG"
+					className="self-center"
+				/>
+				<p>حدف</p>
+			</button>
 
-    <button onClick={onSaveAdmin} className='interactive-button flex gap-2  self-end  rounded py-1 px-4 text-white text-lg shadow' >
-      <img src={addIMG} height={16} width={16} alt="addIMG" className="self-center" />
-      <p>حفظ</p>
-    </button>
-
-
-  </section>
+			<button
+				onClick={onSaveAdmin}
+				className="interactive-button flex gap-2  self-end  rounded py-1 bg-red-300 px-4 text-white text-lg shadow"
+			>
+				<img
+					src={addIMG}
+					height={16}
+					width={16}
+					alt="addIMG"
+					className="self-center"
+				/>
+				<p>حفظ</p>
+			</button>
+		</section>
+  );
 }

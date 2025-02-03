@@ -9003,11 +9003,18 @@ function BookBookPopup() {
     ] })
   ] });
 }
+const profile = "data:image/svg+xml,%3c?xml%20version='1.0'%20?%3e%3csvg%20viewBox='0%200%2032%2032'%20xmlns='http://www.w3.org/2000/svg'%3e%3ctitle/%3e%3cg%20id='about'%3e%3cpath%20d='M16,16A7,7,0,1,0,9,9,7,7,0,0,0,16,16ZM16,4a5,5,0,1,1-5,5A5,5,0,0,1,16,4Z'/%3e%3cpath%20d='M17,18H15A11,11,0,0,0,4,29a1,1,0,0,0,1,1H27a1,1,0,0,0,1-1A11,11,0,0,0,17,18ZM6.06,28A9,9,0,0,1,15,20h2a9,9,0,0,1,8.94,8Z'/%3e%3c/g%3e%3c/svg%3e";
 const INPUT_TITLE_WIDTH = "w-48";
 function AddAdminPopup() {
   function onAddAdmin() {
-    const fNameValid = fNameRef.current?.checkInput({ func: validate_inputNotEmpty, msg: "" });
-    const lNameValid = lNameRef.current?.checkInput({ func: validate_inputNotEmpty, msg: "" });
+    const fNameValid = fNameRef.current?.checkInput({
+      func: validate_inputNotEmpty,
+      msg: ""
+    });
+    const lNameValid = lNameRef.current?.checkInput({
+      func: validate_inputNotEmpty,
+      msg: ""
+    });
     if (!(fNameValid && lNameValid)) {
       return;
     }
@@ -9019,21 +9026,31 @@ function AddAdminPopup() {
     fNameRef.current.setInput("");
     lNameRef.current.setInput("");
     setMainImg([]);
+    hidePopup();
   }
   function onSaveAdmin() {
-    const fNameValid = fNameRef.current?.checkInput({ func: validate_inputNotEmpty, msg: "" });
-    const lNameValid = lNameRef.current?.checkInput({ func: validate_inputNotEmpty, msg: "" });
+    const fNameValid = fNameRef.current?.checkInput({
+      func: validate_inputNotEmpty,
+      msg: ""
+    });
+    const lNameValid = lNameRef.current?.checkInput({
+      func: validate_inputNotEmpty,
+      msg: ""
+    });
     if (!(fNameValid && lNameValid)) {
       return;
     }
-    let admin = AdminsState.admins[popupState.editedAdminIdx];
+    const admin = AdminsState.admins[popupState.editedAdminIdx];
+    const updatedImg = mainImg.length > 0 ? mainImg : admin.img;
     AdminAction.update(
       admin.id,
       admin.imgsUUID,
       fNameRef.current.getInput(),
       lNameRef.current.getInput(),
-      mainImg
+      updatedImg
+      // Updated image passed here
     );
+    hidePopup();
   }
   function onDeleteAdmin() {
     if (adminBooks.length == 0) {
@@ -9074,61 +9091,170 @@ function AddAdminPopup() {
   }, []);
   async function onUploadImg() {
     const imgBase64 = await window.utils.open();
+    setMainImg(imgBase64);
     return imgBase64;
   }
   const fNameRef = reactExports.useRef(null);
   const lNameRef = reactExports.useRef(null);
   const [adminBooks, setAdminBooks] = reactExports.useState([]);
   const [mainImg, setMainImg] = reactExports.useState([]);
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "filter-popup rounded shadow w-2/4", onClick: (e) => e.stopPropagation(), children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx(BgPattern, {}),
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative z-10 w-full flex flex-col gap-2 px-6 py-8", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "self-end -mb-6 cursor-pointer w-fit h-fit", onClick: () => popupState.popupVis = false, children: /* @__PURE__ */ jsxRuntimeExports.jsx("img", { src: closeIMG, alt: "closeIMG", width: 16, onClick: () => hidePopup() }) }),
-      popupState.popupType == "edit-admin" ? /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "text-2xl font-bold", children: "تعديل معلومات المسؤول" }) : /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "text-2xl font-bold", children: "اضافة مسؤول جديد" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(
-        "div",
-        {
-          onClick: async () => setMainImg(await onUploadImg()),
-          className: `img-frame flex items-center justify-center  
-                    w-28 h-28 bg-white self-center rounded-full overflow-hidden border-4
-                    ${popupState.popupType || mainImg == "edit-admin" ? "" : "cursor-pointer bg-zinc-200"}
-                  `,
-          children: popupState.popupType == "edit-admin" || mainImg.length != 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("img", { src: mainImg, alt: "img" }) : /* @__PURE__ */ jsxRuntimeExports.jsx("img", { src: userIMG, width: 50, alt: "img" })
-        }
-      ),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Input, { titleClassName: INPUT_TITLE_WIDTH, ref: fNameRef, title: "الاسم", placeholder: "ادخل الاسم... " }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Input, { titleClassName: INPUT_TITLE_WIDTH, ref: lNameRef, title: "اللقب", placeholder: "ادخل اللقب... " })
-      ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { className: "m-4 flex flex-col gap-4 max-h-32", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "text-xl font-bold", children: "الكتب المحجوزة من طرف المسئول" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mx-4 overflow-y-scroll p-2 flex flex-col", children: adminBooks.map((book, idx) => {
-          return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { onClick: () => showBookPopup(book), className: `cursor-pointer hover:bg-gray-50 bg-white rounded`, children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "py-2", children: book.title }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("hr", { className: "bg-gray-200" })
-          ] }, book.id);
-        }) })
-      ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(ActionButtons, { onAddAdmin, onDeleteAdmin, onSaveAdmin })
-    ] })
-  ] });
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    "div",
+    {
+      className: "filter-popup rounded shadow w-2/4",
+      onClick: (e) => e.stopPropagation(),
+      children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(BgPattern, {}),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "  w-full flex z-10  flex-col gap-2 px-6 py-8", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "self-end mb-6 cursor-pointer  w-fit h-fit", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "img",
+            {
+              src: closeIMG,
+              alt: "closeIMG",
+              width: 16,
+              onClick: () => hidePopup()
+            }
+          ) }),
+          popupState.popupType == "edit-admin" ? /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "text-2xl font-bold", children: "تعديل معلومات المسؤول" }) : /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "text-2xl font-bold", children: "اضافة مسؤول جديد" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "div",
+            {
+              onClick: async () => setMainImg(await onUploadImg()),
+              className: `img-frame flex items-center justify-center  
+        w-28 h-28 bg-white self-center rounded-full overflow-hidden border-4
+        ${popupState.popupType || mainImg == "edit-admin" ? "" : "cursor-pointer bg-zinc-200"}`,
+              children: mainImg.length !== 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("img", { className: "object-fill", src: mainImg, alt: "img" }) : /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col items-center gap-2", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  "img",
+                  {
+                    className: "self-center",
+                    src: profile,
+                    width: 50,
+                    alt: "img"
+                  }
+                ),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs", children: "اضف صورة" })
+              ] })
+            }
+          ),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              Input,
+              {
+                titleClassName: INPUT_TITLE_WIDTH,
+                ref: fNameRef,
+                title: "الاسم",
+                placeholder: "ادخل الاسم... "
+              }
+            ),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              Input,
+              {
+                titleClassName: INPUT_TITLE_WIDTH,
+                ref: lNameRef,
+                title: "اللقب",
+                placeholder: "ادخل اللقب... "
+              }
+            )
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { className: "m-4 flex flex-col gap-4 max-h-32", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "text-xl font-bold", children: "الكتب المحجوزة من طرف المسئول" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mx-4 overflow-y-scroll p-2 flex flex-col", children: adminBooks.map((book, idx) => {
+              return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                "div",
+                {
+                  onClick: () => showBookPopup(book),
+                  className: `cursor-pointer hover:bg-gray-50 bg-white rounded`,
+                  children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "py-2", children: book.title }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("hr", { className: "bg-gray-200" })
+                  ]
+                },
+                book.id
+              );
+            }) })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            ActionButtons,
+            {
+              onAddAdmin,
+              onDeleteAdmin,
+              onSaveAdmin
+            }
+          )
+        ] })
+      ]
+    }
+  );
 }
-function ActionButtons({ onAddAdmin, onDeleteAdmin, onSaveAdmin }) {
+function ActionButtons({
+  onAddAdmin,
+  onDeleteAdmin,
+  onSaveAdmin
+}) {
   if (popupState.popupType == "add-admin") {
-    return /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { onClick: onAddAdmin, className: "interactive-button flex gap-2  self-end  rounded py-1 px-4 text-white text-lg shadow", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("img", { src: addIMG, height: 16, width: 16, alt: "addIMG", className: "self-center" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: "اضافة" })
-    ] });
+    return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+      "button",
+      {
+        onClick: onAddAdmin,
+        className: "interactive-button flex gap-2  self-end  rounded py-1 px-4 text-white text-lg shadow",
+        children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "img",
+            {
+              src: addIMG,
+              height: 16,
+              width: 16,
+              alt: "addIMG",
+              className: "self-center"
+            }
+          ),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: "اضافة" })
+        ]
+      }
+    );
   }
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { className: "flex gap-2 self-end", children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { onClick: onDeleteAdmin, className: "delete-book flex gap-2  self-end  rounded py-1 px-4 text-white text-lg shadow", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("img", { src: addIMG, height: 16, width: 16, alt: "addIMG", className: "self-center" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: "حدف" })
-    ] }),
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { onClick: onSaveAdmin, className: "interactive-button flex gap-2  self-end  rounded py-1 px-4 text-white text-lg shadow", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("img", { src: addIMG, height: 16, width: 16, alt: "addIMG", className: "self-center" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: "حفظ" })
-    ] })
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(
+      "button",
+      {
+        onClick: onDeleteAdmin,
+        className: "delete-book flex gap-2  self-end  rounded py-1 px-4 text-white text-lg shadow",
+        children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "img",
+            {
+              src: addIMG,
+              height: 16,
+              width: 16,
+              alt: "addIMG",
+              className: "self-center"
+            }
+          ),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: "حدف" })
+        ]
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(
+      "button",
+      {
+        onClick: onSaveAdmin,
+        className: "interactive-button flex gap-2  self-end  rounded py-1 bg-red-300 px-4 text-white text-lg shadow",
+        children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "img",
+            {
+              src: addIMG,
+              height: 16,
+              width: 16,
+              alt: "addIMG",
+              className: "self-center"
+            }
+          ),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: "حفظ" })
+        ]
+      }
+    )
   ] });
 }
 function PopUp() {
