@@ -7822,7 +7822,16 @@ async function loadAll$2() {
       idImg: "",
       schoolIdImg: "",
       schoolPaper: "",
-      options_comp: () => OptionsComp({ idx: i2, onClick: toggleEditUser })
+      options_comp: () => OptionsComp({ idx: i2, onClick: toggleEditUser }),
+      // New fields i added them suuuuuuuuuui
+      phone_number: fetched[i2]["phone_number"] ?? "",
+      date_of_birth: fetched[i2]["date_of_birth"] ?? "",
+      email: fetched[i2]["email"] ?? "",
+      state: fetched[i2]["state"] ?? "",
+      place_of_accommodation: fetched[i2]["place_of_accommodation"] ?? "",
+      room_number: fetched[i2]["room_number"] ?? "",
+      speciality: fetched[i2]["speciality"] ?? "",
+      year_of_study: fetched[i2]["year_of_study"] ?? 0
     });
     let { img, idImg, schoolIdImg, schoolPaper } = window.utils.loadUserImgs(users[i2].imgsUUID);
     users[i2].img = img;
@@ -7843,20 +7852,51 @@ const UserAction = {
     await UserAction.remove(UsersState.users[popupState.editedAdminIdx].id);
     await UserAction.loadAll();
   },
-  update: (id2, imgsUUID, fname, lname, school, img, idImg, schoolIdImg, schoolPaper) => {
-    window.db.users.update(id2, imgsUUID, fname, lname, school, img, idImg, schoolIdImg, schoolPaper);
+  update: (id2, imgsUUID, fname, lname, school, img, idImg, schoolIdImg, schoolPaper, phone_number, date_of_birth, email, state, place_of_accommodation, room_number, speciality, year_of_study) => {
+    window.db.users.update(
+      id2,
+      imgsUUID,
+      fname,
+      lname,
+      school,
+      img,
+      idImg,
+      schoolIdImg,
+      schoolPaper,
+      phone_number,
+      date_of_birth,
+      email,
+      state,
+      place_of_accommodation,
+      room_number,
+      speciality,
+      year_of_study
+    );
     UserAction.loadAll();
   },
-  add: (fname, lname, school, img, idImg, schoolIdImg, schoolPaper) => {
-    window.db.users.insert(fname, lname, school, img, idImg, schoolIdImg, schoolPaper);
+  add: (fname, lname, school, img, idImg, schoolIdImg, schoolPaper, phone_number, date_of_birth, email, state, place_of_accommodation, room_number, speciality, year_of_study) => {
+    window.db.users.insert(
+      fname,
+      lname,
+      school,
+      img,
+      idImg,
+      schoolIdImg,
+      schoolPaper,
+      phone_number,
+      date_of_birth,
+      email,
+      state,
+      place_of_accommodation,
+      room_number,
+      speciality,
+      year_of_study
+    );
     UserAction.loadAll();
   },
-  getUser: (id2) => {
-    return UsersState.users.find((user) => user.id == id2);
-  },
-  getCurUser: () => {
-    return UsersState.users[popupState.editedUserIdx];
-  }
+  getUser: (id2) => UsersState.users.find((user) => user.id === id2),
+  // edited this suuuuuuuuuui
+  getCurUser: () => UsersState.users[popupState.editedUserIdx]
 };
 function r$1(e) {
   var t2, f2, n2 = "";
@@ -9028,7 +9068,7 @@ function AddAdminPopup() {
     setMainImg([]);
     hidePopup();
   }
-  function onSaveAdmin() {
+  async function onSaveAdmin() {
     const fNameValid = fNameRef.current?.checkInput({
       func: validate_inputNotEmpty,
       msg: ""
@@ -9037,18 +9077,15 @@ function AddAdminPopup() {
       func: validate_inputNotEmpty,
       msg: ""
     });
-    if (!(fNameValid && lNameValid)) {
-      return;
-    }
+    if (!(fNameValid && lNameValid)) return;
     const admin = AdminsState.admins[popupState.editedAdminIdx];
-    const updatedImg = mainImg.length > 0 ? mainImg : admin.img;
     AdminAction.update(
       admin.id,
       admin.imgsUUID,
       fNameRef.current.getInput(),
       lNameRef.current.getInput(),
-      updatedImg
-      // Updated image passed here
+      mainImg
+      // This holds the current image
     );
     hidePopup();
   }
@@ -9091,7 +9128,6 @@ function AddAdminPopup() {
   }, []);
   async function onUploadImg() {
     const imgBase64 = await window.utils.open();
-    setMainImg(imgBase64);
     return imgBase64;
   }
   const fNameRef = reactExports.useRef(null);
@@ -9121,9 +9157,10 @@ function AddAdminPopup() {
             {
               onClick: async () => setMainImg(await onUploadImg()),
               className: `img-frame flex items-center justify-center  
-        w-28 h-28 bg-white self-center rounded-full overflow-hidden border-4
-        ${popupState.popupType || mainImg == "edit-admin" ? "" : "cursor-pointer bg-zinc-200"}`,
-              children: mainImg.length !== 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("img", { className: "object-fill", src: mainImg, alt: "img" }) : /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col items-center gap-2", children: [
+                    w-28 h-28 bg-white self-center rounded-full overflow-hidden border-4
+                    ${popupState.popupType || mainImg == "edit-admin" ? "" : "cursor-pointer bg-zinc-200"}
+                  `,
+              children: popupState.popupType == "edit-admin" || mainImg.length != 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("img", { className: "object-fill", src: mainImg, alt: "img" }) : /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col items-center gap-2", children: [
                 /* @__PURE__ */ jsxRuntimeExports.jsx(
                   "img",
                   {
@@ -9187,32 +9224,12 @@ function AddAdminPopup() {
     }
   );
 }
-function ActionButtons({
-  onAddAdmin,
-  onDeleteAdmin,
-  onSaveAdmin
-}) {
+function ActionButtons({ onAddAdmin, onDeleteAdmin, onSaveAdmin }) {
   if (popupState.popupType == "add-admin") {
-    return /* @__PURE__ */ jsxRuntimeExports.jsxs(
-      "button",
-      {
-        onClick: onAddAdmin,
-        className: "interactive-button flex gap-2  self-end  rounded py-1 px-4 text-white text-lg shadow",
-        children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(
-            "img",
-            {
-              src: addIMG,
-              height: 16,
-              width: 16,
-              alt: "addIMG",
-              className: "self-center"
-            }
-          ),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: "اضافة" })
-        ]
-      }
-    );
+    return /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { onClick: onAddAdmin, className: "interactive-button flex gap-2  self-end  rounded py-1 px-4 text-white text-lg shadow", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("img", { src: addIMG, height: 16, width: 16, alt: "addIMG", className: "self-center" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: "اضافة" })
+    ] });
   }
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { className: "flex gap-2 self-end", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs(

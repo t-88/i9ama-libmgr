@@ -27,17 +27,7 @@ function NavBar() {
 
   </div>
 
-    // return <div className='flex flex-row'>
-    //     <section className='drop-shadow drawer-container flex flex-row items-center justify-center overflow-hidden w-full scale-90'>
-    //         <div onClick={toBooks} className={`nav-item ${GState.tabIdx == "books" ? "nav-active" : ""}  w-20 h-full rounded-r-lg cursor-pointer flex align-center  justify-center p-3`}>
-    //             <img src={books} alt="books" />
-    //         </div>
-    //         <div onClick={toUsers} className={`nav-item  ${GState.tabIdx == "users" ? "nav-active" : ""}  w-20 h-full rounded-l-lg cursor-pointer flex align-center  justify-center p-3`} >
-    //             <img src={group} alt="group" />
-    //         </div>
-    
-    //     </section>
-    // </div>
+
 }
 
 export default NavBar;
