@@ -11,7 +11,7 @@ import AddAdminPopup from "./AddAdminPopup";
 export default function PopUp() {
     useSnapshot(popupState);
   
-    return <div id='popup' onClick={() => popupState.popupVis = false} style={{ pointerEvents: !popupState.popupVis ? "none" : "auto" }}>
+    return <div id='popup' onClick={() => {}} style={{ pointerEvents: !popupState.popupVis ? "none" : "auto" }}>
       
       <PageTransition cond={!popupState.popupVis}>
         <div id='popup-container'>

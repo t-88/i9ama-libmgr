@@ -5,9 +5,6 @@ const utils = require("@electron-toolkit/utils");
 const fs = require("fs");
 const icon = path.join(__dirname, "../../resources/icon.png");
 function createWindow() {
-  console.log({ dirname: __dirname });
-  console.log({ getAppPath: electron.app.getAppPath() });
-  console.log({ resourcesPath: process.resourcesPath });
   const mainWindow = new electron.BrowserWindow({
     width: 100,
     height: 100,

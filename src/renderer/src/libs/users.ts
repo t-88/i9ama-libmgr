@@ -67,11 +67,13 @@ const UserAction = {
     update: (id : string,imgsUUID : string,fname: string, lname: string, school: string, img: string, idImg: string, schoolIdImg: string, schoolPaper: string) => { 
         (window as any).db.users.update(id,imgsUUID,fname, lname, school, img, idImg, schoolIdImg, schoolPaper);
         UserAction.loadAll();
-
     },
-    add: (fname: string, lname: string, school: string, img: string, idImg: string, schoolIdImg: string, schoolPaper: string) => {
-        (window as any).db.users.insert(fname, lname, school, img, idImg, schoolIdImg, schoolPaper);
-        UserAction.loadAll();
+    add: (data)  => { // fname: string, lname: string, school: string, img: string, idImg: string, schoolIdImg: string, schoolPaper: string) => {
+        const parseData = JSON.parse(JSON.stringify(data));
+        (window as any).db.users.insert(parseData); 
+        // fname, lname, school, img, idImg, schoolIdImg, schoolPaper);
+        // UserAction.loadAll();
+        console.log()
     },
     getUser : (id) => {
         return UsersState.users.find(user => user.id == id);

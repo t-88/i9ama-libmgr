@@ -1,0 +1,2 @@
+- cllose button doesnt close
+- save doesnt work

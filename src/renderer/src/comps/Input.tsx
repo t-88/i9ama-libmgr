@@ -10,7 +10,7 @@ interface InputRef {
   getInput: () => string,
   setInput: (text: string) => null,
 };
-const Input = forwardRef(function ({ title, placeholder, onEnter, className, titleClassName, children, onChange, callbacks }: { title?: string, placeholder: string, className?: string,titleClassName?: string, onEnter?: any, children?: any, onChange?: any, callbacks?: any }, ref: ForwardedRef<InputRef>) {
+const Input = forwardRef(function ({ title, placeholder, onEnter, className, titleClassName, children, onChange, callbacks, type,defaultVal   }: { title?: string, placeholder: string, className?: string,titleClassName?: string, onEnter?: any, children?: any, onChange?: any, callbacks?: any, type?: any ,defaultVal?: any}, ref: ForwardedRef<InputRef>) {
   function _onChange() {
     localRef.current?.classList.remove("popup-error");
     localRef.current?.classList.remove("popup-error-same");
@@ -76,6 +76,9 @@ const Input = forwardRef(function ({ title, placeholder, onEnter, className, tit
   children = children ?? <></>;
   onChange = onChange ?? function (title: string) { };
   callbacks = callbacks ?? [];
+  type = type ?? "text";
+  defaultVal = defaultVal ?? '';
+  
 
 
   return <div ref={localRef} className={'popup-input relative flex  gap-2 text-lg m-4 bg-white rounded shadow overflow-hidden ' + className}>
@@ -83,7 +86,7 @@ const Input = forwardRef(function ({ title, placeholder, onEnter, className, tit
       title == "" ? <></> : <p className={`title text-white flex items-center justify-center cursor-default w-32 font-bold rounded-r ${titleClassName}`}  >{title}</p>
     }
 
-    <input onChange={_onChange}  {...callbacks} type="text" placeholder={placeholder} className='p-2 w-full outline-none' onKeyDown={(e) => e.key == "Enter" ? onEnter() : function () { }} />
+    <input defaultValue={defaultVal}  onChange={_onChange}  {...callbacks} type={type} placeholder={placeholder} className='p-2 w-full outline-none' onKeyDown={(e) => e.key == "Enter" ? onEnter() : function () { }} />
 
     <img src={infoIMG} width={35} className="info-icon self-center px-2 cursor-pointer" alt="infoIMG" />
 

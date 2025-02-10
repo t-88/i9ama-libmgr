@@ -124,10 +124,10 @@ export default function AddAdminPopup() {
   return <div className='filter-popup rounded shadow w-2/4' onClick={(e) => e.stopPropagation()} >
     <BgPattern />
     <div className='relative z-10 w-full flex flex-col gap-2 px-6 py-8' >
-      <div className='self-end -mb-6 cursor-pointer w-fit h-fit' onClick={() => popupState.popupVis = false}>
-        <img src={closeIMG} alt="closeIMG" width={16} onClick={() => hidePopup()} />
+      
+      <div className='self-end cursor-pointer w-fit h-fit' onClick={() =>  hidePopup() }>
+        <img src={closeIMG} alt="closeIMG" width={16}  />
       </div>
-
 
       {
         popupState.popupType == "edit-admin" ?
@@ -152,7 +152,6 @@ export default function AddAdminPopup() {
 
       </div>
 
-
       <section>
         <Input titleClassName={INPUT_TITLE_WIDTH} ref={fNameRef} title="الاسم" placeholder="ادخل الاسم... " />
         <Input titleClassName={INPUT_TITLE_WIDTH} ref={lNameRef} title="اللقب" placeholder="ادخل اللقب... " />
@@ -175,7 +174,7 @@ export default function AddAdminPopup() {
       </section>
 
 
-      <ActionButtons onAddAdmin={onAddAdmin} onDeleteAdmin={onDeleteAdmin} onSaveAdmin={onSaveAdmin} />
+      <ActionButtons onAddAdmin={onAddAdmin} onDeleteAdmin={onDeleteAdmin} onSaveAdmin={onSaveAdmin} /> 
 
     </div>
   </div>

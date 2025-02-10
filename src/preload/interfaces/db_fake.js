@@ -79,6 +79,6 @@ export function users_fillDB() {
 
 
     for (let item of data) {
-        UserTableInterace.insert(item.first_name, item.last_name,faker.image.dataUri());
+        // UserTableInterace.insert(item.first_name, item.last_name,faker.image.dataUri());
     }
 }

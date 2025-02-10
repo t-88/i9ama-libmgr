@@ -8,7 +8,7 @@ import closeIMG from "../assets/close.png";
 
 
 
-const ImgUpload = forwardRef(function ({ title, titleClassName,maxImgs, onUploadImg }: { title: string, titleClassName?: string, maxImgs?: number, onUploadImg?: any }, ref: ForwardedRef<any>) {
+const ImgUpload = forwardRef(function ({ title, titleClassName,maxImgs, onUploadImg,defulatVal }: { title: string, titleClassName?: string, maxImgs?: number, onUploadImg?: any, defulatVal? : any }, ref: ForwardedRef<any>) {
 
     useImperativeHandle(ref, () => {
         return {
@@ -48,7 +48,9 @@ const ImgUpload = forwardRef(function ({ title, titleClassName,maxImgs, onUpload
 
     async function _onUploadImg() {
         const imgBase64 = await onUploadImg();
-        setImgs([...imgs, imgBase64]);
+        if(imgBase64) {
+            setImgs([...imgs, imgBase64]);
+        }
 
     }
 
@@ -60,7 +62,7 @@ const ImgUpload = forwardRef(function ({ title, titleClassName,maxImgs, onUpload
     const localRef = useRef<HTMLImageElement | null>(null);
     onUploadImg = onUploadImg ?? function () { };
     maxImgs = maxImgs ?? 1;
-    const [imgs, setImgs] = useState<string[]>([]);
+    const [imgs, setImgs] = useState<string[]>(defulatVal ? [defulatVal] : []);
     titleClassName = titleClassName ?? "";
 
 

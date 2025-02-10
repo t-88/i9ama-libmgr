@@ -22,3 +22,14 @@ export function loadAdminImgs(imgsUUID) {
         console.error("ERROR: failed to load user imgs", e);
     }
 }
+export function saveBase64Image(base64String, filePath) {
+    const base64Data = base64String.replace(/^data:image\/png;base64,/, '');
+    const imageBuffer = Buffer.from(base64Data, 'base64');
+    fs.writeFile(filePath, imageBuffer, (err) => {
+      if (err) {
+        console.error('Error writing image file:', err);
+      } else {
+        console.log('Image saved successfully:', filePath);
+      }
+    });
+  }

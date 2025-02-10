@@ -52,8 +52,10 @@ contextBridge.exposeInMainWorld("db", {
   migrate: () => { migrateDB(); },
   gen_data : gen_data,
   drop : drop,
-  db_fake: db_fake
+  db_fake: db_fake,
 });
+
+
 
 contextBridge.exposeInMainWorld('utils', {
   open: () => ipcRenderer.invoke('open-file-explorer'),

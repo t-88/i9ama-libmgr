@@ -9,10 +9,6 @@ import icon from '../../resources/icon.png?asset'
 
 function createWindow() {
 
-  console.log({dirname: __dirname})
-console.log({getAppPath: app.getAppPath()})
-console.log({resourcesPath: process.resourcesPath})
-
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: 100,

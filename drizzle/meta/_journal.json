@@ -71,6 +71,20 @@
       "when": 1738567494986,
       "tag": "0009_stiff_taskmaster",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "6",
+      "when": 1739085671296,
+      "tag": "0010_rich_vivisector",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "6",
+      "when": 1739219467700,
+      "tag": "0011_salty_malcolm_colcord",
+      "breakpoints": true
     }
   ]
 }

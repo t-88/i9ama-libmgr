@@ -8,7 +8,6 @@ const ActorsFields = {
   uuid: text("uuid", { length: 64 }).notNull(),
   first_name: text('first_name').notNull(),
   last_name: text('last_name').notNull(),
-  imgsUUID: text('imgsUUID').notNull(),
 };
 
 export const AdminsTable = sqliteTable('admins', {
@@ -18,7 +17,23 @@ export const AdminsTable = sqliteTable('admins', {
 
 export const UsersTable = sqliteTable('users', {
   ...ActorsFields,
+  date_of_birth: text('date_of_birth').notNull(),
+  al_wilaya: text('al_wilaya').notNull(), 
+  phone_number: text('phone_number').notNull(), 
+  fb_name_or_link: text('fb_name_or_link').notNull(), 
   school: text('school').notNull(),
+
+  email: text('email').notNull(), 
+  residense_block_number: text('residense_block_number').notNull(), 
+  residense_room_number: text('residense_room_number').notNull(), 
+  school_matericule: text('school_matericule').notNull(), 
+  year_of_study: text('year_of_study').notNull(), 
+  study_specialty: text('study_specialty').notNull(), 
+
+  // img_personal: text('img_personal').notNull(),
+  // img_card_residency: text('img_card_residency').notNull(),
+  // img_school_certificate: text('img_school_certificate').notNull(),
+
   reserved_book: integer('book_id').references(() => BooksTable.id, {onDelete: "set null"}).default(null),
 });
 
