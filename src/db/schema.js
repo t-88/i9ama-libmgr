@@ -5,7 +5,6 @@ import { integer, datetime, int, sqliteTable, text, boolean } from "drizzle-orm/
 
 const ActorsFields = {
   id: integer("id").primaryKey({ autoIncrement: true }),
-  uuid: text("uuid", { length: 64 }).notNull(),
   first_name: text('first_name').notNull(),
   last_name: text('last_name').notNull(),
 };
@@ -17,6 +16,7 @@ export const AdminsTable = sqliteTable('admins', {
 
 export const UsersTable = sqliteTable('users', {
   ...ActorsFields,
+  uuid: text("uuid", { length: 64 }).notNull(),
   date_of_birth: text('date_of_birth').notNull(),
   al_wilaya: text('al_wilaya').notNull(), 
   phone_number: text('phone_number').notNull(), 

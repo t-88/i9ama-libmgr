@@ -4,6 +4,7 @@ const path = require("path");
 const utils = require("@electron-toolkit/utils");
 const fs = require("fs");
 const icon = path.join(__dirname, "../../resources/icon.png");
+const { session } = require("electron");
 function createWindow() {
   const mainWindow = new electron.BrowserWindow({
     width: 100,
@@ -19,6 +20,7 @@ function createWindow() {
       nodeIntegration: true,
       nodeIntegrationInWorker: true,
       contextIsolation: true
+      // webSecurity: false,
     }
   });
   mainWindow.on("ready-to-show", () => {

@@ -7,6 +7,7 @@ import BookBookPopup from "./BookBookPopup";
 import  "./Popup.css";
 import { popupState } from "../../libs/popup";
 import AddAdminPopup from "./AddAdminPopup";
+import BackupDBOnline from "./BackupDBOnline";
 
 export default function PopUp() {
     useSnapshot(popupState);
@@ -26,6 +27,7 @@ export default function PopUp() {
                 case "add-admin": return <AddAdminPopup />
                 case "edit-admin": return <AddAdminPopup />
                 case "book-book": return <BookBookPopup />
+                case "backup-db-online": return <BackupDBOnline />
               }
               return <></>
             })()

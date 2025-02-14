@@ -1,12 +1,13 @@
 import { proxy } from "valtio";
-import UsersState from "./users";
+import UsersState, { UserAction } from "./users";
 import BookState from "./books";
 
 
 type PopupType = "book-book" 
                 | "add-user" | "edit-user" 
                 | "add-book" | "edit-book" 
-                | "add-admin" | "edit-admin" 
+                | "add-admin" | "edit-admin"
+                | "backup-db-online"; 
 type NavTabName = "books" | "users" | "admins";
 
 interface PopupStateObj {
@@ -51,11 +52,22 @@ function toggleAddUser() {
     popupState.popupVis = true;
     popupState.popupType = "add-user";
 }
-function toggleEditUser(idx: number) {
+async function toggleEditUser(idx: number) {
+    const {img_personal, img_card_personal, img_card_residency, img_school_certificate,} = await (window as any).db.helper.loadUserImgs(UsersState.users[idx].id);
+    UsersState.users[idx].img_personal = img_personal;
+    UsersState.users[idx].img_card_personal = img_card_personal;
+    UsersState.users[idx].img_card_residency = img_card_residency;
+    UsersState.users[idx].img_school_certificate = img_school_certificate;
+
+
     popupState.popupVis = true;
     popupState.popupType = "edit-user";
     popupState.editedUserIdx = idx;
+
 }
+
+
+
 function toggleEditUserID(id: string) {
     for(let i = 0; i <   UsersState.users.length; i++) {
         if(UsersState.users[i].id == id) {
@@ -75,6 +87,11 @@ function toggleEditAdmin(idx: number) {
     popupState.editedAdminIdx = idx;
 }
 
+function toggleBackupPopup() {
+    popupState.popupVis = true;
+    popupState.popupType = "backup-db-online";
+}
+
 
 function hidePopup() {
     popupState.popupVis = false;
@@ -91,6 +108,7 @@ export {
     toggleEditUserID,
     hidePopup,
     toggleEditBookID,
+    toggleBackupPopup,
     popupState,
 }
 

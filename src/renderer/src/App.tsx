@@ -17,6 +17,7 @@ import { BookAction } from './libs/books';
 import { BookingAction } from './libs/booking';
 import { toast, ToastContainer } from 'react-toastify';
 import { showToast } from './libs/utils';
+import { toggleBackupPopup } from './libs/popup';
 // TODO: logout animations
 
 
@@ -66,8 +67,14 @@ function TopBar() {
         <NavBar />
 
       </div>
+
+      <button  
+        onClick={() =>  toggleBackupPopup()}
+        className='p-2 hover:bg-gray-200 bg-white rounded-lg font-bold cursor-pointer'>
+        a
+      </button>
       
-      <div>
+      {/* <div>
         <button onClick={async () =>  { 
           showToast(toast.loading,"جاري ملأ البيانات");
           (window as any).db.db_fake.books_fillDB(); 
@@ -76,7 +83,7 @@ function TopBar() {
           loadAll();
         }} className='p-2 hover:bg-gray-200 bg-white rounded-lg font-bold cursor-pointer'>املاء بمعلومات تجريبية</button>
 
-      </div>
+      </div> */}
       {/* <div className='logout-icon cursor-pointer w-fit flex  justify-end' > */}
         {/* <img src={logout} alt="logout" width={28} /> */}
       {/* </div> */}

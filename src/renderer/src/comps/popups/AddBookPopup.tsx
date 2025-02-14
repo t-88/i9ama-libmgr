@@ -116,8 +116,6 @@ export default function AddBookPopup() {
 
 
 
-
-
   return <div id='book-add-edit-popup' className='filter-popup rounded shadow w-2/4' onClick={(e) => e.stopPropagation()} >
     <BgPattern />
     <div className='relative z-10 w-full h-full flex flex-col gap-5 px-4 py-6' >
@@ -155,7 +153,7 @@ export default function AddBookPopup() {
       <ActionButtons onAddBook={onAddBook} onUpateBook={onUpateBook} onRemoveBook={onRemoveBook} onReturnBook={onReturnBook} />
 
     </div>
-  </div>;
+  </div>
 }
 
 

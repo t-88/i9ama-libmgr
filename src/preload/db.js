@@ -8,11 +8,21 @@ import * as schema from '../db/schema'
 import { migrate } from 'drizzle-orm/better-sqlite3/migrator'
 
 
-const dbPath = path.join('data.db');
-let file_exists = fs.existsSync(dbPath);
-fs.mkdirSync(path.dirname(dbPath), { recursive: true });
-const sqlite = new Database(dbPath)
-const db = drizzle(sqlite, { schema })
+
+let db = undefined;
+let file_exists = false;
+export let sqlite = undefined;
+
+export async function loadDB(fn) {
+  const dbPath = path.join(fn);
+  file_exists = fs.existsSync(dbPath);
+  fs.mkdirSync(path.dirname(dbPath), { recursive: true });
+  if(sqlite) {await sqlite.close();}
+  sqlite = new Database(dbPath);
+  db = drizzle(sqlite, { schema })
+}
+
+loadDB('data.db');
 
 function toDrizzleResult(rows) {
   if (!rows) {

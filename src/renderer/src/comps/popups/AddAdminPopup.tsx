@@ -12,51 +12,63 @@ import AdminsState, { AdminAction } from "../../libs/admins";
 import userIMG from "../../assets/user.png";
 import BookingsState, { BookingAction } from "../../libs/booking";
 import { Bounce, Flip, toast } from "react-toastify";
+import { proxy, useSnapshot } from "valtio";
+import { showToast } from "../../libs/utils";
 
 
 const INPUT_TITLE_WIDTH = "w-48";
 
 
+const addAdminProx = proxy<any>({
+  info: {
+    first_name: "",
+    last_name: "",
+    img_personal: "",
+    books: [],
+  },
+});
+
 export default function AddAdminPopup() {
 
 
   function onAddAdmin() {
-    const fNameValid = fNameRef.current?.checkInput({ func: validate_inputNotEmpty, msg: "" });
-    const lNameValid = lNameRef.current?.checkInput({ func: validate_inputNotEmpty, msg: "" });
-
-
-    if (!(fNameValid && lNameValid)) { return; }
-
-    AdminAction.add(
-      fNameRef.current!.getInput(),
-      lNameRef.current!.getInput(),
-      mainImg,
-    );
-
-
-    fNameRef.current!.setInput("");
-    lNameRef.current!.setInput("");
-    setMainImg([]);
+    let keys = ["first_name", "last_name", "img_personal"];
+    let validInput = true;
+    for (let key of keys) {
+      if (!info[key].current.checkInput({ func: validate_inputNotEmpty, msg: "" })) {
+        validInput = false;
+        break;
+      }
+    }
+    if (validInput) {
+      let admin = AdminsState.admins[popupState.editedAdminIdx];
+      addAdminProx.info.first_name = info.first_name.current.getInput();
+      addAdminProx.info.last_name = info.last_name.current.getInput();
+      addAdminProx.info.img_personal = info.img_personal.current.getInput();
+      AdminAction.add(addAdminProx.info,);
+    } else {
+      showToast(toast.error, "يجب ملأ كل المعطيات")
+    }
   }
 
   function onSaveAdmin() {
-    const fNameValid = fNameRef.current?.checkInput({ func: validate_inputNotEmpty, msg: "" });
-    const lNameValid = lNameRef.current?.checkInput({ func: validate_inputNotEmpty, msg: "" });
-
-
-    if (!(fNameValid && lNameValid)) { return; }
-
-
-    let admin = AdminsState.admins[popupState.editedAdminIdx];
-
-    AdminAction.update(
-      admin.id,
-      admin.imgsUUID,
-      fNameRef.current!.getInput(),
-      lNameRef.current!.getInput(),
-      mainImg,
-    );
-
+    let keys = ["first_name", "last_name", "img_personal"];
+    let validInput = true;
+    for (let key of keys) {
+      if (!info[key].current.checkInput({ func: validate_inputNotEmpty, msg: "" })) {
+        validInput = false;
+        break;
+      }
+    }
+    if (validInput) {
+      let admin = AdminsState.admins[popupState.editedAdminIdx];
+      addAdminProx.info.first_name = info.first_name.current.getInput();
+      addAdminProx.info.last_name = info.last_name.current.getInput();
+      addAdminProx.info.img_personal = info.img_personal.current.getInput();
+      AdminAction.update(admin.id, addAdminProx.info,);
+    } else {
+      showToast(toast.error, "يجب ملأ كل المعطيات")
+    }
   }
 
   function onDeleteAdmin() {
@@ -74,7 +86,7 @@ export default function AddAdminPopup() {
         pauseOnHover: false,
         draggable: false,
         progress: undefined,
-        transition: Flip, 
+        transition: Flip,
       });
     }
   }
@@ -87,20 +99,25 @@ export default function AddAdminPopup() {
   async function onInitAdmin() {
     if (popupState.popupType == "edit-admin") {
       let admin = AdminsState.admins[popupState.editedAdminIdx];
-      fNameRef.current!.setInput(admin.first_name);
-      lNameRef.current!.setInput(admin.last_name);
-
-      let admin_books = await BookingAction.queryAdmin(admin.id);
-      setAdminBooks(admin_books);
-      if (mainImg.length == 0) {
+      addAdminProx.info.first_name = admin.first_name;
+      addAdminProx.info.last_name = admin.last_name;
+      if (info.img_personal.current.length == 0) {
         let admin = AdminsState.admins[popupState.editedAdminIdx];
-        setMainImg([admin.img]);
+        addAdminProx.info.img_personal = admin.img;
       }
+
+
+      console.log(JSON.parse(JSON.stringify(admin)))
+      addAdminProx.info.books = await BookingAction.queryAdmin(admin.id);
     }
+
+
+
   }
 
   useEffect(() => {
     onInitAdmin();
+
   }, []);
 
 
@@ -110,23 +127,24 @@ export default function AddAdminPopup() {
     return imgBase64;
   }
 
-
-  const fNameRef = useRef<InputRef | null>(null);
-  const lNameRef = useRef<InputRef | null>(null);
   const [adminBooks, setAdminBooks] = useState<any>([]);
+  useSnapshot(addAdminProx);
 
-  const [mainImg, setMainImg] = useState<any>([]);
 
-
+  const info = {
+    first_name: useRef<any>(null),
+    last_name: useRef<any>(null),
+    img_personal: useRef<any>(null),
+  };
 
 
 
   return <div className='filter-popup rounded shadow w-2/4' onClick={(e) => e.stopPropagation()} >
     <BgPattern />
     <div className='relative z-10 w-full flex flex-col gap-2 px-6 py-8' >
-      
-      <div className='self-end cursor-pointer w-fit h-fit' onClick={() =>  hidePopup() }>
-        <img src={closeIMG} alt="closeIMG" width={16}  />
+
+      <div className='self-end cursor-pointer w-fit h-fit' onClick={() => hidePopup()}>
+        <img src={closeIMG} alt="closeIMG" width={16} />
       </div>
 
       {
@@ -136,45 +154,34 @@ export default function AddAdminPopup() {
           <h1 className='text-2xl font-bold'>اضافة مسؤول جديد</h1>
       }
 
-      <div
-        onClick={async () => setMainImg(await onUploadImg())}
-        className={`img-frame flex items-center justify-center  
-                    w-28 h-28 bg-white self-center rounded-full overflow-hidden border-4
-                    ${popupState.popupType || mainImg == "edit-admin" ? "" : "cursor-pointer bg-zinc-200"}
-                  `}>
-        {
-          popupState.popupType == "edit-admin" || mainImg.length != 0 ?
-            <img src={mainImg} alt="img" />
-            :
-            <img src={userIMG} width={50} alt="img" />
-        }
-
-
-      </div>
 
       <section>
-        <Input titleClassName={INPUT_TITLE_WIDTH} ref={fNameRef} title="الاسم" placeholder="ادخل الاسم... " />
-        <Input titleClassName={INPUT_TITLE_WIDTH} ref={lNameRef} title="اللقب" placeholder="ادخل اللقب... " />
-
-
-      </section>
-      <section className="m-4 flex flex-col gap-4 max-h-32">
-        <h1 className='text-xl font-bold'>الكتب المحجوزة من طرف المسئول</h1>
-        <div className="mx-4 overflow-y-scroll p-2 flex flex-col">
-          {
-            adminBooks.map((book: any, idx: number) => {
-              return <div key={book.id} onClick={() => showBookPopup(book)} className={`cursor-pointer hover:bg-gray-50 bg-white rounded`}>
-                <h1 className="py-2">{book.title}</h1>
-                <hr className="bg-gray-200" />
-              </div>
-            })
-          }
-
-        </div>
+        <ImgUpload defaultVal={addAdminProx.info.img_personal} titleClassName={INPUT_TITLE_WIDTH} ref={info.img_personal} title="صورة شخصية" onUploadImg={onUploadImg} />
+        <Input defaultVal={addAdminProx.info.first_name} titleClassName={INPUT_TITLE_WIDTH} ref={info.first_name} title="الاسم" placeholder="ادخل الاسم... " />
+        <Input defaultVal={addAdminProx.info.last_name} titleClassName={INPUT_TITLE_WIDTH} ref={info.last_name} title="اللقب" placeholder="ادخل اللقب... " />
       </section>
 
+      {
+        popupState.popupType == "add-admin" ? <></> :
+          <section className="m-4 flex flex-col gap-4 max-h-32">
+            <h1 className='text-xl font-bold'>الكتب المحجوزة من طرف المسئول</h1>
+            <div className="mx-4 overflow-y-scroll p-2 flex flex-col">
+              {
+                adminBooks.length == 0 ? <h1>لا كتب حاليا</h1> :
+                  adminBooks.map((book: any, idx: number) => {
+                    return <div key={book.id} onClick={() => showBookPopup(book)} className={`cursor-pointer hover:bg-gray-50 bg-white rounded`}>
+                      <h1 className="py-2">{book.title}</h1>
+                      <hr className="bg-gray-200" />
+                    </div>
+                  })
+              }
+            </div>
+          </section>
+      }
 
-      <ActionButtons onAddAdmin={onAddAdmin} onDeleteAdmin={onDeleteAdmin} onSaveAdmin={onSaveAdmin} /> 
+
+
+      <ActionButtons onAddAdmin={onAddAdmin} onDeleteAdmin={onDeleteAdmin} onSaveAdmin={onSaveAdmin} />
 
     </div>
   </div>

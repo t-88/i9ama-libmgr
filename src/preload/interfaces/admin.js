@@ -3,41 +3,37 @@ import { AdminsTable } from "../../db/schema";
 import {randomUUID} from "crypto";
 import fs from "fs";
 import { eq } from "drizzle-orm";
+import * as helpers from '../helpers'
 
 // Update insert
-export async function insert(fname, lname, img) {
-    const fileUUID = randomUUID();
-    
-    const data = { name: fname + " " + lname, img };
+// export async function insert(fname, lname, img) {
+export async function insert(info) {
     try {
         if (!fs.existsSync("admins")) { fs.mkdirSync("admins"); }
-        let { id } = (await db.insert(AdminsTable).values({
-            first_name: fname,
-            last_name: lname,
-            imgsUUID: fileUUID, 
-            uuid: fname[0] + lname[0],
-        }).returning({id : AdminsTable.id}))[0];
-        fs.writeFileSync(`admins/${id}.json`, JSON.stringify(data));
+        const {id} = (await db.insert(AdminsTable).values({
+            first_name: info.first_name,
+            last_name: info.last_name,
+        }).returning({ id: AdminsTable.id }))[0]
+        helpers.saveBase64Image(info.img_personal[0],`admins/${id}_img_personal.png`);
     } catch (e) {
         console.error("[DB-ERROR]: failed to insert admin", e);
     }
 }
   
 // Update admin
-export async function update(id, imgsUUID, fname, lname, img) {
-    const data = { name: fname + " " + lname, img };
+export async function update(id, info) {
     try {
         if (!fs.existsSync("admins")) { fs.mkdirSync("admins"); }
-        fs.writeFileSync(`admins/${imgsUUID}.json`, JSON.stringify(data));
-
         await db.update(AdminsTable)
             .set({
-                first_name: fname,
-                last_name: lname,
-                uuid: fname[0] + lname[0],
+                first_name: info.first_name,
+                last_name: info.last_name,
             })
             .where(eq(AdminsTable.id, id))
             .run();
+
+            helpers.saveBase64Image(info.img_personal[0],`admins/${id}_img_personal.png`);
+
     } catch (e) {
         console.error("[DB-ERROR]: failed to update admin", e);
     }

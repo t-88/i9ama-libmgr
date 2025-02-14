@@ -5,6 +5,8 @@ import fs from "fs";
 import icon from '../../resources/icon.png?asset'
 
 
+const { session } = require("electron");
+
 
 
 function createWindow() {
@@ -24,8 +26,12 @@ function createWindow() {
       nodeIntegration: true,
       nodeIntegrationInWorker: true,
       contextIsolation: true,
+      // webSecurity: false,
     },
   })
+
+
+  
 
   mainWindow.on('ready-to-show', () => {
     mainWindow.maximize();

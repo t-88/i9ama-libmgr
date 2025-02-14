@@ -6,6 +6,7 @@ import userIMG from "../../assets/user.png";
 import addIMG from "../../assets/add.png";
 import nextIMG from "../../assets/next.png";
 import backIMG from "../../assets/back.png";
+import saveIMG from "../../assets/save.png";
 import { validate_inputNotEmpty } from "../../libs/validation";
 import "./AddUserPopup.css"
 import ImgUpload from "../ImgUpload";
@@ -23,95 +24,31 @@ const INPUT_TITLE_WIDTH = "w-48";
 const addUserProx = proxy<{ step: number; info: Record<string, any> }>({
   step: 0,
   info: {
-    first_name: "a",
-    last_name: "a",
-    date_of_birth: "a",
-    al_wilaya: "a",
-    phone_number: "1",
-    facebook: "a",
-    school: "a",
-    email: "a",
-    residense_block_number: "a",
-    residense_room_number: "a",
-    school_matericule: "a",
+    first_name: "",
+    last_name: "",
+    date_of_birth: "",
+    al_wilaya: "",
+    phone_number: "",
+    facebook: "",
+    school: "",
+    email: "",
+    residense_block_number: "",
+    residense_room_number: "",
+    school_matericule: "",
     year_of_study: "1",
-    study_specialty: "a",
-    img_personal: ["data:image/png;base64, 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"],
-    img_card_personal: ["data:image/png;base64, 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"],
-    img_card_residency: ["data:image/png;base64, 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"],
-    img_school_certificate: ["data:image/png;base64, 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"],
+    study_specialty: "",
+    img_personal: "" ,
+    img_card_personal: "" ,
+    img_card_residency: "" ,
+    img_school_certificate: "", 
   },
 });
 
 
 export default function AddUserPopup() {
-  function onAddUser() {
-    console.log("jkasdhjahjsdjhasd");
-    // const fNameValid = fNameRef.current?.checkInput({ func: validate_inputNotEmpty, msg: "" });
-    // const lNameValid = lNameRef.current?.checkInput({ func: validate_inputNotEmpty, msg: "" });
-    // const collegeValid = collegeRef.current?.checkInput({ func: validate_inputNotEmpty, msg: "" });
-    // // const mainImgValid =  mainImgRef.current?.checkInput();
-    // const idImgValid = idImgRef.current?.checkInput();
-    // const idSchoolImgValid = idSchoolImgRef.current?.checkInput();
-    // const schoolImgValid = schoolImgRef.current?.checkInput();
-
-
-    // if (!(
-    //   fNameValid && lNameValid && collegeValid &&
-    //   idImgValid && idSchoolImgValid && schoolImgValid
-    // )) { return; }
-
-
-    UserAction.add(
-      addUserProx.info
-      // fNameRef.current!.getInput(),
-      // lNameRef.current!.getInput(),
-      // collegeRef.current!.getInput(),
-      // mainImg[0],
-      // // mainImgRef.current!.getInput()[0],
-      // idImgRef.current!.getInput()[0],
-      // idSchoolImgRef.current!.getInput()[0],
-      // schoolImgRef.current!.getInput()[0],
-    );
-
-
-    // fNameRef.current!.setInput("");
-    // lNameRef.current!.setInput("");
-    // collegeRef.current!.setInput("");
-    // // mainImgRef.current!.setInput([]);
-    // setMainImg([]);
-    // idImgRef.current!.setInput([]);
-    // idSchoolImgRef.current!.setInput([]);
-    // schoolImgRef.current!.setInput([]);
-  }
   function onSaveUser() {
-    const fNameValid = fNameRef.current?.checkInput({ func: validate_inputNotEmpty, msg: "" });
-    const lNameValid = lNameRef.current?.checkInput({ func: validate_inputNotEmpty, msg: "" });
-    const collegeValid = collegeRef.current?.checkInput({ func: validate_inputNotEmpty, msg: "" });
-    const idImgValid = idImgRef.current?.checkInput();
-    const idSchoolImgValid = idSchoolImgRef.current?.checkInput();
-    const schoolImgValid = schoolImgRef.current?.checkInput();
-
-
-    if (!(
-      fNameValid && lNameValid && collegeValid && idImgValid && idSchoolImgValid && schoolImgValid
-    )) { return; }
-
-
     let user = UsersState.users[popupState.editedUserIdx];
-
-    UserAction.update(
-      user.id,
-      user.imgsUUID,
-      fNameRef.current!.getInput(),
-      lNameRef.current!.getInput(),
-      collegeRef.current!.getInput(),
-      mainImg[0],
-      idImgRef.current!.getInput()[0],
-      idSchoolImgRef.current!.getInput()[0],
-      schoolImgRef.current!.getInput()[0],
-    );
-
+    UserAction.update(user.id, addUserProx.info,);
   }
   function onDeleteUser() {
     const user = UserAction.getCurUser();
@@ -125,11 +62,6 @@ export default function AddUserPopup() {
       showToast(toast.success, `تم حدف العضو بنجاح`);
     }
   }
-  function onClickNext() {
-    if (addUserProx.step < 3) {
-      addUserProx.step += 1;
-    }
-  }
 
   async function onUploadImg() {
     const imgBase64 = await (window as any).utils.open();
@@ -137,23 +69,30 @@ export default function AddUserPopup() {
   }
 
   useEffect(() => {
-    if (popupState.popupType == "edit-user") {
+    if (popupState.popupType == 'edit-user') {
       let user = UsersState.users[popupState.editedUserIdx];
-      fNameRef.current!.setInput(user.first_name);
-      lNameRef.current!.setInput(user.last_name);
-      collegeRef.current!.setInput(user.school);
-      idImgRef.current!.setInput([user.idImg]);
-      idSchoolImgRef.current!.setInput([user.schoolIdImg]);
-      schoolImgRef.current!.setInput([user.schoolPaper]);
+      addUserProx.info.first_name = user.first_name;
+      addUserProx.info.last_name = user.last_name;
+      addUserProx.info.date_of_birth = user.date_of_birth;
+      addUserProx.info.al_wilaya = user.al_wilaya;
+      addUserProx.info.phone_number = user.phone_number;
+      addUserProx.info.facebook = "NOT REQUIRED";
+      addUserProx.info.school = user.school;
+      addUserProx.info.email = user.email;
+      addUserProx.info.residense_block_number = user.residense_block_number;
+      addUserProx.info.residense_room_number = user.residense_room_number;
+      addUserProx.info.school_matericule = user.school_matericule;
+      addUserProx.info.year_of_study = user.year_of_study;
+      addUserProx.info.study_specialty = user.study_specialty;
+      addUserProx.info.img_personal = [user.img_personal];
+      addUserProx.info.img_card_personal = [user.img_card_personal];
+      addUserProx.info.img_card_residency = [user.img_card_residency];
+      addUserProx.info.img_school_certificate = [user.img_school_certificate];      
     }
-
     addUserProx.step = 0;
-
   }, []);
 
-  // for(let key of Object.keys(addUserProx.info)) {
-  //   addUserProx.info[key] = useRef<any>(null);
-  // }   
+
   const info = {
     first_name: useRef<any>(null),
     last_name: useRef<any>(null),
@@ -172,32 +111,11 @@ export default function AddUserPopup() {
     img_card_residency: useRef<any>(null),
     img_school_certificate: useRef<any>(null),
     img_card_personal: useRef<any>(null),
-    
+
   }
-
-  const fNameRef = useRef<InputRef | null>(null);
-  const lNameRef = useRef<InputRef | null>(null);
-  const collegeRef = useRef<InputRef | null>(null);
-  const [mainImg, setMainImg] = useState<any>([]);
-  if (popupState.popupType == 'edit-user' && mainImg.length == 0) {
-    let user = UsersState.users[popupState.editedUserIdx];
-    setMainImg([user.img]);
-  }
-
-
-
-
-  const idImgRef = useRef<any | null>(null);
-  const idSchoolImgRef = useRef<any | null>(null);
-  const schoolImgRef = useRef<any | null>(null);
-
 
 
   useSnapshot(addUserProx);
-
-
-
-  // insert first name , second name , date of birth , al_wilaya , phone number ,school 
   function AddUserStep1() {
     const keys = ["first_name", "last_name", "al_wilaya", "phone_number", "facebook", "school"];
 
@@ -240,14 +158,14 @@ export default function AddUserPopup() {
 
       <section>
         <Input defaultVal={addUserProx.info.first_name} titleClassName={INPUT_TITLE_WIDTH} ref={info.first_name} title="الاسم" placeholder="ادخل الاسم... " />
-        <Input defaultVal={addUserProx.info.first_name} titleClassName={INPUT_TITLE_WIDTH} ref={info.last_name} title="اللقب" placeholder="ادخل اللقب... " />
+        <Input defaultVal={addUserProx.info.last_name} titleClassName={INPUT_TITLE_WIDTH} ref={info.last_name} title="اللقب" placeholder="ادخل اللقب... " />
         <Input defaultVal={addUserProx.info.al_wilaya} titleClassName={INPUT_TITLE_WIDTH} ref={info.al_wilaya} title="الولاية" placeholder="ادخل اسم الولاية... " />
         <Input defaultVal={addUserProx.info.phone_number} titleClassName={INPUT_TITLE_WIDTH} type={"number"} ref={info.phone_number} title="رقم الهاتف" placeholder="ادخل رقم الهاتف... " />
         <Input defaultVal={addUserProx.info.facebook} titleClassName={INPUT_TITLE_WIDTH} ref={info.facebook} title="الفيسبوك" placeholder="ادخل رابط او اسم الفيسبوك... " />
         <Input defaultVal={addUserProx.info.school} titleClassName={INPUT_TITLE_WIDTH} ref={info.school} title="الجامعة" placeholder="ادخل اسم الجامعة... " />
 
       </section>
-      <ActionButtons onAddUser={onAddUser} onDeleteUser={onDeleteUser} onSaveUser={onSaveUser} onClickNext={onClickStep1} />
+      <ActionButtons onDeleteUser={onDeleteUser} onSaveUser={onSaveUser} onClickNext={onClickStep1} />
     </div>
   }
 
@@ -300,13 +218,13 @@ export default function AddUserPopup() {
         <Input defaultVal={addUserProx.info.study_specialty} titleClassName={INPUT_TITLE_WIDTH} ref={info.study_specialty} title="التخصص" placeholder="ادخل اسم التخصص... " />
 
       </section>
-      <ActionButtons onAddUser={onAddUser} onDeleteUser={onDeleteUser} onSaveUser={onSaveUser} onClickNext={onClickStep2} />
+      <ActionButtons onDeleteUser={onDeleteUser} onSaveUser={onSaveUser} onClickNext={onClickStep2} />
     </div>
   }
 
-
   function AddUserStep3() {
-    const keys = ["img_personal","img_card_personal","img_card_residency","img_school_certificate"];
+    const keys = ["img_personal", "img_card_personal", "img_card_residency", "img_school_certificate"];
+
 
     function onClickStep3() {
       let validInput = true;
@@ -321,11 +239,19 @@ export default function AddUserPopup() {
         addUserProx.info.img_card_personal = info.img_card_personal.current.getInput();
         addUserProx.info.img_card_residency = info.img_card_residency.current.getInput();
         addUserProx.info.img_school_certificate = info.img_school_certificate.current.getInput();
-        UserAction.add(addUserProx.info);
+        
+        if(popupState.popupType == "add-user") {
+          UserAction.add(addUserProx.info);
+        }  else {
+          onSaveUser();
+        }
       } else {
         showToast(toast.error, "يجب ملأ كل المعطيات")
+
       }
     }
+
+    
 
 
     return <div className='relative z-10 w-full flex flex-col gap-5 px-6 py-8' >
@@ -339,30 +265,13 @@ export default function AddUserPopup() {
           <h1 className='text-2xl font-bold'>اضافة عضو جديد</h1>
       }
 
-      {/* <div
-        onClick={async () => setMainImg(await onUploadImg())}
-        className={`img-frame flex items-center justify-center  
-                  w-28 h-28 bg-white self-center rounded-full overflow-hidden border-4
-                  ${popupState.popupType == "edit-user" ? "" : "cursor-pointer bg-zinc-200"}
-                `}>
-        {
-          popupState.popupType == "edit-user" || mainImg.length != 0 ?
-            <img src={mainImg} alt="img" />
-            :
-            <img src={userIMG} width={50} alt="img" />
-        }
-
-
-      </div> */}
       <section>
-
-        <ImgUpload defulatVal={addUserProx.info.img_personal} ref={info.img_personal} titleClassName={INPUT_TITLE_WIDTH} title="صورة شخصية" onUploadImg={onUploadImg} />
-        <ImgUpload defulatVal={addUserProx.info.img_card_personal} ref={info.img_card_personal} titleClassName={INPUT_TITLE_WIDTH} title="بطاقة التعريف" onUploadImg={onUploadImg} />
-        <ImgUpload defulatVal={addUserProx.info.img_card_residency} ref={info.img_card_residency} titleClassName={INPUT_TITLE_WIDTH} title="بطاقة الطالب" onUploadImg={onUploadImg} />
-        <ImgUpload defulatVal={addUserProx.info.img_school_certificate} ref={info.img_school_certificate} titleClassName={INPUT_TITLE_WIDTH} title="شهادة مدرسية" onUploadImg={onUploadImg} />
-
+        <ImgUpload defaultVal={addUserProx.info.img_personal} ref={info.img_personal} titleClassName={INPUT_TITLE_WIDTH} title="صورة شخصية" onUploadImg={onUploadImg} />
+        <ImgUpload defaultVal={addUserProx.info.img_card_personal} ref={info.img_card_personal} titleClassName={INPUT_TITLE_WIDTH} title="بطاقة التعريف" onUploadImg={onUploadImg} />
+        <ImgUpload defaultVal={addUserProx.info.img_card_residency} ref={info.img_card_residency} titleClassName={INPUT_TITLE_WIDTH} title="بطاقة الطالب" onUploadImg={onUploadImg} />
+        <ImgUpload defaultVal={addUserProx.info.img_school_certificate} ref={info.img_school_certificate} titleClassName={INPUT_TITLE_WIDTH} title="شهادة مدرسية" onUploadImg={onUploadImg} />
       </section>
-      <ActionButtons onAddUser={onClickStep3} onDeleteUser={onDeleteUser} onSaveUser={AddUserStep3} onClickNext={onClickNext} />
+      <ActionButtons onAddUser={onClickStep3} onDeleteUser={onDeleteUser} onSaveUser={onClickStep3} />
     </div>
   }
 
@@ -373,7 +282,6 @@ export default function AddUserPopup() {
     AddUserStep2,
     AddUserStep3,
   ];
-
 
 
 
@@ -390,12 +298,10 @@ export default function AddUserPopup() {
 
 
 
-function ActionButtons({ onAddUser, onDeleteUser, onSaveUser, onClickNext }: { onAddUser: any, onDeleteUser: any, onSaveUser: any, onClickNext: any }) {
+function ActionButtons({ onAddUser, onDeleteUser, onSaveUser, onClickNext }: { onAddUser?: any, onDeleteUser: any, onSaveUser: any, onClickNext?: any }) {
   useSnapshot(addUserProx);
 
-
-
-  if (addUserProx.step < 2 && popupState.popupType == 'add-user') {
+  if (addUserProx.step < 2) {
     return <div className="flex flex-row-reverse justify-between">
       <div className="flex flex-row gap-2 self-end items-center justify-center">
         <button onClick={onClickNext} className='interactive-button flex gap-2 rounded py-1 px-4 text-white text-lg shadow' >
@@ -417,9 +323,10 @@ function ActionButtons({ onAddUser, onDeleteUser, onSaveUser, onClickNext }: { o
 
   } else {
     return <div className="flex flex-row-reverse justify-between">
-      <button onClick={onAddUser} className='interactive-button flex gap-2  self-end  rounded py-1 px-4 text-white text-lg shadow' >
-        <img src={addIMG} height={16} width={16} alt="addIMG" className="self-center" />
-        <p>اضافة</p>
+      <button onClick={popupState.popupType == 'edit-user' ? onSaveUser :  onAddUser} className='interactive-button flex gap-2  self-end  rounded py-1 px-4 text-white text-lg shadow' >
+
+        {popupState.popupType == 'edit-user' ? <p>حفظ</p> : <p>اضافة</p>}
+        <img src={popupState.popupType == 'edit-user' ? saveIMG : addIMG} height={16} width={16} alt="IMG" className="self-center" />
       </button>
       <p className="text-lg self-center flex-1 justify-self-center text-center">{addUserProx.step + 1}/3</p>
 

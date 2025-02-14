@@ -49,13 +49,16 @@ const AdminAction = {
         await AdminAction.remove(AdminsState.admins[popupState.editedAdminIdx].id);
         await  AdminAction.loadAll();
     },
-    update: async (id : string,imgsUUID : string,fname: string, lname: string, img: string) => { 
-        await (window as any).db.admins.update(id,imgsUUID,fname, lname,  img);
+    update: async (id : string,data : any) => { // imgsUUID : string,fname: string, lname: string, img: string) => { 
+        const parseData = JSON.parse(JSON.stringify(data));
+        // await (window as any).db.admins.update(id,imgsUUID,fname, lname,  img);
+        await (window as any).db.admins.update(id,parseData);
         await AdminAction.loadAll();
 
     },
-    add: async (fname: string, lname: string,  img: string) => {
-        await (window as any).db.admins.insert(fname, lname, img);
+    add: async (data : any) => { //fname: string, lname: string,  img: string) => {
+        const parseData = JSON.parse(JSON.stringify(data));
+        await (window as any).db.admins.insert(parseData);
         await AdminAction.loadAll();
     }
 };
