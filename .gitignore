@@ -31,3 +31,4 @@ admins/*
 .env
 backup-dbs/*
 downloaded-dbs/*
+data.db

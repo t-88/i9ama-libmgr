@@ -21,7 +21,9 @@ import { toast, ToastContainer } from 'react-toastify';
 import { showToast } from './libs/utils';
 import { popupState, toggleBackupPopup, toggleHelpPopup } from './libs/popup';
 import { Menu, MenuButton, MenuDivider, MenuHeader, MenuItem, SubMenu } from '@szhsin/react-menu';
-// TODO: logout animations
+
+import Papa from "papaparse";
+
 
 import '@szhsin/react-menu/dist/index.css';
 
@@ -98,7 +100,7 @@ function TopBar() {
       if (status == 0) {
         window.location.reload();
       } else {
-        showToast(toast.error,"حدثت مشكلة, هل حملت db؟")
+        showToast(toast.error, "حدثت مشكلة, هل حملت db؟")
       }
     }
   };
@@ -130,9 +132,41 @@ function TopBar() {
           </SubMenu>
 
           <SubMenu label="ادخل csv">
-            <MenuItem>مسؤول</MenuItem>
-            <MenuItem>كتب</MenuItem>
-            <MenuItem>اعضاء</MenuItem>
+            <MenuItem disabled >مسؤول</MenuItem>
+            <MenuItem disabled>كتب</MenuItem>
+            <MenuItem onClick={async () => {
+              const data = await (window as any).utils.openForCsv();
+
+              const csv = Papa.parse(data, {
+                header: true, // Set to false if the CSV has no headers
+                skipEmptyLines: true,
+              });
+
+              for (let item of csv.data) {
+                let parseItem = {};
+                parseItem["first_name"] = item["الاسم"] ?? "Unknown";
+                parseItem["last_name"] = item["اللقب"] ?? "Unknown";
+                parseItem["date_of_birth"] = item["تاريخ الميلاد"] ?? "Unknown";
+                parseItem["al_wilaya"] = item["الولاية"] ?? "Unknown";
+                parseItem["phone_number"] = item["رقم الهاتف"] ?? "Unknown";
+                parseItem["email"] = item["البريد الإلكتروني"] ?? "Unknown";
+                parseItem["residense_block_number"] = item["الجناح"] ?? "Unknown";
+                parseItem["residense_room_number"] = item["الغرفة"] ?? "Unknown";
+                if(Number.parseInt(item["رقم الطالب (Matricule)"])) {
+                  parseItem["school_matericule"] = Number.parseInt(item["رقم الطالب (Matricule)"]) ?? "Unknown";
+                } else {
+                  parseItem["school_matericule"] = item["رقم الطالب (Matricule)"] ?? "Unknown";
+                }
+                parseItem["school"] = item["المؤسسة الجامعية"] ?? "Unknown";
+                parseItem["year_of_study"] = item["السنة الدراسية"] ?? "Unknown";
+                parseItem["study_specialty"] = item["التخصص الدراسي"] ?? "Unknown";
+                parseItem["img_card_personal_url"] = item["صورة شخصية"] ?? "Unknown";
+                parseItem["img_card_residency_url"] = item["بطاقة الإقامة"] ?? "Unknown";
+                parseItem["img_school_certificate_url"] = item["شهادة مدرسية"] ?? "Unknown";
+                UserAction.add(parseItem);
+              }
+
+            }}>اعضاء</MenuItem>
           </SubMenu>
           <MenuItem onClick={() => toggleHelpPopup()}>مساعدة</MenuItem>
 

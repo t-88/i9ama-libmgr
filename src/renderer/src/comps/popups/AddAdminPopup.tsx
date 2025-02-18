@@ -123,7 +123,7 @@ export default function AddAdminPopup() {
 
 
   async function onUploadImg() {
-    const imgBase64 = await (window as any).utils.open();
+    const imgBase64 = await (window as any).utils.openForImg();
     return imgBase64;
   }
 

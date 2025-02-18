@@ -37,10 +37,14 @@ const addUserProx = proxy<{ step: number; info: Record<string, any> }>({
     school_matericule: "",
     year_of_study: "1",
     study_specialty: "",
-    img_personal: "" ,
-    img_card_personal: "" ,
-    img_card_residency: "" ,
-    img_school_certificate: "", 
+    img_personal: "",
+    img_card_personal: "",
+    img_card_residency: "",
+    img_school_certificate: "",
+    img_personal_url: "",
+    img_card_residency_url: "",
+    img_school_certificate_url: "",
+    img_card_personal_url: "",
   },
 });
 
@@ -64,7 +68,7 @@ export default function AddUserPopup() {
   }
 
   async function onUploadImg() {
-    const imgBase64 = await (window as any).utils.open();
+    const imgBase64 = await (window as any).utils.openForImg();
     return [imgBase64];
   }
 
@@ -84,10 +88,16 @@ export default function AddUserPopup() {
       addUserProx.info.school_matericule = user.school_matericule;
       addUserProx.info.year_of_study = user.year_of_study;
       addUserProx.info.study_specialty = user.study_specialty;
-      addUserProx.info.img_personal = [user.img_personal];
-      addUserProx.info.img_card_personal = [user.img_card_personal];
-      addUserProx.info.img_card_residency = [user.img_card_residency];
-      addUserProx.info.img_school_certificate = [user.img_school_certificate];      
+      addUserProx.info.img_personal = user.img_personal ? [user.img_personal] : null;
+      addUserProx.info.img_card_personal = user.img_card_personal ? [user.img_card_personal] : null;
+      addUserProx.info.img_card_residency = user.img_card_residency ? [user.img_card_residency] : null;
+      addUserProx.info.img_school_certificate = user.img_school_certificate ? [user.img_school_certificate] : null;
+      addUserProx.info.img_personal_url = user.img_personal_url;
+      addUserProx.info.img_card_residency_url = user.img_card_residency_url;
+      addUserProx.info.img_school_certificate_url = user.img_school_certificate_url;
+      addUserProx.info.img_card_personal_url = user.img_card_personal_url;
+
+
     }
     addUserProx.step = 0;
   }, []);
@@ -111,13 +121,18 @@ export default function AddUserPopup() {
     img_card_residency: useRef<any>(null),
     img_school_certificate: useRef<any>(null),
     img_card_personal: useRef<any>(null),
+    img_personal_url: useRef<any>(null),
+    img_card_residency_url: useRef<any>(null),
+    img_school_certificate_url: useRef<any>(null),
+    img_card_personal_url: useRef<any>(null),
+
 
   }
 
 
   useSnapshot(addUserProx);
   function AddUserStep1() {
-    const keys = ["first_name", "last_name", "al_wilaya", "phone_number", "facebook", "school"];
+    const keys = ["first_name", "last_name", "al_wilaya", "phone_number", "school"];
 
     function onClickStep1() {
 
@@ -133,7 +148,6 @@ export default function AddUserPopup() {
         addUserProx.info.last_name = info.last_name.current.getInput();
         addUserProx.info.al_wilaya = info.al_wilaya.current.getInput();
         addUserProx.info.phone_number = info.phone_number.current.getInput();
-        addUserProx.info.facebook = info.facebook.current.getInput();
         addUserProx.info.school = info.school.current.getInput();
 
         addUserProx.step += 1;
@@ -161,7 +175,7 @@ export default function AddUserPopup() {
         <Input defaultVal={addUserProx.info.last_name} titleClassName={INPUT_TITLE_WIDTH} ref={info.last_name} title="اللقب" placeholder="ادخل اللقب... " />
         <Input defaultVal={addUserProx.info.al_wilaya} titleClassName={INPUT_TITLE_WIDTH} ref={info.al_wilaya} title="الولاية" placeholder="ادخل اسم الولاية... " />
         <Input defaultVal={addUserProx.info.phone_number} titleClassName={INPUT_TITLE_WIDTH} type={"number"} ref={info.phone_number} title="رقم الهاتف" placeholder="ادخل رقم الهاتف... " />
-        <Input defaultVal={addUserProx.info.facebook} titleClassName={INPUT_TITLE_WIDTH} ref={info.facebook} title="الفيسبوك" placeholder="ادخل رابط او اسم الفيسبوك... " />
+        {/* <Input defaultVal={addUserProx.info.facebook} titleClassName={INPUT_TITLE_WIDTH} ref={info.facebook} title="الفيسبوك" placeholder="ادخل رابط او اسم الفيسبوك... " /> */}
         <Input defaultVal={addUserProx.info.school} titleClassName={INPUT_TITLE_WIDTH} ref={info.school} title="الجامعة" placeholder="ادخل اسم الجامعة... " />
 
       </section>
@@ -214,7 +228,7 @@ export default function AddUserPopup() {
         <Input defaultVal={addUserProx.info.residense_block_number} titleClassName={INPUT_TITLE_WIDTH} ref={info.residense_block_number} title="رقم البلوك" placeholder="ادخل رقم البلوك... " />
         <Input defaultVal={addUserProx.info.residense_room_number} titleClassName={INPUT_TITLE_WIDTH} ref={info.residense_room_number} title="رقم الغرفة" placeholder="ادخل اسم رقم الغرفة... " />
         <Input defaultVal={addUserProx.info.school_matericule} titleClassName={INPUT_TITLE_WIDTH} ref={info.school_matericule} title="رقم التسجيل" placeholder="ادخل رقم التسجيل المدرسي... " />
-        <Input defaultVal={addUserProx.info.year_of_study} titleClassName={INPUT_TITLE_WIDTH} ref={info.year_of_study} type={"number"} title="عام الدراسة" placeholder="ادخل العام الدراسي... " />
+        <Input defaultVal={addUserProx.info.year_of_study} titleClassName={INPUT_TITLE_WIDTH} ref={info.year_of_study} title="عام الدراسة" placeholder="ادخل العام الدراسي... " />
         <Input defaultVal={addUserProx.info.study_specialty} titleClassName={INPUT_TITLE_WIDTH} ref={info.study_specialty} title="التخصص" placeholder="ادخل اسم التخصص... " />
 
       </section>
@@ -223,26 +237,38 @@ export default function AddUserPopup() {
   }
 
   function AddUserStep3() {
-    const keys = ["img_personal", "img_card_personal", "img_card_residency", "img_school_certificate"];
+    const keys = [ "img_card_personal", "img_card_residency", "img_school_certificate"];
 
 
     function onClickStep3() {
       let validInput = true;
       for (let key of keys) {
-        if (!info[key].current.checkInput({ func: validate_inputNotEmpty, msg: "" })) {
-          validInput = false;
-          break;
+        if (addUserProx.info[key]) {
+          if (!info[key].current.checkInput({ func: validate_inputNotEmpty, msg: "" })) {
+            validInput = false;
+            break;
+          }
+        } else {
+          if (!info[key + "_url"].current.checkInput({ func: validate_inputNotEmpty, msg: "" })) {
+            validInput = false;
+            break;
+          }
         }
       }
       if (validInput) {
-        addUserProx.info.img_personal = info.img_personal.current.getInput();
-        addUserProx.info.img_card_personal = info.img_card_personal.current.getInput();
-        addUserProx.info.img_card_residency = info.img_card_residency.current.getInput();
-        addUserProx.info.img_school_certificate = info.img_school_certificate.current.getInput();
-        
-        if(popupState.popupType == "add-user") {
+
+
+        keys.forEach(field => {
+          if (addUserProx.info[field] != null) {
+            addUserProx.info[field] = info[field].current.getInput();;
+          } else {
+            addUserProx.info[`${field}_url`] = info[`${field}_url`].current.getInput();
+          }
+        });
+
+        if (popupState.popupType == "add-user") {
           UserAction.add(addUserProx.info);
-        }  else {
+        } else {
           onSaveUser();
         }
       } else {
@@ -251,7 +277,7 @@ export default function AddUserPopup() {
       }
     }
 
-    
+
 
 
     return <div className='relative z-10 w-full flex flex-col gap-5 px-6 py-8' >
@@ -266,10 +292,26 @@ export default function AddUserPopup() {
       }
 
       <section>
-        <ImgUpload defaultVal={addUserProx.info.img_personal} ref={info.img_personal} titleClassName={INPUT_TITLE_WIDTH} title="صورة شخصية" onUploadImg={onUploadImg} />
-        <ImgUpload defaultVal={addUserProx.info.img_card_personal} ref={info.img_card_personal} titleClassName={INPUT_TITLE_WIDTH} title="بطاقة التعريف" onUploadImg={onUploadImg} />
-        <ImgUpload defaultVal={addUserProx.info.img_card_residency} ref={info.img_card_residency} titleClassName={INPUT_TITLE_WIDTH} title="بطاقة الطالب" onUploadImg={onUploadImg} />
-        <ImgUpload defaultVal={addUserProx.info.img_school_certificate} ref={info.img_school_certificate} titleClassName={INPUT_TITLE_WIDTH} title="شهادة مدرسية" onUploadImg={onUploadImg} />
+        {/* {
+          addUserProx.info.img_personal ?
+            <ImgUpload defaultVal={addUserProx.info.img_personal} ref={info.img_personal} titleClassName={INPUT_TITLE_WIDTH} title="صورة شخصية" onUploadImg={onUploadImg} /> :
+            <Input defaultVal={addUserProx.info.img_personal_url} titleClassName={INPUT_TITLE_WIDTH} ref={info.img_personal_url} title="الاميل" placeholder="ادخل الاميل... " />
+        } */}
+        {
+          addUserProx.info.img_card_residency ?
+            <ImgUpload defaultVal={addUserProx.info.img_card_residency} ref={info.img_card_residency} titleClassName={INPUT_TITLE_WIDTH} title="بطاقة التعريف" onUploadImg={onUploadImg} /> :
+            <Input defaultVal={addUserProx.info.img_card_residency_url} titleClassName={INPUT_TITLE_WIDTH} ref={info.img_card_residency_url} title="بطاقة التعريف"  placeholder="ادخل الاميل... " />
+        }
+        {
+          addUserProx.info.img_school_certificate ?
+            <ImgUpload defaultVal={addUserProx.info.img_school_certificate} ref={info.img_school_certificate} titleClassName={INPUT_TITLE_WIDTH} title="بطاقة الطالب" onUploadImg={onUploadImg} /> :
+            <Input defaultVal={addUserProx.info.img_school_certificate_url} titleClassName={INPUT_TITLE_WIDTH} ref={info.img_school_certificate_url} title="بطاقة الطالب" placeholder="ادخل الاميل... " />
+        }
+        {
+          addUserProx.info.img_card_personal ?
+            <ImgUpload defaultVal={addUserProx.info.img_card_personal_url} ref={info.img_card_personal} titleClassName={INPUT_TITLE_WIDTH} title="شهادة مدرسية" onUploadImg={onUploadImg} /> :
+            <Input defaultVal={addUserProx.info.img_card_personal_url} titleClassName={INPUT_TITLE_WIDTH} ref={info.img_card_personal_url} title="شهادة مدرسية" placeholder="ادخل الاميل... " />
+        }
       </section>
       <ActionButtons onAddUser={onClickStep3} onDeleteUser={onDeleteUser} onSaveUser={onClickStep3} />
     </div>
@@ -323,7 +365,7 @@ function ActionButtons({ onAddUser, onDeleteUser, onSaveUser, onClickNext }: { o
 
   } else {
     return <div className="flex flex-row-reverse justify-between">
-      <button onClick={popupState.popupType == 'edit-user' ? onSaveUser :  onAddUser} className='interactive-button flex gap-2  self-end  rounded py-1 px-4 text-white text-lg shadow' >
+      <button onClick={popupState.popupType == 'edit-user' ? onSaveUser : onAddUser} className='interactive-button flex gap-2  self-end  rounded py-1 px-4 text-white text-lg shadow' >
 
         {popupState.popupType == 'edit-user' ? <p>حفظ</p> : <p>اضافة</p>}
         <img src={popupState.popupType == 'edit-user' ? saveIMG : addIMG} height={16} width={16} alt="IMG" className="self-center" />

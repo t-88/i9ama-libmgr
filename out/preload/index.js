@@ -6,8 +6,8 @@ const Database = require("better-sqlite3");
 const electron = require("electron");
 const drizzleOrm = require("drizzle-orm");
 const sqliteCore = require("drizzle-orm/sqlite-core");
-const migrator = require("drizzle-orm/better-sqlite3/migrator");
 const crypto = require("crypto");
+const migrator = require("drizzle-orm/better-sqlite3/migrator");
 const megajs = require("megajs");
 const ActorsFields = {
   id: sqliteCore.integer("id").primaryKey({ autoIncrement: true }),
@@ -20,21 +20,22 @@ const AdminsTable = sqliteCore.sqliteTable("admins", {
 });
 const UsersTable = sqliteCore.sqliteTable("users", {
   ...ActorsFields,
-  uuid: sqliteCore.text("uuid", { length: 64 }).notNull(),
-  date_of_birth: sqliteCore.text("date_of_birth").notNull(),
-  al_wilaya: sqliteCore.text("al_wilaya").notNull(),
-  phone_number: sqliteCore.text("phone_number").notNull(),
-  fb_name_or_link: sqliteCore.text("fb_name_or_link").notNull(),
-  school: sqliteCore.text("school").notNull(),
-  email: sqliteCore.text("email").notNull(),
-  residense_block_number: sqliteCore.text("residense_block_number").notNull(),
-  residense_room_number: sqliteCore.text("residense_room_number").notNull(),
-  school_matericule: sqliteCore.text("school_matericule").notNull(),
-  year_of_study: sqliteCore.text("year_of_study").notNull(),
-  study_specialty: sqliteCore.text("study_specialty").notNull(),
-  // img_personal: text('img_personal').notNull(),
-  // img_card_residency: text('img_card_residency').notNull(),
-  // img_school_certificate: text('img_school_certificate').notNull(),
+  uuid: sqliteCore.text("uuid", { length: 64 }).notNull().default(drizzleOrm.sql`(lower(hex(randomblob(16))))`),
+  // Generates a valid UUID
+  date_of_birth: sqliteCore.text("date_of_birth").notNull().default(drizzleOrm.sql`CURRENT_TIMESTAMP`),
+  // Default to current date
+  al_wilaya: sqliteCore.text("al_wilaya").notNull().default(drizzleOrm.sql`'Unknown'`),
+  phone_number: sqliteCore.text("phone_number").notNull().default(drizzleOrm.sql`'Unknown'`),
+  school: sqliteCore.text("school").notNull().default(drizzleOrm.sql`'Unknown'`),
+  email: sqliteCore.text("email").notNull().default(drizzleOrm.sql`'Unknown'`),
+  residense_block_number: sqliteCore.text("residense_block_number").notNull().default(drizzleOrm.sql`'Unknown'`),
+  residense_room_number: sqliteCore.text("residense_room_number").notNull().default(drizzleOrm.sql`'Unknown'`),
+  school_matericule: sqliteCore.text("school_matericule").notNull().default(drizzleOrm.sql`'Unknown'`),
+  year_of_study: sqliteCore.text("year_of_study").notNull().default(drizzleOrm.sql`'Unknown'`),
+  study_specialty: sqliteCore.text("study_specialty").notNull().default(drizzleOrm.sql`'Unknown'`),
+  img_card_personal_url: sqliteCore.text("img_personal_url").notNull().default(drizzleOrm.sql`'default_image.jpg'`),
+  img_card_residency_url: sqliteCore.text("img_card_residency_url").notNull().default(drizzleOrm.sql`'default_card.jpg'`),
+  img_school_certificate_url: sqliteCore.text("img_school_certificate_url").notNull().default(drizzleOrm.sql`'default_certificate.jpg'`),
   reserved_book: sqliteCore.integer("book_id").references(() => BooksTable.id, { onDelete: "set null" }).default(null)
 });
 const TagsTable = sqliteCore.sqliteTable("tags", {
@@ -200,7 +201,7 @@ async function insert$4(info) {
       date_of_birth: info.date_of_birth,
       al_wilaya: info.al_wilaya,
       phone_number: info.phone_number,
-      fb_name_or_link: info.fb_name_or_link,
+      // fb_name_or_link: info.fb_name_or_link,
       school: info.school,
       email: info.email,
       residense_block_number: info.residense_block_number,
@@ -208,18 +209,19 @@ async function insert$4(info) {
       school_matericule: info.school_matericule,
       year_of_study: info.year_of_study,
       study_specialty: info.study_specialty,
-      fb_name_or_link: ""
+      img_card_wpersonal_url: info.img_card_personal_url,
+      img_card_residency_url: info.img_card_residency_url,
+      img_school_certificate_url: info.img_school_certificate_url
     }).returning({ id: UsersTable.id }))[0];
-    saveBase64Image(info.img_personal[0][0], `users/${id}_img_personal.png`);
-    saveBase64Image(info.img_card_personal[0][0], `users/${id}_img_card_personal.png`);
-    saveBase64Image(info.img_card_residency[0][0], `users/${id}_img_card_residency.png`);
-    saveBase64Image(info.img_school_certificate[0][0], `users/${id}_img_school_certificate.png`);
+    info.img_personal && saveBase64Image(info.img_personal[0][0], `users/${id}_img_personal.png`);
+    info.img_card_personal && saveBase64Image(info.img_card_personal[0][0], `users/${id}_img_card_personal.png`);
+    info.img_card_residency && saveBase64Image(info.img_card_residency[0][0], `users/${id}_img_card_residency.png`);
+    info.img_school_certificate && saveBase64Image(info.img_school_certificate[0][0], `users/${id}_img_school_certificate.png`);
   } catch (e) {
     console.error("[DB-ERROR]: failed to insert user", e);
   }
 }
 async function update$2(id, info) {
-  console.log("UR MOM", info);
   try {
     if (!fs.existsSync("users")) {
       fs.mkdirSync("users");
@@ -231,7 +233,6 @@ async function update$2(id, info) {
       date_of_birth: info.date_of_birth,
       al_wilaya: info.al_wilaya,
       phone_number: info.phone_number,
-      fb_name_or_link: info.fb_name_or_link,
       school: info.school,
       email: info.email,
       residense_block_number: info.residense_block_number,
@@ -239,12 +240,14 @@ async function update$2(id, info) {
       school_matericule: info.school_matericule,
       year_of_study: info.year_of_study,
       study_specialty: info.study_specialty,
-      fb_name_or_link: ""
+      img_personal_url: info.img_personal_url,
+      img_card_residency_url: info.img_card_residency_url,
+      img_school_certificate_url: info.img_school_certificate_url
     }).where(drizzleOrm.eq(UsersTable.id, id)).run();
-    saveBase64Image(info.img_personal[0][0], `users/${id}_img_personal.png`);
-    saveBase64Image(info.img_card_personal[0][0], `users/${id}_img_card_personal.png`);
-    saveBase64Image(info.img_card_residency[0][0], `users/${id}_img_card_residency.png`);
-    saveBase64Image(info.img_school_certificate[0][0], `users/${id}_img_school_certificate.png`);
+    fs.existsSync(`users/${id}_img_personal.png`) && saveBase64Image(info.img_personal[0][0], `users/${id}_img_personal.png`);
+    fs.existsSync(`users/${id}_img_card_personal.png`) && saveBase64Image(info.img_card_personal[0][0], `users/${id}_img_card_personal.png`);
+    fs.existsSync(`users/${id}_img_card_residency.png`) && saveBase64Image(info.img_card_residency[0][0], `users/${id}_img_card_residency.png`);
+    fs.existsSync(`users/${id}_img_school_certificate.png`) && saveBase64Image(info.img_school_certificate[0][0], `users/${id}_img_school_certificate.png`);
   } catch (e) {
     console.error("[DB-ERROR]: failed to insert user", e);
   }
@@ -430,10 +433,14 @@ async function loadUserImgs(id) {
     if (!fs.existsSync("users")) {
       return void 0;
     }
-    let img_personal = "data:image/png;base64," + fs.readFileSync(`users/${id}_img_personal.png`).toString("base64");
-    let img_card_personal = "data:image/png;base64," + fs.readFileSync(`users/${id}_img_card_personal.png`).toString("base64");
-    let img_card_residency = "data:image/png;base64," + fs.readFileSync(`users/${id}_img_card_residency.png`).toString("base64");
-    let img_school_certificate = "data:image/png;base64," + fs.readFileSync(`users/${id}_img_school_certificate.png`).toString("base64");
+    let img_personal = null;
+    let img_card_personal = null;
+    let img_card_residency = null;
+    let img_school_certificate = null;
+    fs.existsSync(`users/${id}_img_personal.png`) && (img_personal = "data:image/png;base64," + fs.readFileSync(`users/${id}_img_personal.png`).toString("base64"));
+    fs.existsSync(`users/${id}_img_card_personal.png`) && (img_card_personal = "data:image/png;base64," + fs.readFileSync(`users/${id}_img_card_personal.png`).toString("base64"));
+    fs.existsSync(`users/${id}_img_card_residency.png`) && (img_card_residency = "data:image/png;base64," + fs.readFileSync(`users/${id}_img_card_residency.png`).toString("base64"));
+    fs.existsSync(`users/${id}_img_school_certificate.png`) && (img_school_certificate = "data:image/png;base64," + fs.readFileSync(`users/${id}_img_school_certificate.png`).toString("base64"));
     return {
       img_personal,
       img_card_personal,
@@ -752,7 +759,8 @@ electron.contextBridge.exposeInMainWorld("db", {
   db_fake
 });
 electron.contextBridge.exposeInMainWorld("utils", {
-  open: () => electron.ipcRenderer.invoke("open-file-explorer"),
-  loadUserImgs: (imgsUUID) => loadUserImgs(imgsUUID),
-  loadAdminImgs: (imgsUUID) => loadAdminImgs(imgsUUID)
+  openForImg: () => electron.ipcRenderer.invoke("open-file-explorer-imgs"),
+  openForCsv: () => electron.ipcRenderer.invoke("open-file-explorer-csvs"),
+  loadUserImgs: (id) => loadUserImgs(id),
+  loadAdminImgs: (id) => loadAdminImgs(id)
 });

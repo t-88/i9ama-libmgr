@@ -1,5 +1,6 @@
-import { relations } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 import { integer, datetime, int, sqliteTable, text, boolean } from "drizzle-orm/sqlite-core";
+import { randomUUID } from "crypto";
 
 
 
@@ -16,25 +17,24 @@ export const AdminsTable = sqliteTable('admins', {
 
 export const UsersTable = sqliteTable('users', {
   ...ActorsFields,
-  uuid: text("uuid", { length: 64 }).notNull(),
-  date_of_birth: text('date_of_birth').notNull(),
-  al_wilaya: text('al_wilaya').notNull(), 
-  phone_number: text('phone_number').notNull(), 
-  fb_name_or_link: text('fb_name_or_link').notNull(), 
-  school: text('school').notNull(),
+  
+  uuid: text("uuid", { length: 64 }).notNull().default(sql`(lower(hex(randomblob(16))))`), // Generates a valid UUID
+  date_of_birth: text('date_of_birth').notNull().default(sql`CURRENT_TIMESTAMP`), // Default to current date
+  al_wilaya: text('al_wilaya').notNull().default(sql`'Unknown'`),
+  phone_number: text('phone_number').notNull().default(sql`'Unknown'`),
+  school: text('school').notNull().default(sql`'Unknown'`),
+  email: text('email').notNull().default(sql`'Unknown'`),
+  residense_block_number: text('residense_block_number').notNull().default(sql`'Unknown'`),
+  residense_room_number: text('residense_room_number').notNull().default(sql`'Unknown'`),
+  school_matericule: text('school_matericule').notNull().default(sql`'Unknown'`),
+  year_of_study: text('year_of_study').notNull().default(sql`'Unknown'`),
+  study_specialty: text('study_specialty').notNull().default(sql`'Unknown'`),
+  img_card_personal_url: text('img_personal_url').notNull().default(sql`'default_image.jpg'`),
+  img_card_residency_url: text('img_card_residency_url').notNull().default(sql`'default_card.jpg'`),
+  img_school_certificate_url: text('img_school_certificate_url').notNull().default(sql`'default_certificate.jpg'`),
 
-  email: text('email').notNull(), 
-  residense_block_number: text('residense_block_number').notNull(), 
-  residense_room_number: text('residense_room_number').notNull(), 
-  school_matericule: text('school_matericule').notNull(), 
-  year_of_study: text('year_of_study').notNull(), 
-  study_specialty: text('study_specialty').notNull(), 
-
-  // img_personal: text('img_personal').notNull(),
-  // img_card_residency: text('img_card_residency').notNull(),
-  // img_school_certificate: text('img_school_certificate').notNull(),
-
-  reserved_book: integer('book_id').references(() => BooksTable.id, {onDelete: "set null"}).default(null),
+  reserved_book: integer('book_id')
+    .references(() => BooksTable.id, { onDelete: "set null" }).default(null),
 });
 
 

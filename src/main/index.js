@@ -77,7 +77,8 @@ app.whenReady().then(() => {
   })
 
 
-  ipcMain.handle('open-file-explorer', openFileExplorer)  
+  ipcMain.handle('open-file-explorer-imgs', openFileExplorerForIMGS)  
+  ipcMain.handle('open-file-explorer-csvs', openFileExplorerForCSV)  
 
 
   createWindow()
@@ -97,7 +98,7 @@ app.on('window-all-closed', () => {
 
 
 
-async function openFileExplorer(event) {
+async function openFileExplorerForIMGS(event) {
   const file = await dialog.showOpenDialog({
     properties: ['openFile', 'multiSelections'], filters: [
       { name: 'Images', extensions: ['jpg', 'png', 'gif'] },
@@ -106,4 +107,16 @@ async function openFileExplorer(event) {
   const base64 = "data:image/png;base64, "  + fs.readFileSync(file.filePaths[0]).toString('base64');
 
   return base64;
+}
+
+async function openFileExplorerForCSV(event) {
+  console.log("asda")
+  const file = await dialog.showOpenDialog({
+    properties: ['openFile', 'multiSelections'], filters: [
+      { name: 'csv files', extensions: ['csv'] },
+    ]
+  });
+
+  const data =  fs.readFileSync(file.filePaths[0],"utf-8")
+  return data;
 }

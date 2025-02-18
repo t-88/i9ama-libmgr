@@ -25,7 +25,6 @@ async function migrateDB() {
 
 
 
-
 contextBridge.exposeInMainWorld("db", {
   admins: AdminsTableInterface,
   users: UsersTableInterface,
@@ -44,7 +43,8 @@ contextBridge.exposeInMainWorld("db", {
 
 
 contextBridge.exposeInMainWorld('utils', {
-  open: () => ipcRenderer.invoke('open-file-explorer'),
-  loadUserImgs: (imgsUUID) => helpers.loadUserImgs(imgsUUID),
-  loadAdminImgs: (imgsUUID) => helpers.loadAdminImgs(imgsUUID)
+  openForImg: () => ipcRenderer.invoke('open-file-explorer-imgs'),
+  openForCsv: () => ipcRenderer.invoke('open-file-explorer-csvs'),
+  loadUserImgs: (id) => helpers.loadUserImgs(id),
+  loadAdminImgs: (id) => helpers.loadAdminImgs(id)
 })

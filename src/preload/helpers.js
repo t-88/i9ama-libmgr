@@ -13,10 +13,16 @@ export async function loadUserImgs(id) {
       return undefined;
     }
 
-    let img_personal = "data:image/png;base64," + fs.readFileSync(`users/${id}_img_personal.png`).toString("base64");
-    let img_card_personal = "data:image/png;base64," + fs.readFileSync(`users/${id}_img_card_personal.png`).toString("base64");
-    let img_card_residency = "data:image/png;base64," + fs.readFileSync(`users/${id}_img_card_residency.png`).toString("base64");
-    let img_school_certificate = "data:image/png;base64," + fs.readFileSync(`users/${id}_img_school_certificate.png`).toString("base64"); 
+    let img_personal = null;
+    let img_card_personal = null;
+    let img_card_residency = null;
+    let img_school_certificate = null;
+
+    fs.existsSync(`users/${id}_img_personal.png`) && (img_personal = "data:image/png;base64," + fs.readFileSync(`users/${id}_img_personal.png`).toString("base64"));
+    fs.existsSync(`users/${id}_img_card_personal.png`) && (img_card_personal = "data:image/png;base64," + fs.readFileSync(`users/${id}_img_card_personal.png`).toString("base64"));
+    fs.existsSync(`users/${id}_img_card_residency.png`) && (img_card_residency = "data:image/png;base64," + fs.readFileSync(`users/${id}_img_card_residency.png`).toString("base64"));
+    fs.existsSync(`users/${id}_img_school_certificate.png`) && (img_school_certificate = "data:image/png;base64," + fs.readFileSync(`users/${id}_img_school_certificate.png`).toString("base64"));
+
     return {
       img_personal,
       img_card_personal,

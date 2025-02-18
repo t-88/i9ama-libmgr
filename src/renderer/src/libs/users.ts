@@ -11,7 +11,7 @@ interface User {
     date_of_birth: string,
     al_wilaya: string,
     phone_number: string,
-    fb_name_or_link: string,
+    // fb_name_or_link: string,
     school: string,
     email: string,
     residense_block_number: string,
@@ -25,6 +25,11 @@ interface User {
     img_card_personal: string | null,
     img_card_residency: string | null,
     img_school_certificate: string | null,
+    img_personal_url: string | null,
+    img_card_personal_url: string | null,
+    img_card_residency_url: string | null,
+    img_school_certificate_url: string | null,
+
 }
 
 interface UserStateObj {

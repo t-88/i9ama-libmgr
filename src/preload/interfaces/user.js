@@ -6,17 +6,17 @@ import { cosineDistance, eq } from "drizzle-orm";
 import * as helpers from '../helpers'
 
 
-export async function insert(info) { 
+export async function insert(info) {
     try {
         if (!fs.existsSync("users")) { fs.mkdirSync("users"); }
-        const {id} = (await db.insert(UsersTable).values({
-            uuid : "25" + info.first_name[0] + info.residense_room_number.padStart(3,"0") + info.residense_block_number.padStart(3,"0")  + info.last_name[0],
+        const { id } = (await db.insert(UsersTable).values({
+            uuid: "25" + info.first_name[0] + info.residense_room_number.padStart(3, "0") + info.residense_block_number.padStart(3, "0") + info.last_name[0],
             first_name: info.first_name,
             last_name: info.last_name,
             date_of_birth: info.date_of_birth,
             al_wilaya: info.al_wilaya,
             phone_number: info.phone_number,
-            fb_name_or_link: info.fb_name_or_link,
+            // fb_name_or_link: info.fb_name_or_link,
             school: info.school,
             email: info.email,
             residense_block_number: info.residense_block_number,
@@ -24,12 +24,16 @@ export async function insert(info) {
             school_matericule: info.school_matericule,
             year_of_study: info.year_of_study,
             study_specialty: info.study_specialty,
-            fb_name_or_link: "", 
+            img_card_wpersonal_url: info.img_card_personal_url,
+            img_card_residency_url: info.img_card_residency_url,
+            img_school_certificate_url: info.img_school_certificate_url,
+
         }).returning({ id: UsersTable.id }))[0]
-        helpers.saveBase64Image(info.img_personal[0][0],`users/${id}_img_personal.png`);
-        helpers.saveBase64Image(info.img_card_personal[0][0],`users/${id}_img_card_personal.png`);
-        helpers.saveBase64Image(info.img_card_residency[0][0],`users/${id}_img_card_residency.png`);
-        helpers.saveBase64Image(info.img_school_certificate[0][0],`users/${id}_img_school_certificate.png`);
+
+        info.img_personal && helpers.saveBase64Image(info.img_personal[0][0], `users/${id}_img_personal.png`);
+        info.img_card_personal && helpers.saveBase64Image(info.img_card_personal[0][0], `users/${id}_img_card_personal.png`);
+        info.img_card_residency && helpers.saveBase64Image(info.img_card_residency[0][0], `users/${id}_img_card_residency.png`);
+        info.img_school_certificate && helpers.saveBase64Image(info.img_school_certificate[0][0], `users/${id}_img_school_certificate.png`);
 
     } catch (e) {
         console.error("[DB-ERROR]: failed to insert user", e);
@@ -38,18 +42,15 @@ export async function insert(info) {
 
 
 export async function update(id, info) {
-    console.log("UR MOM",info)
-
     try {
         if (!fs.existsSync("users")) { fs.mkdirSync("users"); }
         await db.update(UsersTable).set({
-            uuid : "25" + info.first_name[0] + info.residense_room_number.padStart(3,"0") + info.residense_block_number.padStart(3,"0")  + info.last_name[0],
+            uuid: "25" + info.first_name[0] + info.residense_room_number.padStart(3, "0") + info.residense_block_number.padStart(3, "0") + info.last_name[0],
             first_name: info.first_name,
             last_name: info.last_name,
             date_of_birth: info.date_of_birth,
             al_wilaya: info.al_wilaya,
             phone_number: info.phone_number,
-            fb_name_or_link: info.fb_name_or_link,
             school: info.school,
             email: info.email,
             residense_block_number: info.residense_block_number,
@@ -57,14 +58,18 @@ export async function update(id, info) {
             school_matericule: info.school_matericule,
             year_of_study: info.year_of_study,
             study_specialty: info.study_specialty,
-            fb_name_or_link: "", 
+            img_personal_url : info.img_personal_url, 
+            img_card_residency_url : info.img_card_residency_url, 
+            img_school_certificate_url : info.img_school_certificate_url,             
         })
-        .where(eq(UsersTable.id, id))
-        .run()
-        helpers.saveBase64Image(info.img_personal[0][0],`users/${id}_img_personal.png`);
-        helpers.saveBase64Image(info.img_card_personal[0][0],`users/${id}_img_card_personal.png`);
-        helpers.saveBase64Image(info.img_card_residency[0][0],`users/${id}_img_card_residency.png`);
-        helpers.saveBase64Image(info.img_school_certificate[0][0],`users/${id}_img_school_certificate.png`);
+            .where(eq(UsersTable.id, id))
+            .run()
+
+        fs.existsSync(`users/${id}_img_personal.png`) && helpers.saveBase64Image(info.img_personal[0][0], `users/${id}_img_personal.png`);
+        fs.existsSync(`users/${id}_img_card_personal.png`) && helpers.saveBase64Image(info.img_card_personal[0][0], `users/${id}_img_card_personal.png`);
+        fs.existsSync(`users/${id}_img_card_residency.png`) && helpers.saveBase64Image(info.img_card_residency[0][0], `users/${id}_img_card_residency.png`);
+        fs.existsSync(`users/${id}_img_school_certificate.png`) && helpers.saveBase64Image(info.img_school_certificate[0][0], `users/${id}_img_school_certificate.png`);
+
 
     } catch (e) {
         console.error("[DB-ERROR]: failed to insert user", e);
