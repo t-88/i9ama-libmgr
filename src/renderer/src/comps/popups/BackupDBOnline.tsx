@@ -13,23 +13,13 @@ const INPUT_WIDTH = "w-40";
 
 
 export default function BackupDBOnline() {
+
+    
     function uploadDB() {
-        toast.promise((window as any).db.mega.uploadDB(),
-            {
-                pending: 'Promise is pending',
-                success: 'Promise resolved 👌',
-                error: 'Promise rejected 🤯'
-            }
-        );        
+               
     }
     function downloadDB() {
-        toast.promise((window as any).db.mega.downloadDB(),
-            {
-                pending: 'Promise is pending',
-                success: 'Promise resolved 👌',
-                error: 'Promise rejected 🤯'
-            }
-        );
+ 
     }
     async function switchDB() {
         await (window as any).db.mega.switchDB();

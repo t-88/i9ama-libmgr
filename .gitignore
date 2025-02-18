@@ -27,3 +27,7 @@ electron-builder.yaml
 
 users/*
 admins/*
+
+.env
+backup-dbs/*
+downloaded-dbs/*

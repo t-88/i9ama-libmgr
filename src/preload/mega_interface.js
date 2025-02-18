@@ -4,18 +4,29 @@ import crypto from "crypto";
 import * as helpers from './helpers'
 import db, { loadDB, sqlite } from './db';
 
-const MEGA_ENC_PASSWORD = ""
-const ALGORTHIM = ""
-const EMAIL = ""
-const PASSWORD = ""
+let MEGA_ENC_PASSWORD = ""
+let EMAIL = ""
+let PASSWORD = ""
+let ALGORITHM = ""
 
 
+
+function loadConfig() {
+
+    const data = fs.readFileSync(".env", 'utf-8');
+    const config = JSON.parse(data);
+
+    MEGA_ENC_PASSWORD = config.MEGA_ENC_PASSWORD || "";
+    EMAIL = config.EMAIL || "";
+    PASSWORD = config.PASSWORD || "";
+    ALGORITHM = config.ALGORITHM || "";
+}
 
 
 async function encryptFileToBuffer(inputPath) {
     const key = crypto.scryptSync(MEGA_ENC_PASSWORD, "salt", 32);
     const iv = crypto.randomBytes(16);
-    const cipher = crypto.createCipheriv(ALGORTHIM, key, iv);
+    const cipher = crypto.createCipheriv(ALGORITHM, key, iv);
     try {
         const fileData = fs.readFileSync(inputPath);
         const encrypted = Buffer.concat([cipher.update(fileData), cipher.final()]);
@@ -41,7 +52,7 @@ async function decryptBufferToBuffer(inputBuffer) {
         const fileData = inputBuffer;
         const iv = fileData.slice(0, 16);
         const encryptedContent = fileData.slice(16);
-        const decipher = crypto.createDecipheriv(ALGORTHIM, key, iv);
+        const decipher = crypto.createDecipheriv(ALGORITHM, key, iv);
         const decrypted = Buffer.concat([decipher.update(encryptedContent), decipher.final()]);
         return decrypted;
     } catch (error) {
@@ -62,6 +73,7 @@ function streamToBuffer(stream) {
 
 
 export async function downloadFile(fn) {
+
     const storage = await new Storage({
         email: EMAIL,
         password: PASSWORD,
@@ -97,10 +109,7 @@ export async function uploadFile(fn, store_fn) {
 
         stream.end(fileBuffer);
         const file = await stream.complete;
-
-        console.log('Upload successful:', file);
     } catch (error) {
-        console.error('Upload failed:', error);
     }
 }
 
@@ -108,6 +117,9 @@ export async function uploadFile(fn, store_fn) {
 
 
 export function uploadDB() {
+    loadConfig();
+
+
     const fn = `data-${Date.now()}.db`;
     return uploadFile("data.db", fn)
         .then(() => `Database uploaded as ${fn}`)
@@ -118,6 +130,9 @@ export function uploadDB() {
 }
 
 export function downloadDB() {
+    loadConfig();
+    const info = loadJsonFile("info.json");
+
     return new Storage({
         email: EMAIL,
         password: PASSWORD,
@@ -129,8 +144,8 @@ export function downloadDB() {
         Object.keys(storage.files).forEach(file => {
             let name = storage.files[file].name;
             if (name.startsWith("data-")) {
-                const dateString = name.substring("data-".length, name.length - 3);
-                const dateObject = new Date(Number.parseInt(dateString));
+                const timestamp = extractIDFromDB(name);
+                const dateObject = new Date(Number.parseInt(timestamp));
                 if (!latestDate || dateObject > latestDate) {
                     latestDate = dateObject;
                     latestDateKey = file;
@@ -144,31 +159,81 @@ export function downloadDB() {
 
 
 
-        return downloadFile(storage.files[latestDateKey].name).then(db => {
+        return downloadFile(storage.files[latestDateKey].name).then(async (db) => {
             try {
-                if (!fs.existsSync("downloaded-dbs")) { fs.mkdirSync("downloaded-dbs"); }
-                if (!fs.existsSync("backup-dbs")) { fs.mkdirSync("backup-dbs"); }
-                writeFileSync("downloaded-dbs/" + storage.files[latestDateKey].name, db);
-                writeFileSync("data-version.db", "downloaded-dbs/" + storage.files[latestDateKey].name);
+                if (!fs.existsSync(info.download_db_dir)) { fs.mkdirSync(info.download_db_dir); }
+                if (!fs.existsSync(info.backup_db_dir)) { fs.mkdirSync(info.backup_db_dir); }
+
+                const last_db_id_in_storage = extractIDFromDB(storage.files[latestDateKey].name);
+                if(last_db_id_in_storage == info.last_db_id) {
+                    console.log("YOU HAVE THE LASTEST VERSION");
+                    return;
+                }
+
+                writeFileSync(`${info.download_db_dir}/` + storage.files[latestDateKey].name, db);
+                info.last_db_id = extractIDFromDB(storage.files[latestDateKey].name);
+                saveJsonToFile("info.json",info);
                 return `Database saved as ${storage.files[latestDateKey].name}`;
-            } catch(e) {
-                console.log("ERROR downloading the file",e)
+            } catch (e) {
+                console.log("ERROR downloading the file", e)
             }
         });
 
 
     });
-
 }
 
+function extractIDFromDB(fn) {
+    return fn.substring("data-".length, fn.length - 3);
+}
+
+async function getFileHash(filePath, algorithm = 'sha256') {
+    return new Promise((resolve, reject) => {
+        const hash = crypto.createHash(algorithm);
+        const stream = fs.createReadStream(filePath);
+
+        stream.on('data', (chunk) => hash.update(chunk));
+        stream.on('error', (err) => reject(err));
+        stream.on('end', () => resolve(hash.digest('hex')));
+    });
+}
+
+function loadJsonFile(fn) {
+    try {
+        const data = fs.readFileSync(fn, 'utf8');
+        return JSON.parse(data);
+    } catch (error) {
+        return null;
+    }
+}
+
+async function saveJsonToFile(filePath, data) {
+    try {
+        const jsonData = JSON.stringify(data, null, 2);
+        fs.writeFileSync(filePath, jsonData, 'utf8');
+    } catch (error) {
+        return null;
+    }
+}
+
+
+
 export async function switchDB() {
-    if (!fs.existsSync("downloaded-dbs")) { fs.mkdirSync("downloaded-dbs"); }
-    if (!fs.existsSync("backup-dbs")) { fs.mkdirSync("backup-dbs"); }
+    const info = loadJsonFile("info.json");
 
-    let formattedDate = new Date().toLocaleString().replace(",", "-");
-    formattedDate = formattedDate.replaceAll("/", ".").replaceAll(" ", "");
+    if (!fs.existsSync(info.download_db_dir)) { fs.mkdirSync(info.download_db_dir); }
+    if (!fs.existsSync(info.backup_db_dir)) { fs.mkdirSync(info.backup_db_dir); }
 
-    let db_fn = readFileSync("data-version.db").toString("utf8");
-    fs.copyFileSync(db_fn,"data.db");
+
+
+    let db_fn = info.download_db_dir + "/" + "data-" + info.last_db_id + ".db";
+    if(!fs.existsSync(db_fn)) {
+        console.log("ERROR: DB DOESNT EXISTS")
+        return 1;
+    }
+    
+    fs.copyFileSync("data.db", `${info.backup_db_dir}/data-${Date.now()}.db`);
+    fs.copyFileSync(db_fn, "data.db");
     loadDB("data.db");
+    return 0;
 }

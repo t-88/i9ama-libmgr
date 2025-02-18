@@ -555,14 +555,22 @@ const db_fake = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.definePrope
   books_fillDB,
   users_fillDB
 }, Symbol.toStringTag, { value: "Module" }));
-const MEGA_ENC_PASSWORD = "random-password-for-mega-file-storage-aes-algo";
-const ALGORTHIM = "aes-256-cbc";
-const EMAIL = "mt_douibi@esi.dz";
-const PASSWORD = "imprettycoolguy123456789";
+let MEGA_ENC_PASSWORD = "";
+let EMAIL = "";
+let PASSWORD = "";
+let ALGORITHM = "";
+function loadConfig() {
+  const data = fs.readFileSync(".env", "utf-8");
+  const config = JSON.parse(data);
+  MEGA_ENC_PASSWORD = config.MEGA_ENC_PASSWORD || "";
+  EMAIL = config.EMAIL || "";
+  PASSWORD = config.PASSWORD || "";
+  ALGORITHM = config.ALGORITHM || "";
+}
 async function encryptFileToBuffer(inputPath) {
   const key = crypto.scryptSync(MEGA_ENC_PASSWORD, "salt", 32);
   const iv = crypto.randomBytes(16);
-  const cipher = crypto.createCipheriv(ALGORTHIM, key, iv);
+  const cipher = crypto.createCipheriv(ALGORITHM, key, iv);
   try {
     const fileData = fs.readFileSync(inputPath);
     const encrypted = Buffer.concat([cipher.update(fileData), cipher.final()]);
@@ -578,7 +586,7 @@ async function decryptBufferToBuffer(inputBuffer) {
     const fileData = inputBuffer;
     const iv = fileData.slice(0, 16);
     const encryptedContent = fileData.slice(16);
-    const decipher = crypto.createDecipheriv(ALGORTHIM, key, iv);
+    const decipher = crypto.createDecipheriv(ALGORITHM, key, iv);
     const decrypted = Buffer.concat([decipher.update(encryptedContent), decipher.final()]);
     return decrypted;
   } catch (error) {
@@ -622,12 +630,11 @@ async function uploadFile(fn, store_fn) {
     const stream = storage.upload({ name: store_fn, allowUploadBuffering: true });
     stream.end(fileBuffer);
     const file = await stream.complete;
-    console.log("Upload successful:", file);
   } catch (error) {
-    console.error("Upload failed:", error);
   }
 }
 function uploadDB() {
+  loadConfig();
   const fn = `data-${Date.now()}.db`;
   return uploadFile("data.db", fn).then(() => `Database uploaded as ${fn}`).catch((error) => {
     console.error("Upload failed:", error);
@@ -635,6 +642,8 @@ function uploadDB() {
   });
 }
 function downloadDB() {
+  loadConfig();
+  const info = loadJsonFile("info.json");
   return new megajs.Storage({
     email: EMAIL,
     password: PASSWORD,
@@ -645,8 +654,8 @@ function downloadDB() {
     Object.keys(storage.files).forEach((file) => {
       let name = storage.files[file].name;
       if (name.startsWith("data-")) {
-        const dateString = name.substring("data-".length, name.length - 3);
-        const dateObject = new Date(Number.parseInt(dateString));
+        const timestamp = extractIDFromDB(name);
+        const dateObject = new Date(Number.parseInt(timestamp));
         if (!latestDate || dateObject > latestDate) {
           latestDate = dateObject;
           latestDateKey = file;
@@ -656,16 +665,22 @@ function downloadDB() {
     if (!latestDateKey) {
       throw new Error("No valid database file found.");
     }
-    return downloadFile(storage.files[latestDateKey].name).then((db2) => {
+    return downloadFile(storage.files[latestDateKey].name).then(async (db2) => {
       try {
-        if (!fs.existsSync("downloaded-dbs")) {
-          fs.mkdirSync("downloaded-dbs");
+        if (!fs.existsSync(info.download_db_dir)) {
+          fs.mkdirSync(info.download_db_dir);
         }
-        if (!fs.existsSync("backup-dbs")) {
-          fs.mkdirSync("backup-dbs");
+        if (!fs.existsSync(info.backup_db_dir)) {
+          fs.mkdirSync(info.backup_db_dir);
         }
-        fs.writeFileSync("downloaded-dbs/" + storage.files[latestDateKey].name, db2);
-        fs.writeFileSync("data-version.db", "downloaded-dbs/" + storage.files[latestDateKey].name);
+        const last_db_id_in_storage = extractIDFromDB(storage.files[latestDateKey].name);
+        if (last_db_id_in_storage == info.last_db_id) {
+          console.log("YOU HAVE THE LASTEST VERSION");
+          return;
+        }
+        fs.writeFileSync(`${info.download_db_dir}/` + storage.files[latestDateKey].name, db2);
+        info.last_db_id = extractIDFromDB(storage.files[latestDateKey].name);
+        saveJsonToFile("info.json", info);
         return `Database saved as ${storage.files[latestDateKey].name}`;
       } catch (e) {
         console.log("ERROR downloading the file", e);
@@ -673,18 +688,42 @@ function downloadDB() {
     });
   });
 }
+function extractIDFromDB(fn) {
+  return fn.substring("data-".length, fn.length - 3);
+}
+function loadJsonFile(fn) {
+  try {
+    const data = fs.readFileSync(fn, "utf8");
+    return JSON.parse(data);
+  } catch (error) {
+    return null;
+  }
+}
+async function saveJsonToFile(filePath, data) {
+  try {
+    const jsonData = JSON.stringify(data, null, 2);
+    fs.writeFileSync(filePath, jsonData, "utf8");
+  } catch (error) {
+    return null;
+  }
+}
 async function switchDB() {
-  if (!fs.existsSync("downloaded-dbs")) {
-    fs.mkdirSync("downloaded-dbs");
+  const info = loadJsonFile("info.json");
+  if (!fs.existsSync(info.download_db_dir)) {
+    fs.mkdirSync(info.download_db_dir);
   }
-  if (!fs.existsSync("backup-dbs")) {
-    fs.mkdirSync("backup-dbs");
+  if (!fs.existsSync(info.backup_db_dir)) {
+    fs.mkdirSync(info.backup_db_dir);
   }
-  let formattedDate = (/* @__PURE__ */ new Date()).toLocaleString().replace(",", "-");
-  formattedDate = formattedDate.replaceAll("/", ".").replaceAll(" ", "");
-  let db_fn = fs.readFileSync("data-version.db").toString("utf8");
+  let db_fn = info.download_db_dir + "/data-" + info.last_db_id + ".db";
+  if (!fs.existsSync(db_fn)) {
+    console.log("ERROR: DB DOESNT EXISTS");
+    return 1;
+  }
+  fs.copyFileSync("data.db", `${info.backup_db_dir}/data-${Date.now()}.db`);
   fs.copyFileSync(db_fn, "data.db");
   loadDB("data.db");
+  return 0;
 }
 const MegaInterface = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,

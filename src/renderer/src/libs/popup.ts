@@ -7,7 +7,8 @@ type PopupType = "book-book"
                 | "add-user" | "edit-user" 
                 | "add-book" | "edit-book" 
                 | "add-admin" | "edit-admin"
-                | "backup-db-online"; 
+                | "backup-db-online" 
+                | "help";
 type NavTabName = "books" | "users" | "admins";
 
 interface PopupStateObj {
@@ -92,6 +93,12 @@ function toggleBackupPopup() {
     popupState.popupType = "backup-db-online";
 }
 
+function toggleHelpPopup() {
+    popupState.popupVis = true;
+    popupState.popupType = "help";
+}
+
+
 
 function hidePopup() {
     popupState.popupVis = false;
@@ -109,6 +116,7 @@ export {
     hidePopup,
     toggleEditBookID,
     toggleBackupPopup,
+    toggleHelpPopup,
     popupState,
 }
 
