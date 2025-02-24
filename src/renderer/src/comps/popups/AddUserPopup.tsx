@@ -297,21 +297,22 @@ export default function AddUserPopup() {
             <ImgUpload defaultVal={addUserProx.info.img_personal} ref={info.img_personal} titleClassName={INPUT_TITLE_WIDTH} title="صورة شخصية" onUploadImg={onUploadImg} /> :
             <Input defaultVal={addUserProx.info.img_personal_url} titleClassName={INPUT_TITLE_WIDTH} ref={info.img_personal_url} title="الاميل" placeholder="ادخل الاميل... " />
         } */}
-        {
-          addUserProx.info.img_card_residency ?
-            <ImgUpload defaultVal={addUserProx.info.img_card_residency} ref={info.img_card_residency} titleClassName={INPUT_TITLE_WIDTH} title="بطاقة التعريف" onUploadImg={onUploadImg} /> :
-            <Input defaultVal={addUserProx.info.img_card_residency_url} titleClassName={INPUT_TITLE_WIDTH} ref={info.img_card_residency_url} title="بطاقة التعريف"  placeholder="ادخل الاميل... " />
-        }
-        {
-          addUserProx.info.img_school_certificate ?
-            <ImgUpload defaultVal={addUserProx.info.img_school_certificate} ref={info.img_school_certificate} titleClassName={INPUT_TITLE_WIDTH} title="بطاقة الطالب" onUploadImg={onUploadImg} /> :
-            <Input defaultVal={addUserProx.info.img_school_certificate_url} titleClassName={INPUT_TITLE_WIDTH} ref={info.img_school_certificate_url} title="بطاقة الطالب" placeholder="ادخل الاميل... " />
-        }
+
         {
           addUserProx.info.img_card_personal ?
-            <ImgUpload defaultVal={addUserProx.info.img_card_personal_url} ref={info.img_card_personal} titleClassName={INPUT_TITLE_WIDTH} title="شهادة مدرسية" onUploadImg={onUploadImg} /> :
-            <Input defaultVal={addUserProx.info.img_card_personal_url} titleClassName={INPUT_TITLE_WIDTH} ref={info.img_card_personal_url} title="شهادة مدرسية" placeholder="ادخل الاميل... " />
+            <ImgUpload defaultVal={addUserProx.info.img_card_personal} ref={info.img_card_personal} titleClassName={INPUT_TITLE_WIDTH} title="بطاقة التعريف" onUploadImg={onUploadImg} /> :
+            <Input defaultVal={addUserProx.info.img_card_personal_url} titleClassName={INPUT_TITLE_WIDTH} ref={info.img_card_personal_url} title="بطاقة التعريف" placeholder="" />
         }
+        {
+          addUserProx.info.img_card_residency ?
+            <ImgUpload defaultVal={addUserProx.info.img_card_residency} ref={info.img_card_residency} titleClassName={INPUT_TITLE_WIDTH} title="بطاقة الاقامة" onUploadImg={onUploadImg} /> :
+            <Input defaultVal={addUserProx.info.img_card_residency_url} titleClassName={INPUT_TITLE_WIDTH} ref={info.img_card_residency_url} title="بطاقة الاقامة"  placeholder="" />
+        }        
+        {
+          addUserProx.info.img_school_certificate ?
+            <ImgUpload defaultVal={addUserProx.info.img_school_certificate} ref={info.img_school_certificate} titleClassName={INPUT_TITLE_WIDTH} title="شهادة مدرسية" onUploadImg={onUploadImg} /> :
+            <Input defaultVal={addUserProx.info.img_school_certificate_url} titleClassName={INPUT_TITLE_WIDTH} ref={info.img_school_certificate_url} title="شهادة مدرسية" placeholder="" />
+        }        
       </section>
       <ActionButtons onAddUser={onClickStep3} onDeleteUser={onDeleteUser} onSaveUser={onClickStep3} />
     </div>

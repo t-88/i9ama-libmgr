@@ -24,7 +24,7 @@ export async function insert(info) {
             school_matericule: info.school_matericule,
             year_of_study: info.year_of_study,
             study_specialty: info.study_specialty,
-            img_card_wpersonal_url: info.img_card_personal_url,
+            img_card_personal_url: info.img_card_personal_url,
             img_card_residency_url: info.img_card_residency_url,
             img_school_certificate_url: info.img_school_certificate_url,
 

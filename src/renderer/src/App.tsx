@@ -164,6 +164,9 @@ function TopBar() {
                 parseItem["img_card_residency_url"] = item["بطاقة الإقامة"] ?? "Unknown";
                 parseItem["img_school_certificate_url"] = item["شهادة مدرسية"] ?? "Unknown";
                 UserAction.add(parseItem);
+                console.log(item,parseItem);
+                break;
+
               }
 
             }}>اعضاء</MenuItem>

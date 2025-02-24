@@ -1,3 +1,4 @@
+var commonjsGlobal = typeof globalThis !== "undefined" ? globalThis : typeof window !== "undefined" ? window : typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : {};
 function getDefaultExportFromCjs(x2) {
   return x2 && x2.__esModule && Object.prototype.hasOwnProperty.call(x2, "default") ? x2["default"] : x2;
 }
@@ -7468,7 +7469,7 @@ function BgPattern() {
   return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "main-bg z-0 absolute nav-bg w-full h-full top-0 left-0", style: { backgroundImage: `url(${mainbgIMG})` } });
 }
 const infoIMG = "" + new URL("info-etcwfViV.png", import.meta.url).href;
-const Input = reactExports.forwardRef(function({ title, placeholder, onEnter, className, titleClassName, children, onChange, callbacks }, ref) {
+const Input = reactExports.forwardRef(function({ title, placeholder, onEnter, className, titleClassName, children, onChange, callbacks, type, defaultVal }, ref) {
   function _onChange() {
     localRef.current?.classList.remove("popup-error");
     localRef.current?.classList.remove("popup-error-same");
@@ -7522,9 +7523,11 @@ const Input = reactExports.forwardRef(function({ title, placeholder, onEnter, cl
   onChange = onChange ?? function(title2) {
   };
   callbacks = callbacks ?? [];
+  type = type ?? "text";
+  defaultVal = defaultVal ?? "";
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { ref: localRef, className: "popup-input relative flex  gap-2 text-lg m-4 bg-white rounded shadow overflow-hidden " + className, children: [
     title == "" ? /* @__PURE__ */ jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, {}) : /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: `title text-white flex items-center justify-center cursor-default w-32 font-bold rounded-r ${titleClassName}`, children: title }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx("input", { onChange: _onChange, ...callbacks, type: "text", placeholder, className: "p-2 w-full outline-none", onKeyDown: (e) => e.key == "Enter" ? onEnter() : function() {
+    /* @__PURE__ */ jsxRuntimeExports.jsx("input", { defaultValue: defaultVal, onChange: _onChange, ...callbacks, type, placeholder, className: "p-2 w-full outline-none", onKeyDown: (e) => e.key == "Enter" ? onEnter() : function() {
     } }),
     /* @__PURE__ */ jsxRuntimeExports.jsx("img", { src: infoIMG, width: 35, className: "info-icon self-center px-2 cursor-pointer", alt: "infoIMG" }),
     !errMsg ? /* @__PURE__ */ jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, {}) : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "bubble arrow-bottom", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "bubble-wrapper ", children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: errMsg }) }) }),
@@ -7532,8 +7535,10 @@ const Input = reactExports.forwardRef(function({ title, placeholder, onEnter, cl
   ] });
 });
 const closeIMG = "" + new URL("close-CNt9sK1Y.png", import.meta.url).href;
-const userIMG = "" + new URL("user-Dew6X5B5.png", import.meta.url).href;
 const addIMG = "" + new URL("add-tiTPLJhe.png", import.meta.url).href;
+const nextIMG = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAGXRFWHRTb2Z0d2FyZQB3d3cuaW5rc2NhcGUub3Jnm+48GgAAAUZJREFUeJztm7FNw1AABS8INqCDHSgQS0CF2IRAxAYUwBJQIVgBMQMSU1BF0CIdlSsgmMTfX7Hf1Zb17mInUizDmqGeqK/qh/qs7tXe1Bvq1O/M1d3a24rzi3zDxbLn3ehyZCnUGXC94JDtvrb0jjpb8Mk3HNbeWYSW8re1dxbhj3u+4UHdrL21cyIf+chHPvKRj/yg5c8iH/nIRz7ykY985Gtv7ZzIRz7ykR+T/HkL+fuhyh+on6OUB1Avh3DZr/Jw1M5WrCPq/qhvAWj9CzD4COP9c7MhEUgE4F8RtmpvLUYikAhAIgCJACQCkAhAIgCJACQCkAgAqKeJkAiJALSO8JgIiZAIiZAII4vQ5uHrXe2dRWkZ4aj2zqK0iHCz7LnX4s3RyWRyBUwXHPLW15aq+PMX41zdqb2tN9Rj9UV9V59c8fX5LypklU3KIYOgAAAAAElFTkSuQmCC";
+const backIMG = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAGXRFWHRTb2Z0d2FyZQB3d3cuaW5rc2NhcGUub3Jnm+48GgAAAVNJREFUeJztm7tNA0EYBsdABWTQBEjQBgHUAgTYqRMCiuARUAQSLSDKQBBAijREkGCsNcux9t036cmrf8ZenXTrgwrUXfVefVMf1aOa9VYKdVt98TtnrWf7F9TJDPmVi7BW8dnNOdem6knF2suPejDnF/BJ7yNcDTqCuq7eFEQYt561MxKBRAASAUgEIBGArwjXiZAIiZAIkAhAIgCJACQCkAhAIgCJACQCsFCESetZOyMRSAQgEYBEAEDdUG8LIhy3nrUzCiO8q/utZ+2Mwu0w/e36NYejy4StB+iEBbbAXutZ/5xCee3j4Wvhvtc+3gYjH/nIR/4H+vdAJPKRj3zkhyY/zL/ORD7ykY985CMf+chHvm8MWh5AvSyQP209ZydY9tpcP+UB1Is+yNccjj7NuTYejUbnFWsvP+qW+jzjm1+Z94arUXfUO/VVfVAPW8+0KB/TppVV5q9zCwAAAABJRU5ErkJggg==";
+const saveIMG = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAGXRFWHRTb2Z0d2FyZQB3d3cuaW5rc2NhcGUub3Jnm+48GgAAAodJREFUeJztmzFv00AYhp8DRBf4BbQzCxKdCn8BqRuoS4WYgAl+UDakwgArIDEw026REEjMLRtCoslCAL0MOVf2NY7q8zmfY907OfZ3n9/vUc7JnT5DVlZFkjYkPZd0KGmq/utE0v3Yel1Q/A3gHXC7LcgV6x/wyDn3sunAMwCSNoAj1q/4QlEQLpWOn7K+xQNcBl5I2o8aLekomFtv/ZRomqeiKDMXzCdpT9KfIORvFARJkyDRZmrDXeRLBiGV8VUD8DEPJM0WQHi4cuMWAHxcOwjrDsDHxkMYAgAfHwdhKAD8mOYQhgTAj2sGYWgA/Ni6n8jza4chAvDjF0E47sx43wD4HHt1ecqLoUpy51xlpdjEcIo8q/J1Jd5arSbA9bobt9SvhLmA6mowlT52kLPQh84yJ3wG3JT0M8yXQD8UuUBbVl/yb4Bz7hvzfYU3wGmClKfAa2DbOXeSIF9FyR+CfVVdfV08A9ZKGYC1AWtlANYGrJUBWBuwVgZgbcBaGYC1AWtlANYGrJUBWBuwVjQA2fcSTf29n2ne3RKlqA0R9a+XaAzsOue+1wXU1dcYgPrbSzQG7jrnfi+6WFdfzBToay/RNvA4enQ4wZbEJeklaitJm5LeB14+LYlfXl8DAEl6iVJI0lbgpXYXuq6+mGdAr3aP2/rO/wOsDVgrA7A2YK0MwNqAtTIAawPWygCsDVgrAygdT8sXLBc5qSVpKzg1KQ7KAL4GQaMhQPDFj4LTX4qDcp/gAbBT+nwPOF6yMi5ukLIPsLUu6OfszbLwtblD5jsrQ9YYuOOcm0FpCvi9tF0fMFQVm6ez4sS5zQNJV4EnwD5wC7i2MnvdaAp8Bl4Bo3LxWVnwH3K1Fg25odGrAAAAAElFTkSuQmCC";
 function validate_inputNotEmpty(text) {
   return text.length != 0;
 }
@@ -7562,7 +7567,7 @@ const imgViewer = {
 };
 const imgIMG = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAB2AAAAdgB+lymcgAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAATaSURBVHic7ZtdbBRVGIbfM7vtdmehPxaQ1rRGhUrxp16QRhSTGo0hWMGABtFWm8UQijGkAcIVCYoxRgHFSKUqJYZWiqZao21isalJb7BNYw2Vsv0vVMJiabPpdn9n5/MCuqG2MjPdOTO07HO3s2e+854n58zMzuwwaCSlpTRNSghtJYYNAJYDWAKAaa1zK5It9nCemLX1l5V7T+pZdyY0BXe0OkuI2CEAd3HKAwBItYp4YsHysF8Kv1b/0K7vePYlqG0onnW+S8ROgPPgbyIhyWo9+VzXh4U8O1ElwNH6ZhEY28czyEwwMNtCi/30890fP8urD2UBzTsWENFBXgGUYESijYS6tec+KuBRX1GA6AgVA7ibR+dqEcAcjkRb3Yt/Hc7Xv7YSMr2gd6ezgQEplgRrw/r+Tx7Vs66yAIYcPTuMBUZITwwLv27oObhSr5pqDoJGHfXVsjhRtjVu6i6/X49iagToepGjBwS6B4j8tvH8Z/fGWkv1dcDtBiPKYla5qWiwIiOWOnNWAAAwwgPBUKhpm6ti0WxrzGkBAEBEudco0PzqUHnabPaf8wIAgDH2cCggNTovHF+odd95IeAGq8bZREPZpW/tWnaaTwJAwJrhgLvh7Z4Gm9p95pUAACCZCtxy3/f7qdmqpv28EwAAMmhdT+/5U0SkOD5VloxGIhkj0nisZV56qvO9cgDbb9XothTgjQTQ6u3Xo9RmKAiYl0tAC3EBZgcwm7gAswOYTVyA2QHMJi7A7ABmExdgdgCzueMFcPsxVJaxFnsy1yHFIsZUxxPx4YO/f8anVxp1SjYVLjPgETELB7I2xTx4AEixiHg/+2XkJC3VIdl0uAjItWeAzfA8xRPxoct/GRLJmuoxMOTaM/WKNwVOS2D64E9fO4sdA18jIIeRa89Ew4rdWJKQrL4i4/OAypCDYIRk7BysRkAOAwC6/JdxhNOa1oohAoIkwScHp2wbkyamtWsZdyFEkhGRohgiQBQSsSV9dfSzlQkoXvzklDa1o20ovHAIRb3HDJVg2D3B8vveQEHyCvQH/0Fh2mPIE7Oj39WOtsHZ9yUkklE/1oGi3mOoWrYdiYx/PMMEWJiALYtWT9v+w2h7dPCT1I91YHP3UdTkvAUbZwmGLIEznk5UuJunba8dbUNJX8WMp8VGzzkUG7AcuAs44+nEKz1HsWvoG3zubopuv3na/x/1Yx3Y1l/JNR/X+TU5+MnT356hGngifqRaROy9WKPqgqjdO8AzIh8B4RvTdt+l2ujgAYBAODBcp6mWaLn+nDMk81kKXAS0eQfgk0OoXlaKP30XY6qVJ2bDGwmifWJQn3D/gYuA4dAoNrqOoHTpM0izxvaDqNM/jNKBE3CHPTqlmwq3Y0DLuAst4y5e5XXjjr8hEhdgdgCziQswO4DZxAWYHcBs1Agg7in4oZhdUQADRvTJYjwEXFVqoyiAgB594hgPAylmV7EE6Cc9wpgCCYrZFQX4fElVAK7oEshQ6KooyaeUWinPgKfLvYzRbl0yGQgR2zmyplLx76aqToMT+ZXVAHsn9lhGQfv9jx+vUdNS28vTvztfJ7DDANJnlYs/I4yxson8r6rU7qD5gVvqHyWpwZDgFCCsJ9CDuP5WqVlvlhEANwNzyaAfkyyWyrFVX2i6c/Iv4zuQw8IkFOwAAAAASUVORK5CYII=";
 const uploadIMG = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAAXNSR0IArs4c6QAACqRJREFUeF7tW3uQnEUR7/52N+dekEeQ29tvvk2OEBNJqYigEIpAUhVi0DKiUaEERECRZ0AFQoSShwIajEUgilUqIlD4wCoCgiUVI1HxgSWglq9oPO9yM8NdwiNBuMs9dtv9HfOde5vd22/3drNn1fU/yX07PdPzm56enu4epjI0d+7cgwYHBy8loncS0TFEpMq1ncT3fmbeqLW+hohkEv3UzMqlOIMgWCIi3yGi2TX3XAWjiNxhrb28Cpa6Nd0HgCAIVojIj4ko/G2AiJ4lop66jfpaR8uI6NCCPm8xxlxb5zEqdjcOgI6OjoOHh4f/7NQ9R0QbmPlarTVAqCsppX5LRMcVdsrMa7XWX6zrQBU6GwdAEATrROQqx3OzMea6RglTAMAgEcWJKIaxRORSa+1XGzVucb/jAFBK/YaIjieivmQyOWf79u0QriFUAEA3M1/nbI7njOG5xhjYoIZTIQBxpdTLRJQUkYestR9o5OiFABhjOpRSnySir7sxs0R0hjHmh42UAX2PAeD7/mxm7h79yLwuv+/XNHLwYgAwllLqM0T0ZTfuMDOfprWGQW4YjQHQ3t7eEYvF/u324ZestTibG0alAMBgvu9fz8w3uIH3MvOpWuutjRJkygHgNAFaAG0AvcLMy7TWTzUChCkJgAMB9gB2AfQSES01xvyx3iA0DYAgCDaJyPuI6FVjzIFEBL+jkFgpdS8RneU+7hSRk6y12+oJQtMAUErBx/g8JuN53oqenp7HS0wsppT6ARGFJ5LOZrOLe3t7u+oFQtMA8H3/aGb+PeZPRJaIVhlj4B2Oo4ULF87YvXv3w8y8wv3Q6Xne4p6eHvBMmpoGACQv8jyxBbaJyI4Ss0oy80nhd2b+a39//6IXX3wRfsukqKkAzJs3r2VgYGBDXgMuKPRJosyoXi5zUwEIJ6qUWsrMZ4rIsUQ0ZwIwsF1eDz4RucFae2MUsCZqMyUAiDoJpdTb3NUc3uqNWuvQYYraxT7tpgEIIdnfrnAtSzatAdNbYNoGTBvB6VPgtQh1847B9vb2hbFY7FYiStVgyf9JRFcYY16ogRcRo+ZvgSAINorIJbVMwK3cJ7TW36yFf0oAkMlk3pHL5TbWqgHxePyj3d3dz1UCIJVKHR6Px09GqFBEUswMjTuEiE5xrvA3ZsyYsbqrq2tvpb7+b1zhIAjeiIuRiLyHiI6MMLF+ItqCKHY6nb7/6aefHo7AM67JlHCF0+n0kchAMfMZYYKk2okQEfILN6dSqXuqAaLZAHi+71/HzJ8rmvgeZkY4/DER6czlcnbmzJm9AwMDB3iel85ms2kiWsTMCKm9vQisPxDR6caYf0QBsSYAUqnUzGQyOXotrZWGhoYOYmYEPpcU9PE3aEIqlXo06ioin+F53tUiggAqUmygV/PZrYuMMfdVkq9qAJRSHyQiBCuTlTqv4veXmHmN1vpuIkJWqGryfX8BEd1eEDqDr3C51vqOuhrBIAhuE5Erq5awPANWfaXWensd+kQk+SYiGkvq4si21n6tXN9VawBS6CMjIxeKSHu1AjNzTEQuKtjvTwwMDJxWj9heoSy+75/BzPe7cVB5sswY87NS8lYNQLWTLhLsYmYOU9/bEonE8V1dXbsr9Tlr1qwDW1tbLxaRp4wxT1Rqj9+DILgMlSeubU9LS8tbOjs79xTz7jcAZs+efUg2m4UrjKoQTPq4qJba9/0rmfk2Zn45Ho+nojo/Sqm7iOhCTJqZv6W1/njTAFBK3Z5PcY3WATHzaq31nVFWEm0KeROJRLqrq6s3Cm8QBEj1A3QUeI2MjIzM7+vrG00Ah1STBiiljq/GBjAzjkxYeBxTne3t7W+KesxNBgDw+r5/PjOHd4+7jDEXTwqAfBHFp/Oh6fVRVqBMm3OMMThGI1OtGuAGQHrt70Q0j4j2Dg4Otj3//PP/qVkDlFKo5PpCZOnHN9w7NDR02K5du16phn+SAGAL3UJEazGmiKy01v6oZgCQywuCYHnULSAib4ABcwM+aox5bzWTn+wWcPyoe0L9EwAYV5NYkw2oZgJKqUVE9GvHA/c0rAOK3M1kNQB2VymFIAyu088aY8buDw0HwPf905n5e5jtBGnwCcGoAwDYBgilIaLUl1+EMSdufwBwFYquMENmPkpr/afIS+8a1gkA3C5PxV3DGDMjLMhoOACFwg8PD7fv3LmzrxiATCbj53K5XxDRLhH5sLV2XFluJQCCIFgjIrgRorhrFOxiUkp9m4g+hu+xWGzWjh07UHbzvzK5RqXGlFI4McIa4AWlvL8gCN4tIo85obe5KpBd4SQmAqCotO7nxpjC6/UYDkop1ByuwsobY1rgGI0DIJ1Oz/E8b7T0xCFZlzK5IAhWiwhqAEC4lGwpXh1UgezZswffT3S/PdvS0rI09N3LAeD7/rlwcd1CDuIqXK6kTikFQwyDXNoGuGIFOAgJZv6u1voj1e7VUu0LjWA+bIUS2HtKtXPvE3DROdr9/qSIvMta218KAN/3T2NmrCpqjLPM/CGt9UPlZFZKYXFRe/CMMQbvH0apuFY4tJTdeW9tbonKraoxUUodRUQIU8EI3q21Pr9cJ6lUqi0ej/+SiOY7TfxJOp1e2dvbCz9i9B6Bu8Dw8PDC/EMOGDWoMq6755UDFjyFVbD5YOv3jTGIPZYEAIED3Nch7BVa61B1q554IYNSCkYtIKKdxhjE84pL4saaO2GfJKKM+/igiPQy82XubzhSD4SVIkT0KWMMLlplyff9S/Ayxc3rbK01YgX7AuCs8V/yoaWD4TfDeLnOywocBZnCa6mInGit/VUFgRcwMzThMNcOMb6Zxf9n5pu01tdXkkEptdk90BiJxWJt4QmwzxbAB6XU2S7mF/aLJAbK2TorDTTB71DZ0YQGEUVyh1FG53neVhFBEeU+JCJ3WmtXV5Ipk8kcm8vlfue2+xZjDF6qjFG5N0NnYQCnCZXGqPp3z/NO7unpwbk/IaXT6cWe56GAsjgAe58x5pwoD62UUgiFLcVAInKKtfanFQFAgyAIEES4Jv9+CK/G3kpEr6skcBW/P5NMJk+I8iDD+QibYP9c/48YY3Cej57jE5GLYD/o2mw2xiwvbl9SA0p0Gm9razu0tbU1avuScg0NDa1n5vB4vccYc26lSbjFWIVbnIhsbW1tPS8KcO70ga2B7RAROcZaO5paj6QBUQSrto3v+63MDIcERyOkWlPOda2278L20N68D4Hrb3iSwJgjJrAPTWpFaxHSZX1hVGc5/g3GGLwNqCkhUiyDM3rYMqMPPUXkAWvtmeVk3e8AQBDf95cz8yPOkcGnLcx8jtba1AKq48GdH4YRvkxoNJ9MJBKnTBRFbgoAEDidTh8Ti8Xg5BzuJoBU91cGBwfXFcbsogDiTgu8MoHBDuneZDJ5QSV70TQAIKV7qInncSsLBH+BmR/O5XIPe563udyjTaXUfDy4wMMqIjqhgD8rIp+NaluaCkCoui6Lc3WJB9ooeIAjZpm5V0QOEJE0M8OdDm3I2NyZeVMul1trrUUUOBJNBQBCQfFu8f35oAjqj1AaE5XgJj8uIuuttWHsMSrv+NtgZK4GN8xkMm/OZrNLmPkIIjoC/4pIBxHBTjwnItCIf+FGmEgktkRNlZUS+78B/puMBJxNPwAAAABJRU5ErkJggg==";
-const ImgUpload = reactExports.forwardRef(function({ title, titleClassName, maxImgs, onUploadImg }, ref) {
+const ImgUpload = reactExports.forwardRef(function({ title, titleClassName, maxImgs, onUploadImg, defaultVal }, ref) {
   reactExports.useImperativeHandle(ref, () => {
     return {
       checkInput: () => {
@@ -7594,7 +7599,9 @@ const ImgUpload = reactExports.forwardRef(function({ title, titleClassName, maxI
   }
   async function _onUploadImg() {
     const imgBase64 = await onUploadImg();
-    setImgs([...imgs, imgBase64]);
+    if (imgBase64) {
+      setImgs([...imgs, imgBase64]);
+    }
   }
   function onClickImg(imgBase64) {
     imgViewer.show(imgBase64);
@@ -7603,7 +7610,7 @@ const ImgUpload = reactExports.forwardRef(function({ title, titleClassName, maxI
   onUploadImg = onUploadImg ?? function() {
   };
   maxImgs = maxImgs ?? 1;
-  const [imgs, setImgs] = reactExports.useState([]);
+  const [imgs, setImgs] = reactExports.useState(defaultVal ? defaultVal : []);
   titleClassName = titleClassName ?? "";
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { ref: localRef, className: "popup-input relative flex  gap-2 text-lg m-4 bg-white rounded shadow overflow-hidden", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: `title text-white font-bold flex items-center justify-center cursor-default  rounded-r ${titleClassName}`, children: title }),
@@ -7778,7 +7785,12 @@ function toggleAddUser() {
   popupState.popupVis = true;
   popupState.popupType = "add-user";
 }
-function toggleEditUser(idx) {
+async function toggleEditUser(idx) {
+  const { img_personal, img_card_personal, img_card_residency, img_school_certificate } = await window.db.helper.loadUserImgs(UsersState.users[idx].id);
+  UsersState.users[idx].img_personal = img_personal;
+  UsersState.users[idx].img_card_personal = img_card_personal;
+  UsersState.users[idx].img_card_residency = img_card_residency;
+  UsersState.users[idx].img_school_certificate = img_school_certificate;
   popupState.popupVis = true;
   popupState.popupType = "edit-user";
   popupState.editedUserIdx = idx;
@@ -7800,6 +7812,10 @@ function toggleEditAdmin(idx) {
   popupState.popupType = "edit-admin";
   popupState.editedAdminIdx = idx;
 }
+function toggleHelpPopup() {
+  popupState.popupVis = true;
+  popupState.popupType = "help";
+}
 function hidePopup() {
   popupState.popupVis = false;
 }
@@ -7811,24 +7827,9 @@ async function loadAll$2() {
   let users = [];
   for (let i2 = 0; i2 < fetched.length; i2++) {
     users.push({
-      id: fetched[i2]["id"],
-      idx: i2.toString(),
-      first_name: fetched[i2]["first_name"] ?? "",
-      last_name: fetched[i2]["last_name"] ?? "",
-      school: fetched[i2]["school"] ?? "",
-      imgsUUID: fetched[i2]["imgsUUID"] ?? "",
-      reserved_book: fetched[i2]["reserved_book"] ?? null,
-      img: "",
-      idImg: "",
-      schoolIdImg: "",
-      schoolPaper: "",
+      ...fetched[i2],
       options_comp: () => OptionsComp({ idx: i2, onClick: toggleEditUser })
     });
-    let { img, idImg, schoolIdImg, schoolPaper } = window.utils.loadUserImgs(users[i2].imgsUUID);
-    users[i2].img = img;
-    users[i2].idImg = idImg;
-    users[i2].schoolIdImg = schoolIdImg;
-    users[i2].schoolPaper = schoolPaper;
   }
   UsersState.users = users;
 }
@@ -7843,13 +7844,15 @@ const UserAction = {
     await UserAction.remove(UsersState.users[popupState.editedAdminIdx].id);
     await UserAction.loadAll();
   },
-  update: (id2, imgsUUID, fname, lname, school, img, idImg, schoolIdImg, schoolPaper) => {
-    window.db.users.update(id2, imgsUUID, fname, lname, school, img, idImg, schoolIdImg, schoolPaper);
-    UserAction.loadAll();
+  update: async (id2, data) => {
+    const parseData2 = JSON.parse(JSON.stringify(data));
+    await window.db.users.update(id2, parseData2);
+    await UserAction.loadAll();
   },
-  add: (fname, lname, school, img, idImg, schoolIdImg, schoolPaper) => {
-    window.db.users.insert(fname, lname, school, img, idImg, schoolIdImg, schoolPaper);
-    UserAction.loadAll();
+  add: async (data) => {
+    const parseData2 = JSON.parse(JSON.stringify(data));
+    await window.db.users.insert(parseData2);
+    await UserAction.loadAll();
   },
   getUser: (id2) => {
     return UsersState.users.find((user) => user.id == id2);
@@ -8275,57 +8278,36 @@ function showToast(type, msg) {
   });
 }
 const INPUT_TITLE_WIDTH$1 = "w-48";
-function AddUserPopup() {
-  function onAddUser() {
-    const fNameValid = fNameRef.current?.checkInput({ func: validate_inputNotEmpty, msg: "" });
-    const lNameValid = lNameRef.current?.checkInput({ func: validate_inputNotEmpty, msg: "" });
-    const collegeValid = collegeRef.current?.checkInput({ func: validate_inputNotEmpty, msg: "" });
-    const idImgValid = idImgRef.current?.checkInput();
-    const idSchoolImgValid = idSchoolImgRef.current?.checkInput();
-    const schoolImgValid = schoolImgRef.current?.checkInput();
-    if (!(fNameValid && lNameValid && collegeValid && idImgValid && idSchoolImgValid && schoolImgValid)) {
-      return;
-    }
-    UserAction.add(
-      fNameRef.current.getInput(),
-      lNameRef.current.getInput(),
-      collegeRef.current.getInput(),
-      mainImg[0],
-      // mainImgRef.current!.getInput()[0],
-      idImgRef.current.getInput()[0],
-      idSchoolImgRef.current.getInput()[0],
-      schoolImgRef.current.getInput()[0]
-    );
-    fNameRef.current.setInput("");
-    lNameRef.current.setInput("");
-    collegeRef.current.setInput("");
-    setMainImg([]);
-    idImgRef.current.setInput([]);
-    idSchoolImgRef.current.setInput([]);
-    schoolImgRef.current.setInput([]);
+const addUserProx = proxy({
+  step: 0,
+  info: {
+    first_name: "",
+    last_name: "",
+    date_of_birth: "",
+    al_wilaya: "",
+    phone_number: "",
+    facebook: "",
+    school: "",
+    email: "",
+    residense_block_number: "",
+    residense_room_number: "",
+    school_matericule: "",
+    year_of_study: "1",
+    study_specialty: "",
+    img_personal: "",
+    img_card_personal: "",
+    img_card_residency: "",
+    img_school_certificate: "",
+    img_personal_url: "",
+    img_card_residency_url: "",
+    img_school_certificate_url: "",
+    img_card_personal_url: ""
   }
+});
+function AddUserPopup() {
   function onSaveUser() {
-    const fNameValid = fNameRef.current?.checkInput({ func: validate_inputNotEmpty, msg: "" });
-    const lNameValid = lNameRef.current?.checkInput({ func: validate_inputNotEmpty, msg: "" });
-    const collegeValid = collegeRef.current?.checkInput({ func: validate_inputNotEmpty, msg: "" });
-    const idImgValid = idImgRef.current?.checkInput();
-    const idSchoolImgValid = idSchoolImgRef.current?.checkInput();
-    const schoolImgValid = schoolImgRef.current?.checkInput();
-    if (!(fNameValid && lNameValid && collegeValid && idImgValid && idSchoolImgValid && schoolImgValid)) {
-      return;
-    }
     let user = UsersState.users[popupState.editedUserIdx];
-    UserAction.update(
-      user.id,
-      user.imgsUUID,
-      fNameRef.current.getInput(),
-      lNameRef.current.getInput(),
-      collegeRef.current.getInput(),
-      mainImg[0],
-      idImgRef.current.getInput()[0],
-      idSchoolImgRef.current.getInput()[0],
-      schoolImgRef.current.getInput()[0]
-    );
+    UserAction.update(user.id, addUserProx.info);
   }
   function onDeleteUser() {
     const user = UserAction.getCurUser();
@@ -8339,77 +8321,226 @@ function AddUserPopup() {
       showToast(y$2.success, `تم حدف العضو بنجاح`);
     }
   }
+  async function onUploadImg() {
+    const imgBase64 = await window.utils.openForImg();
+    return [imgBase64];
+  }
   reactExports.useEffect(() => {
     if (popupState.popupType == "edit-user") {
       let user = UsersState.users[popupState.editedUserIdx];
-      fNameRef.current.setInput(user.first_name);
-      lNameRef.current.setInput(user.last_name);
-      collegeRef.current.setInput(user.school);
-      idImgRef.current.setInput([user.idImg]);
-      idSchoolImgRef.current.setInput([user.schoolIdImg]);
-      schoolImgRef.current.setInput([user.schoolPaper]);
+      addUserProx.info.first_name = user.first_name;
+      addUserProx.info.last_name = user.last_name;
+      addUserProx.info.date_of_birth = user.date_of_birth;
+      addUserProx.info.al_wilaya = user.al_wilaya;
+      addUserProx.info.phone_number = user.phone_number;
+      addUserProx.info.facebook = "NOT REQUIRED";
+      addUserProx.info.school = user.school;
+      addUserProx.info.email = user.email;
+      addUserProx.info.residense_block_number = user.residense_block_number;
+      addUserProx.info.residense_room_number = user.residense_room_number;
+      addUserProx.info.school_matericule = user.school_matericule;
+      addUserProx.info.year_of_study = user.year_of_study;
+      addUserProx.info.study_specialty = user.study_specialty;
+      addUserProx.info.img_personal = user.img_personal ? [user.img_personal] : null;
+      addUserProx.info.img_card_personal = user.img_card_personal ? [user.img_card_personal] : null;
+      addUserProx.info.img_card_residency = user.img_card_residency ? [user.img_card_residency] : null;
+      addUserProx.info.img_school_certificate = user.img_school_certificate ? [user.img_school_certificate] : null;
+      addUserProx.info.img_personal_url = user.img_personal_url;
+      addUserProx.info.img_card_residency_url = user.img_card_residency_url;
+      addUserProx.info.img_school_certificate_url = user.img_school_certificate_url;
+      addUserProx.info.img_card_personal_url = user.img_card_personal_url;
     }
-  });
-  async function onUploadImg() {
-    const imgBase64 = await window.utils.open();
-    return [imgBase64];
-  }
-  const fNameRef = reactExports.useRef(null);
-  const lNameRef = reactExports.useRef(null);
-  const collegeRef = reactExports.useRef(null);
-  const [mainImg, setMainImg] = reactExports.useState([]);
-  if (popupState.popupType == "edit-user" && mainImg.length == 0) {
-    let user = UsersState.users[popupState.editedUserIdx];
-    setMainImg([user.img]);
-  }
-  const idImgRef = reactExports.useRef(null);
-  const idSchoolImgRef = reactExports.useRef(null);
-  const schoolImgRef = reactExports.useRef(null);
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "filter-popup rounded shadow w-2/4", onClick: (e) => e.stopPropagation(), children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx(BgPattern, {}),
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative z-10 w-full flex flex-col gap-5 px-6 py-8", children: [
+    addUserProx.step = 0;
+  }, []);
+  const info = {
+    first_name: reactExports.useRef(null),
+    last_name: reactExports.useRef(null),
+    date_of_birth: reactExports.useRef(null),
+    al_wilaya: reactExports.useRef(null),
+    phone_number: reactExports.useRef(null),
+    facebook: reactExports.useRef(null),
+    school: reactExports.useRef(null),
+    email: reactExports.useRef(null),
+    residense_block_number: reactExports.useRef(null),
+    residense_room_number: reactExports.useRef(null),
+    school_matericule: reactExports.useRef(null),
+    year_of_study: reactExports.useRef(null),
+    study_specialty: reactExports.useRef(null),
+    img_personal: reactExports.useRef(null),
+    img_card_residency: reactExports.useRef(null),
+    img_school_certificate: reactExports.useRef(null),
+    img_card_personal: reactExports.useRef(null),
+    img_personal_url: reactExports.useRef(null),
+    img_card_residency_url: reactExports.useRef(null),
+    img_school_certificate_url: reactExports.useRef(null),
+    img_card_personal_url: reactExports.useRef(null)
+  };
+  useSnapshot(addUserProx);
+  function AddUserStep1() {
+    const keys = ["first_name", "last_name", "al_wilaya", "phone_number", "school"];
+    function onClickStep1() {
+      let validInput = true;
+      for (let key of keys) {
+        if (!info[key].current.checkInput({ func: validate_inputNotEmpty, msg: "" })) {
+          validInput = false;
+          break;
+        }
+      }
+      if (validInput) {
+        addUserProx.info.first_name = info.first_name.current.getInput();
+        addUserProx.info.last_name = info.last_name.current.getInput();
+        addUserProx.info.al_wilaya = info.al_wilaya.current.getInput();
+        addUserProx.info.phone_number = info.phone_number.current.getInput();
+        addUserProx.info.school = info.school.current.getInput();
+        addUserProx.step += 1;
+      } else {
+        showToast(y$2.error, "يجب ملأ كل المعطيات");
+      }
+    }
+    return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative z-10 w-full flex flex-col gap-5 px-6 py-8", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "self-end -mb-6 cursor-pointer w-fit h-fit", onClick: () => popupState.popupVis = false, children: /* @__PURE__ */ jsxRuntimeExports.jsx("img", { src: closeIMG, alt: "closeIMG", width: 16, onClick: () => hidePopup() }) }),
       popupState.popupType == "edit-user" ? /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "text-2xl font-bold", children: "تعديل معلومات العضو" }) : /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "text-2xl font-bold", children: "اضافة عضو جديد" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(
-        "div",
-        {
-          onClick: async () => setMainImg(await onUploadImg()),
-          className: `img-frame flex items-center justify-center  
-                    w-28 h-28 bg-white self-center rounded-full overflow-hidden border-4
-                    ${popupState.popupType == "edit-user" ? "" : "cursor-pointer bg-zinc-200"}
-                  `,
-          children: popupState.popupType == "edit-user" || mainImg.length != 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("img", { src: mainImg, alt: "img" }) : /* @__PURE__ */ jsxRuntimeExports.jsx("img", { src: userIMG, width: 50, alt: "img" })
-        }
-      ),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Input, { titleClassName: INPUT_TITLE_WIDTH$1, ref: fNameRef, title: "الاسم", placeholder: "ادخل الاسم... " }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Input, { titleClassName: INPUT_TITLE_WIDTH$1, ref: lNameRef, title: "اللقب", placeholder: "ادخل اللقب... " }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Input, { titleClassName: INPUT_TITLE_WIDTH$1, ref: collegeRef, title: "الجامعة", placeholder: "ادخل اسم الجامعة... " }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(ImgUpload, { ref: idImgRef, titleClassName: INPUT_TITLE_WIDTH$1, title: "بطاقة التعريف", onUploadImg }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(ImgUpload, { ref: idSchoolImgRef, titleClassName: INPUT_TITLE_WIDTH$1, title: "بطاقة الطالب", onUploadImg }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(ImgUpload, { ref: schoolImgRef, titleClassName: INPUT_TITLE_WIDTH$1, title: "شهادة مدرسية", onUploadImg })
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Input, { defaultVal: addUserProx.info.first_name, titleClassName: INPUT_TITLE_WIDTH$1, ref: info.first_name, title: "الاسم", placeholder: "ادخل الاسم... " }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Input, { defaultVal: addUserProx.info.last_name, titleClassName: INPUT_TITLE_WIDTH$1, ref: info.last_name, title: "اللقب", placeholder: "ادخل اللقب... " }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Input, { defaultVal: addUserProx.info.al_wilaya, titleClassName: INPUT_TITLE_WIDTH$1, ref: info.al_wilaya, title: "الولاية", placeholder: "ادخل اسم الولاية... " }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Input, { defaultVal: addUserProx.info.phone_number, titleClassName: INPUT_TITLE_WIDTH$1, type: "number", ref: info.phone_number, title: "رقم الهاتف", placeholder: "ادخل رقم الهاتف... " }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Input, { defaultVal: addUserProx.info.school, titleClassName: INPUT_TITLE_WIDTH$1, ref: info.school, title: "الجامعة", placeholder: "ادخل اسم الجامعة... " })
       ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(ActionButtons$2, { onAddUser, onDeleteUser, onSaveUser })
-    ] })
-  ] });
-}
-function ActionButtons$2({ onAddUser, onDeleteUser, onSaveUser }) {
-  if (popupState.popupType == "add-user") {
-    return /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { onClick: onAddUser, className: "interactive-button flex gap-2  self-end  rounded py-1 px-4 text-white text-lg shadow", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("img", { src: addIMG, height: 16, width: 16, alt: "addIMG", className: "self-center" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: "اضافة" })
+      /* @__PURE__ */ jsxRuntimeExports.jsx(ActionButtons$2, { onDeleteUser, onSaveUser, onClickNext: onClickStep1 })
     ] });
   }
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { className: "flex gap-2 self-end", children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { onClick: onDeleteUser, className: "delete-book flex gap-2  self-end  rounded py-1 px-4 text-white text-lg shadow", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("img", { src: addIMG, height: 16, width: 16, alt: "addIMG", className: "self-center" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: "حدف" })
-    ] }),
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { onClick: onSaveUser, className: "interactive-button flex gap-2  self-end  rounded py-1 px-4 text-white text-lg shadow", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("img", { src: addIMG, height: 16, width: 16, alt: "addIMG", className: "self-center" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: "حفظ" })
-    ] })
+  function AddUserStep2() {
+    const keys = ["email", "residense_block_number", "residense_room_number", "school_matericule", "year_of_study", "study_specialty"];
+    function onClickStep2() {
+      let validInput = true;
+      for (let key of keys) {
+        if (!info[key].current.checkInput({ func: validate_inputNotEmpty, msg: "" })) {
+          validInput = false;
+          break;
+        }
+      }
+      if (validInput) {
+        addUserProx.info.email = info.email.current.getInput();
+        addUserProx.info.residense_block_number = info.residense_block_number.current.getInput();
+        addUserProx.info.residense_room_number = info.residense_room_number.current.getInput();
+        addUserProx.info.school_matericule = info.school_matericule.current.getInput();
+        addUserProx.info.year_of_study = info.year_of_study.current.getInput();
+        addUserProx.info.study_specialty = info.study_specialty.current.getInput();
+        addUserProx.step += 1;
+      } else {
+        showToast(y$2.error, "يجب ملأ كل المعطيات");
+      }
+    }
+    return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative z-10 w-full flex flex-col gap-5 px-6 py-8", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "self-end -mb-6 cursor-pointer w-fit h-fit", onClick: () => popupState.popupVis = false, children: /* @__PURE__ */ jsxRuntimeExports.jsx("img", { src: closeIMG, alt: "closeIMG", width: 16, onClick: () => hidePopup() }) }),
+      popupState.popupType == "edit-user" ? /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "text-2xl font-bold", children: "تعديل معلومات العضو" }) : /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "text-2xl font-bold", children: "اضافة عضو جديد" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Input, { defaultVal: addUserProx.info.email, titleClassName: INPUT_TITLE_WIDTH$1, ref: info.email, title: "الاميل", placeholder: "ادخل الاميل... " }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Input, { defaultVal: addUserProx.info.residense_block_number, titleClassName: INPUT_TITLE_WIDTH$1, ref: info.residense_block_number, title: "رقم البلوك", placeholder: "ادخل رقم البلوك... " }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Input, { defaultVal: addUserProx.info.residense_room_number, titleClassName: INPUT_TITLE_WIDTH$1, ref: info.residense_room_number, title: "رقم الغرفة", placeholder: "ادخل اسم رقم الغرفة... " }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Input, { defaultVal: addUserProx.info.school_matericule, titleClassName: INPUT_TITLE_WIDTH$1, ref: info.school_matericule, title: "رقم التسجيل", placeholder: "ادخل رقم التسجيل المدرسي... " }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Input, { defaultVal: addUserProx.info.year_of_study, titleClassName: INPUT_TITLE_WIDTH$1, ref: info.year_of_study, title: "عام الدراسة", placeholder: "ادخل العام الدراسي... " }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Input, { defaultVal: addUserProx.info.study_specialty, titleClassName: INPUT_TITLE_WIDTH$1, ref: info.study_specialty, title: "التخصص", placeholder: "ادخل اسم التخصص... " })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(ActionButtons$2, { onDeleteUser, onSaveUser, onClickNext: onClickStep2 })
+    ] });
+  }
+  function AddUserStep3() {
+    const keys = ["img_card_personal", "img_card_residency", "img_school_certificate"];
+    function onClickStep3() {
+      let validInput = true;
+      for (let key of keys) {
+        if (addUserProx.info[key]) {
+          if (!info[key].current.checkInput({ func: validate_inputNotEmpty, msg: "" })) {
+            validInput = false;
+            break;
+          }
+        } else {
+          if (!info[key + "_url"].current.checkInput({ func: validate_inputNotEmpty, msg: "" })) {
+            validInput = false;
+            break;
+          }
+        }
+      }
+      if (validInput) {
+        keys.forEach((field) => {
+          if (addUserProx.info[field] != null) {
+            addUserProx.info[field] = info[field].current.getInput();
+          } else {
+            addUserProx.info[`${field}_url`] = info[`${field}_url`].current.getInput();
+          }
+        });
+        if (popupState.popupType == "add-user") {
+          UserAction.add(addUserProx.info);
+        } else {
+          onSaveUser();
+        }
+      } else {
+        showToast(y$2.error, "يجب ملأ كل المعطيات");
+      }
+    }
+    return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative z-10 w-full flex flex-col gap-5 px-6 py-8", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "self-end -mb-6 cursor-pointer w-fit h-fit", onClick: () => popupState.popupVis = false, children: /* @__PURE__ */ jsxRuntimeExports.jsx("img", { src: closeIMG, alt: "closeIMG", width: 16, onClick: () => hidePopup() }) }),
+      popupState.popupType == "edit-user" ? /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "text-2xl font-bold", children: "تعديل معلومات العضو" }) : /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "text-2xl font-bold", children: "اضافة عضو جديد" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { children: [
+        addUserProx.info.img_card_personal ? /* @__PURE__ */ jsxRuntimeExports.jsx(ImgUpload, { defaultVal: addUserProx.info.img_card_personal, ref: info.img_card_personal, titleClassName: INPUT_TITLE_WIDTH$1, title: "بطاقة التعريف", onUploadImg }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Input, { defaultVal: addUserProx.info.img_card_personal_url, titleClassName: INPUT_TITLE_WIDTH$1, ref: info.img_card_personal_url, title: "بطاقة التعريف", placeholder: "" }),
+        addUserProx.info.img_card_residency ? /* @__PURE__ */ jsxRuntimeExports.jsx(ImgUpload, { defaultVal: addUserProx.info.img_card_residency, ref: info.img_card_residency, titleClassName: INPUT_TITLE_WIDTH$1, title: "بطاقة الاقامة", onUploadImg }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Input, { defaultVal: addUserProx.info.img_card_residency_url, titleClassName: INPUT_TITLE_WIDTH$1, ref: info.img_card_residency_url, title: "بطاقة الاقامة", placeholder: "" }),
+        addUserProx.info.img_school_certificate ? /* @__PURE__ */ jsxRuntimeExports.jsx(ImgUpload, { defaultVal: addUserProx.info.img_school_certificate, ref: info.img_school_certificate, titleClassName: INPUT_TITLE_WIDTH$1, title: "شهادة مدرسية", onUploadImg }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Input, { defaultVal: addUserProx.info.img_school_certificate_url, titleClassName: INPUT_TITLE_WIDTH$1, ref: info.img_school_certificate_url, title: "شهادة مدرسية", placeholder: "" })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(ActionButtons$2, { onAddUser: onClickStep3, onDeleteUser, onSaveUser: onClickStep3 })
+    ] });
+  }
+  const registerSteps = [
+    AddUserStep1,
+    AddUserStep2,
+    AddUserStep3
+  ];
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "filter-popup rounded shadow w-2/4", onClick: (e) => e.stopPropagation(), children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(BgPattern, {}),
+    (() => {
+      const RegisterStep = registerSteps[addUserProx.step];
+      return /* @__PURE__ */ jsxRuntimeExports.jsx(RegisterStep, {});
+    })()
   ] });
+}
+function ActionButtons$2({ onAddUser, onDeleteUser, onSaveUser, onClickNext }) {
+  useSnapshot(addUserProx);
+  if (addUserProx.step < 2) {
+    return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-row-reverse justify-between", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex flex-row gap-2 self-end items-center justify-center", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { onClick: onClickNext, className: "interactive-button flex gap-2 rounded py-1 px-4 text-white text-lg shadow", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: "التالي" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("img", { src: nextIMG, height: 16, width: 16, alt: "addIMG", className: "self-center" })
+      ] }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-lg self-center flex-1 justify-self-center text-center", children: [
+        addUserProx.step + 1,
+        "/3"
+      ] }),
+      addUserProx.step > 0 && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex flex-row gap-2 self-end items-center justify-center", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { onClick: () => {
+        addUserProx.step -= 1;
+      }, className: "interactive-button flex gap-2 rounded py-1 px-4 text-white text-lg shadow", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("img", { src: backIMG, height: 16, width: 16, alt: "addIMG", className: "self-center" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: "السابق" })
+      ] }) })
+    ] });
+  } else {
+    return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-row-reverse justify-between", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { onClick: popupState.popupType == "edit-user" ? onSaveUser : onAddUser, className: "interactive-button flex gap-2  self-end  rounded py-1 px-4 text-white text-lg shadow", children: [
+        popupState.popupType == "edit-user" ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: "حفظ" }) : /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: "اضافة" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("img", { src: popupState.popupType == "edit-user" ? saveIMG : addIMG, height: 16, width: 16, alt: "IMG", className: "self-center" })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-lg self-center flex-1 justify-self-center text-center", children: [
+        addUserProx.step + 1,
+        "/3"
+      ] }),
+      addUserProx.step > 0 && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex flex-row gap-2 self-end items-center justify-center", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { onClick: () => {
+        addUserProx.step -= 1;
+      }, className: "interactive-button flex gap-2 rounded py-1 px-4 text-white text-lg shadow", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("img", { src: backIMG, height: 16, width: 16, alt: "addIMG", className: "self-center" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: "السابق" })
+      ] }) })
+    ] });
+  }
 }
 const subIMG = "" + new URL("sub-CUnai6Uh.png", import.meta.url).href;
 const DateInput = reactExports.forwardRef(function({}, ref) {
@@ -8696,12 +8827,14 @@ const AdminAction = {
     await AdminAction.remove(AdminsState.admins[popupState.editedAdminIdx].id);
     await AdminAction.loadAll();
   },
-  update: async (id2, imgsUUID, fname, lname, img) => {
-    await window.db.admins.update(id2, imgsUUID, fname, lname, img);
+  update: async (id2, data) => {
+    const parseData2 = JSON.parse(JSON.stringify(data));
+    await window.db.admins.update(id2, parseData2);
     await AdminAction.loadAll();
   },
-  add: async (fname, lname, img) => {
-    await window.db.admins.insert(fname, lname, img);
+  add: async (data) => {
+    const parseData2 = JSON.parse(JSON.stringify(data));
+    await window.db.admins.insert(parseData2);
     await AdminAction.loadAll();
   }
 };
@@ -9004,36 +9137,52 @@ function BookBookPopup() {
   ] });
 }
 const INPUT_TITLE_WIDTH = "w-48";
+const addAdminProx = proxy({
+  info: {
+    first_name: "",
+    last_name: "",
+    img_personal: "",
+    books: []
+  }
+});
 function AddAdminPopup() {
   function onAddAdmin() {
-    const fNameValid = fNameRef.current?.checkInput({ func: validate_inputNotEmpty, msg: "" });
-    const lNameValid = lNameRef.current?.checkInput({ func: validate_inputNotEmpty, msg: "" });
-    if (!(fNameValid && lNameValid)) {
-      return;
+    let keys = ["first_name", "last_name", "img_personal"];
+    let validInput = true;
+    for (let key of keys) {
+      if (!info[key].current.checkInput({ func: validate_inputNotEmpty, msg: "" })) {
+        validInput = false;
+        break;
+      }
     }
-    AdminAction.add(
-      fNameRef.current.getInput(),
-      lNameRef.current.getInput(),
-      mainImg
-    );
-    fNameRef.current.setInput("");
-    lNameRef.current.setInput("");
-    setMainImg([]);
+    if (validInput) {
+      AdminsState.admins[popupState.editedAdminIdx];
+      addAdminProx.info.first_name = info.first_name.current.getInput();
+      addAdminProx.info.last_name = info.last_name.current.getInput();
+      addAdminProx.info.img_personal = info.img_personal.current.getInput();
+      AdminAction.add(addAdminProx.info);
+    } else {
+      showToast(y$2.error, "يجب ملأ كل المعطيات");
+    }
   }
   function onSaveAdmin() {
-    const fNameValid = fNameRef.current?.checkInput({ func: validate_inputNotEmpty, msg: "" });
-    const lNameValid = lNameRef.current?.checkInput({ func: validate_inputNotEmpty, msg: "" });
-    if (!(fNameValid && lNameValid)) {
-      return;
+    let keys = ["first_name", "last_name", "img_personal"];
+    let validInput = true;
+    for (let key of keys) {
+      if (!info[key].current.checkInput({ func: validate_inputNotEmpty, msg: "" })) {
+        validInput = false;
+        break;
+      }
     }
-    let admin = AdminsState.admins[popupState.editedAdminIdx];
-    AdminAction.update(
-      admin.id,
-      admin.imgsUUID,
-      fNameRef.current.getInput(),
-      lNameRef.current.getInput(),
-      mainImg
-    );
+    if (validInput) {
+      let admin = AdminsState.admins[popupState.editedAdminIdx];
+      addAdminProx.info.first_name = info.first_name.current.getInput();
+      addAdminProx.info.last_name = info.last_name.current.getInput();
+      addAdminProx.info.img_personal = info.img_personal.current.getInput();
+      AdminAction.update(admin.id, addAdminProx.info);
+    } else {
+      showToast(y$2.error, "يجب ملأ كل المعطيات");
+    }
   }
   function onDeleteAdmin() {
     if (adminBooks.length == 0) {
@@ -9059,50 +9208,43 @@ function AddAdminPopup() {
   async function onInitAdmin() {
     if (popupState.popupType == "edit-admin") {
       let admin = AdminsState.admins[popupState.editedAdminIdx];
-      fNameRef.current.setInput(admin.first_name);
-      lNameRef.current.setInput(admin.last_name);
-      let admin_books = await BookingAction.queryAdmin(admin.id);
-      setAdminBooks(admin_books);
-      if (mainImg.length == 0) {
+      addAdminProx.info.first_name = admin.first_name;
+      addAdminProx.info.last_name = admin.last_name;
+      if (info.img_personal.current.length == 0) {
         let admin2 = AdminsState.admins[popupState.editedAdminIdx];
-        setMainImg([admin2.img]);
+        addAdminProx.info.img_personal = admin2.img;
       }
+      console.log(JSON.parse(JSON.stringify(admin)));
+      addAdminProx.info.books = await BookingAction.queryAdmin(admin.id);
     }
   }
   reactExports.useEffect(() => {
     onInitAdmin();
   }, []);
   async function onUploadImg() {
-    const imgBase64 = await window.utils.open();
+    const imgBase64 = await window.utils.openForImg();
     return imgBase64;
   }
-  const fNameRef = reactExports.useRef(null);
-  const lNameRef = reactExports.useRef(null);
   const [adminBooks, setAdminBooks] = reactExports.useState([]);
-  const [mainImg, setMainImg] = reactExports.useState([]);
+  useSnapshot(addAdminProx);
+  const info = {
+    first_name: reactExports.useRef(null),
+    last_name: reactExports.useRef(null),
+    img_personal: reactExports.useRef(null)
+  };
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "filter-popup rounded shadow w-2/4", onClick: (e) => e.stopPropagation(), children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx(BgPattern, {}),
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative z-10 w-full flex flex-col gap-2 px-6 py-8", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "self-end -mb-6 cursor-pointer w-fit h-fit", onClick: () => popupState.popupVis = false, children: /* @__PURE__ */ jsxRuntimeExports.jsx("img", { src: closeIMG, alt: "closeIMG", width: 16, onClick: () => hidePopup() }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "self-end cursor-pointer w-fit h-fit", onClick: () => hidePopup(), children: /* @__PURE__ */ jsxRuntimeExports.jsx("img", { src: closeIMG, alt: "closeIMG", width: 16 }) }),
       popupState.popupType == "edit-admin" ? /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "text-2xl font-bold", children: "تعديل معلومات المسؤول" }) : /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "text-2xl font-bold", children: "اضافة مسؤول جديد" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(
-        "div",
-        {
-          onClick: async () => setMainImg(await onUploadImg()),
-          className: `img-frame flex items-center justify-center  
-                    w-28 h-28 bg-white self-center rounded-full overflow-hidden border-4
-                    ${popupState.popupType || mainImg == "edit-admin" ? "" : "cursor-pointer bg-zinc-200"}
-                  `,
-          children: popupState.popupType == "edit-admin" || mainImg.length != 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("img", { src: mainImg, alt: "img" }) : /* @__PURE__ */ jsxRuntimeExports.jsx("img", { src: userIMG, width: 50, alt: "img" })
-        }
-      ),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Input, { titleClassName: INPUT_TITLE_WIDTH, ref: fNameRef, title: "الاسم", placeholder: "ادخل الاسم... " }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Input, { titleClassName: INPUT_TITLE_WIDTH, ref: lNameRef, title: "اللقب", placeholder: "ادخل اللقب... " })
+        /* @__PURE__ */ jsxRuntimeExports.jsx(ImgUpload, { defaultVal: addAdminProx.info.img_personal, titleClassName: INPUT_TITLE_WIDTH, ref: info.img_personal, title: "صورة شخصية", onUploadImg }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Input, { defaultVal: addAdminProx.info.first_name, titleClassName: INPUT_TITLE_WIDTH, ref: info.first_name, title: "الاسم", placeholder: "ادخل الاسم... " }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Input, { defaultVal: addAdminProx.info.last_name, titleClassName: INPUT_TITLE_WIDTH, ref: info.last_name, title: "اللقب", placeholder: "ادخل اللقب... " })
       ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { className: "m-4 flex flex-col gap-4 max-h-32", children: [
+      popupState.popupType == "add-admin" ? /* @__PURE__ */ jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, {}) : /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { className: "m-4 flex flex-col gap-4 max-h-32", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "text-xl font-bold", children: "الكتب المحجوزة من طرف المسئول" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mx-4 overflow-y-scroll p-2 flex flex-col", children: adminBooks.map((book, idx) => {
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mx-4 overflow-y-scroll p-2 flex flex-col", children: adminBooks.length == 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { children: "لا كتب حاليا" }) : adminBooks.map((book, idx) => {
           return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { onClick: () => showBookPopup(book), className: `cursor-pointer hover:bg-gray-50 bg-white rounded`, children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "py-2", children: book.title }),
             /* @__PURE__ */ jsxRuntimeExports.jsx("hr", { className: "bg-gray-200" })
@@ -9131,9 +9273,46 @@ function ActionButtons({ onAddAdmin, onDeleteAdmin, onSaveAdmin }) {
     ] })
   ] });
 }
+function BackupDBOnline() {
+  async function switchDB() {
+    await window.db.mega.switchDB();
+    window.location.reload();
+  }
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex-col p-4 filter-popup rounded shadow w-[600px]", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(BgPattern, {}),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative z-10 w-full h-full flex flex-col gap-5 px-4 py-6", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "text-2xl font-bold", children: "انسخ" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { onClick: () => hidePopup(), className: " self-end -mt-12  cursor-pointer w-fit h-fit", children: /* @__PURE__ */ jsxRuntimeExports.jsx("img", { src: closeIMG, alt: "closeIMG", width: 16 }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "h-4" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => {
+      }, className: "flex items-center justify-center interactive-button add-book  gap-2    rounded py-1 px-4 text-white text-lg shadow", children: /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-center", children: "حفظ" }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => {
+      }, className: "flex items-center justify-center interactive-button add-book  gap-2    rounded py-1 px-4 text-white text-lg shadow", children: /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-center", children: "تحميل" }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => {
+        switchDB();
+      }, className: "flex items-center justify-center interactive-button add-book  gap-2    rounded py-1 px-4 text-white text-lg shadow", children: /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-center", children: "تغير" }) })
+    ] })
+  ] });
+}
+function HelpPopup() {
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "filter-popup rounded shadow w-2/4", onClick: (e) => e.stopPropagation(), children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(BgPattern, {}),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative z-10 w-full flex flex-col gap-2 px-6 py-8", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "self-end cursor-pointer w-fit h-fit", onClick: () => hidePopup(), children: /* @__PURE__ */ jsxRuntimeExports.jsx("img", { src: closeIMG, alt: "closeIMG", width: 16 }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "text-2xl font-bold", children: "معلومات حول المطورين" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("br", {}),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("ul", { style: { listStyle: "disc" }, children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("li", { className: "text-xl p-1 mr-12 font-medium", children: "ذويبي تقي الدين" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("li", { className: "text-xl p-1 mr-12 font-medium", children: "حجاج داوود" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("li", { className: "text-xl p-1 mr-12 font-medium", children: "بوخاري ايمن" })
+      ] })
+    ] })
+  ] });
+}
 function PopUp() {
   useSnapshot(popupState);
-  return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { id: "popup", onClick: () => popupState.popupVis = false, style: { pointerEvents: !popupState.popupVis ? "none" : "auto" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(PageTransition, { cond: !popupState.popupVis, children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { id: "popup-container", children: (() => {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { id: "popup", onClick: () => {
+  }, style: { pointerEvents: !popupState.popupVis ? "none" : "auto" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(PageTransition, { cond: !popupState.popupVis, children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { id: "popup-container", children: (() => {
     switch (popupState.popupType) {
       case "add-book":
         return /* @__PURE__ */ jsxRuntimeExports.jsx(AddBookPopup, {});
@@ -9149,6 +9328,10 @@ function PopUp() {
         return /* @__PURE__ */ jsxRuntimeExports.jsx(AddAdminPopup, {});
       case "book-book":
         return /* @__PURE__ */ jsxRuntimeExports.jsx(BookBookPopup, {});
+      case "backup-db-online":
+        return /* @__PURE__ */ jsxRuntimeExports.jsx(BackupDBOnline, {});
+      case "help":
+        return /* @__PURE__ */ jsxRuntimeExports.jsx(HelpPopup, {});
     }
     return /* @__PURE__ */ jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, {});
   })() }) }) });
@@ -9956,7 +10139,7 @@ function useLocation() {
   return reactExports.useContext(LocationContext).location;
 }
 var navigateEffectWarning = `You should call navigate() in a React.useEffect(), not when your component is first rendered.`;
-function useIsomorphicLayoutEffect(cb2) {
+function useIsomorphicLayoutEffect$1(cb2) {
   let isStatic = reactExports.useContext(NavigationContext).static;
   if (!isStatic) {
     reactExports.useLayoutEffect(cb2);
@@ -9979,7 +10162,7 @@ function useNavigateUnstable() {
   let { pathname: locationPathname } = useLocation();
   let routePathnamesJson = JSON.stringify(getResolveToMatches(matches));
   let activeRef = reactExports.useRef(false);
-  useIsomorphicLayoutEffect(() => {
+  useIsomorphicLayoutEffect$1(() => {
     activeRef.current = true;
   });
   let navigate = reactExports.useCallback(
@@ -10378,7 +10561,7 @@ function useNavigateStable() {
     /* UseNavigateStable */
   );
   let activeRef = reactExports.useRef(false);
-  useIsomorphicLayoutEffect(() => {
+  useIsomorphicLayoutEffect$1(() => {
     activeRef.current = true;
   });
   let navigate = reactExports.useCallback(
@@ -11423,6 +11606,2075 @@ function NavBar() {
     /* @__PURE__ */ jsxRuntimeExports.jsx("p", { onClick: () => to("users"), className: `${GState.tabIdx == "users" ? "nav-active" : ""}      text-lg text-white cursor-pointer py-1 w-28 text-center rounded-2xl hover:font-bold`, children: "الاعضاء" })
   ] });
 }
+const isMenuOpen = (state) => !!state && state[0] === "o";
+const batchedUpdates = reactDomExports.unstable_batchedUpdates;
+const getTransition = (transition, name) => transition === true || !!(transition && transition[name]);
+const safeCall = (fn, arg) => typeof fn === "function" ? fn(arg) : fn;
+const internalKey = "_szhsinMenu";
+const getName = (component) => component[internalKey];
+const defineName = (name, component) => Object.defineProperty(component, internalKey, {
+  value: name
+});
+const mergeProps = (target, source) => {
+  source && Object.keys(source).forEach((key) => {
+    const targetProp = target[key];
+    const sourceProp = source[key];
+    if (typeof sourceProp === "function" && targetProp) {
+      target[key] = (...arg) => {
+        sourceProp(...arg);
+        targetProp(...arg);
+      };
+    } else {
+      target[key] = sourceProp;
+    }
+  });
+  return target;
+};
+const parsePadding = (paddingStr) => {
+  if (typeof paddingStr !== "string") return {
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0
+  };
+  const padding = paddingStr.trim().split(/\s+/, 4).map(parseFloat);
+  const top = !isNaN(padding[0]) ? padding[0] : 0;
+  const right = !isNaN(padding[1]) ? padding[1] : top;
+  return {
+    top,
+    right,
+    bottom: !isNaN(padding[2]) ? padding[2] : top,
+    left: !isNaN(padding[3]) ? padding[3] : right
+  };
+};
+const getScrollAncestor = (node2) => {
+  while (node2) {
+    node2 = node2.parentNode;
+    if (!node2 || node2 === document.body || !node2.parentNode) return;
+    const {
+      overflow,
+      overflowX,
+      overflowY
+    } = getComputedStyle(node2);
+    if (/auto|scroll|overlay|hidden/.test(overflow + overflowY + overflowX)) return node2;
+  }
+};
+function commonProps(isDisabled, isHovering) {
+  return {
+    "aria-disabled": isDisabled || void 0,
+    tabIndex: isHovering ? 0 : -1
+  };
+}
+function indexOfNode(nodeList, node2) {
+  for (let i2 = 0; i2 < nodeList.length; i2++) {
+    if (nodeList[i2] === node2) return i2;
+  }
+  return -1;
+}
+const useBEM = ({
+  block,
+  element,
+  modifiers,
+  className
+}) => reactExports.useMemo(() => {
+  const blockElement = element ? `${block}__${element}` : block;
+  let classString = blockElement;
+  modifiers && Object.keys(modifiers).forEach((name) => {
+    const value = modifiers[name];
+    if (value) classString += ` ${blockElement}--${value === true ? name : `${name}-${value}`}`;
+  });
+  let expandedClassName = typeof className === "function" ? className(modifiers) : className;
+  if (typeof expandedClassName === "string") {
+    expandedClassName = expandedClassName.trim();
+    if (expandedClassName) classString += ` ${expandedClassName}`;
+  }
+  return classString;
+}, [block, element, modifiers, className]);
+const menuContainerClass = "szh-menu-container";
+const menuClass = "szh-menu";
+const menuButtonClass = "szh-menu-button";
+const menuArrowClass = "arrow";
+const menuItemClass = "item";
+const subMenuClass = "submenu";
+const HoverItemContext = /* @__PURE__ */ reactExports.createContext();
+const MenuListItemContext = /* @__PURE__ */ reactExports.createContext({});
+const MenuListContext = /* @__PURE__ */ reactExports.createContext({});
+const EventHandlersContext = /* @__PURE__ */ reactExports.createContext({});
+const RadioGroupContext = /* @__PURE__ */ reactExports.createContext({});
+const SettingsContext = /* @__PURE__ */ reactExports.createContext({});
+const Keys = /* @__PURE__ */ Object.freeze({
+  ENTER: "Enter",
+  ESC: "Escape",
+  SPACE: " ",
+  HOME: "Home",
+  END: "End",
+  LEFT: "ArrowLeft",
+  RIGHT: "ArrowRight",
+  UP: "ArrowUp",
+  DOWN: "ArrowDown"
+});
+const HoverActionTypes = /* @__PURE__ */ Object.freeze({
+  RESET: 0,
+  SET: 1,
+  UNSET: 2,
+  INCREASE: 3,
+  DECREASE: 4,
+  FIRST: 5,
+  LAST: 6,
+  SET_INDEX: 7
+});
+const CloseReason = /* @__PURE__ */ Object.freeze({
+  CLICK: "click",
+  CANCEL: "cancel",
+  BLUR: "blur",
+  SCROLL: "scroll"
+});
+const FocusPositions = /* @__PURE__ */ Object.freeze({
+  FIRST: "first",
+  LAST: "last"
+});
+const MenuStateMap = /* @__PURE__ */ Object.freeze({
+  entering: "opening",
+  entered: "open",
+  exiting: "closing",
+  exited: "closed"
+});
+const positionAbsolute = "absolute";
+const roleNone = "none";
+const roleMenuitem = "menuitem";
+const noScrollFocus = {
+  preventScroll: true
+};
+const MenuButton = /* @__PURE__ */ defineName("MenuButton", /* @__PURE__ */ reactExports.forwardRef(function MenuButton2({
+  className,
+  isOpen,
+  disabled,
+  children,
+  ...restProps
+}, ref) {
+  const modifiers = reactExports.useMemo(() => ({
+    open: isOpen
+  }), [isOpen]);
+  return /* @__PURE__ */ jsxRuntimeExports.jsx("button", {
+    "aria-haspopup": true,
+    "aria-expanded": isOpen,
+    "aria-disabled": disabled || void 0,
+    type: "button",
+    disabled,
+    ...restProps,
+    ref,
+    className: useBEM({
+      block: menuButtonClass,
+      modifiers,
+      className
+    }),
+    children
+  });
+}));
+const MenuContainer = ({
+  className,
+  containerRef,
+  containerProps,
+  children,
+  isOpen,
+  theming,
+  transition,
+  onClose
+}) => {
+  const itemTransition = getTransition(transition, "item");
+  const onKeyDown = ({
+    key
+  }) => {
+    switch (key) {
+      case Keys.ESC:
+        safeCall(onClose, {
+          key,
+          reason: CloseReason.CANCEL
+        });
+        break;
+    }
+  };
+  const onBlur = (e) => {
+    if (isOpen && !e.currentTarget.contains(e.relatedTarget)) {
+      safeCall(onClose, {
+        reason: CloseReason.BLUR
+      });
+    }
+  };
+  return /* @__PURE__ */ jsxRuntimeExports.jsx("div", {
+    ...mergeProps({
+      onKeyDown,
+      onBlur
+    }, containerProps),
+    className: useBEM({
+      block: menuContainerClass,
+      modifiers: reactExports.useMemo(() => ({
+        theme: theming,
+        itemTransition
+      }), [theming, itemTransition]),
+      className
+    }),
+    style: {
+      position: "absolute",
+      ...containerProps?.style
+    },
+    ref: containerRef,
+    children
+  });
+};
+const createSubmenuCtx = () => {
+  let timer, count = 0;
+  return {
+    toggle: (isOpen) => {
+      isOpen ? count++ : count--;
+      count = Math.max(count, 0);
+    },
+    on: (closeDelay, pending, settled) => {
+      if (count) {
+        if (!timer) timer = setTimeout(() => {
+          timer = 0;
+          pending();
+        }, closeDelay);
+      } else {
+        settled?.();
+      }
+    },
+    off: () => {
+      if (timer) {
+        clearTimeout(timer);
+        timer = 0;
+      }
+    }
+  };
+};
+const useItems = (menuRef) => {
+  const [hoverItem, setHoverItem] = reactExports.useState();
+  const stateRef = reactExports.useRef({
+    items: [],
+    hoverIndex: -1,
+    sorted: false
+  });
+  const mutableState = stateRef.current;
+  const updateItems = reactExports.useCallback((item, isMounted) => {
+    const {
+      items
+    } = mutableState;
+    if (!item) {
+      mutableState.items = [];
+    } else if (isMounted) {
+      items.push(item);
+    } else {
+      const index = items.indexOf(item);
+      if (index > -1) {
+        items.splice(index, 1);
+        if (item.contains(document.activeElement)) {
+          menuRef.current.focus(noScrollFocus);
+          setHoverItem();
+        }
+      }
+    }
+    mutableState.hoverIndex = -1;
+    mutableState.sorted = false;
+  }, [mutableState, menuRef]);
+  const dispatch = reactExports.useCallback((actionType, item, nextIndex) => {
+    const {
+      items,
+      hoverIndex
+    } = mutableState;
+    const sortItems = () => {
+      if (mutableState.sorted) return;
+      const orderedNodes = menuRef.current.querySelectorAll(".szh-menu__item");
+      items.sort((a, b2) => indexOfNode(orderedNodes, a) - indexOfNode(orderedNodes, b2));
+      mutableState.sorted = true;
+    };
+    let index = -1, newItem = void 0;
+    switch (actionType) {
+      case HoverActionTypes.RESET:
+        break;
+      case HoverActionTypes.SET:
+        newItem = item;
+        break;
+      case HoverActionTypes.UNSET:
+        newItem = (prevItem) => prevItem === item ? void 0 : prevItem;
+        break;
+      case HoverActionTypes.FIRST:
+        sortItems();
+        index = 0;
+        newItem = items[index];
+        break;
+      case HoverActionTypes.LAST:
+        sortItems();
+        index = items.length - 1;
+        newItem = items[index];
+        break;
+      case HoverActionTypes.SET_INDEX:
+        sortItems();
+        index = nextIndex;
+        newItem = items[index];
+        break;
+      case HoverActionTypes.INCREASE:
+        sortItems();
+        index = hoverIndex;
+        if (index < 0) index = items.indexOf(item);
+        index++;
+        if (index >= items.length) index = 0;
+        newItem = items[index];
+        break;
+      case HoverActionTypes.DECREASE:
+        sortItems();
+        index = hoverIndex;
+        if (index < 0) index = items.indexOf(item);
+        index--;
+        if (index < 0) index = items.length - 1;
+        newItem = items[index];
+        break;
+    }
+    if (!newItem) index = -1;
+    setHoverItem(newItem);
+    mutableState.hoverIndex = index;
+  }, [menuRef, mutableState]);
+  return {
+    hoverItem,
+    dispatch,
+    updateItems
+  };
+};
+const getNativeDimension = (transformed, untransformed) => Math.round(transformed) === untransformed ? transformed : untransformed;
+const getNormalizedClientRect = (element) => {
+  const rect = element.getBoundingClientRect();
+  rect.width = getNativeDimension(rect.width, element.offsetWidth);
+  rect.height = getNativeDimension(rect.height, element.offsetHeight);
+  return rect;
+};
+const getPositionHelpers = (containerRef, menuRef, menuScroll, boundingBoxPadding) => {
+  const menuRect = getNormalizedClientRect(menuRef.current);
+  const containerRect = containerRef.current.getBoundingClientRect();
+  const boundingRect = menuScroll === window ? {
+    left: 0,
+    top: 0,
+    right: document.documentElement.clientWidth,
+    bottom: window.innerHeight
+  } : menuScroll.getBoundingClientRect();
+  const padding = parsePadding(boundingBoxPadding);
+  const getLeftOverflow = (x2) => x2 + containerRect.left - boundingRect.left - padding.left;
+  const getRightOverflow = (x2) => x2 + containerRect.left + menuRect.width - boundingRect.right + padding.right;
+  const getTopOverflow = (y2) => y2 + containerRect.top - boundingRect.top - padding.top;
+  const getBottomOverflow = (y2) => y2 + containerRect.top + menuRect.height - boundingRect.bottom + padding.bottom;
+  const confineHorizontally = (x2) => {
+    let leftOverflow = getLeftOverflow(x2);
+    if (leftOverflow < 0) {
+      x2 -= leftOverflow;
+    } else {
+      const rightOverflow = getRightOverflow(x2);
+      if (rightOverflow > 0) {
+        x2 -= rightOverflow;
+        leftOverflow = getLeftOverflow(x2);
+        if (leftOverflow < 0) x2 -= leftOverflow;
+      }
+    }
+    return x2;
+  };
+  const confineVertically = (y2) => {
+    let topOverflow = getTopOverflow(y2);
+    if (topOverflow < 0) {
+      y2 -= topOverflow;
+    } else {
+      const bottomOverflow = getBottomOverflow(y2);
+      if (bottomOverflow > 0) {
+        y2 -= bottomOverflow;
+        topOverflow = getTopOverflow(y2);
+        if (topOverflow < 0) y2 -= topOverflow;
+      }
+    }
+    return y2;
+  };
+  return {
+    menuRect,
+    containerRect,
+    getLeftOverflow,
+    getRightOverflow,
+    getTopOverflow,
+    getBottomOverflow,
+    confineHorizontally,
+    confineVertically
+  };
+};
+const placeArrowVertical = ({
+  arrowRef,
+  menuY,
+  anchorRect,
+  containerRect,
+  menuRect
+}) => {
+  let y2 = anchorRect.top - containerRect.top - menuY + anchorRect.height / 2;
+  const offset = arrowRef.current.offsetHeight * 1.25;
+  y2 = Math.max(offset, y2);
+  y2 = Math.min(y2, menuRect.height - offset);
+  return y2;
+};
+const placeLeftorRight = ({
+  anchorRect,
+  containerRect,
+  menuRect,
+  placeLeftorRightY,
+  placeLeftX,
+  placeRightX,
+  getLeftOverflow,
+  getRightOverflow,
+  confineHorizontally,
+  confineVertically,
+  arrowRef,
+  arrow,
+  direction,
+  position: position2
+}) => {
+  let computedDirection = direction;
+  let y2 = placeLeftorRightY;
+  if (position2 !== "initial") {
+    y2 = confineVertically(y2);
+    if (position2 === "anchor") {
+      y2 = Math.min(y2, anchorRect.bottom - containerRect.top);
+      y2 = Math.max(y2, anchorRect.top - containerRect.top - menuRect.height);
+    }
+  }
+  let x2, leftOverflow, rightOverflow;
+  if (computedDirection === "left") {
+    x2 = placeLeftX;
+    if (position2 !== "initial") {
+      leftOverflow = getLeftOverflow(x2);
+      if (leftOverflow < 0) {
+        rightOverflow = getRightOverflow(placeRightX);
+        if (rightOverflow <= 0 || -leftOverflow > rightOverflow) {
+          x2 = placeRightX;
+          computedDirection = "right";
+        }
+      }
+    }
+  } else {
+    x2 = placeRightX;
+    if (position2 !== "initial") {
+      rightOverflow = getRightOverflow(x2);
+      if (rightOverflow > 0) {
+        leftOverflow = getLeftOverflow(placeLeftX);
+        if (leftOverflow >= 0 || -leftOverflow < rightOverflow) {
+          x2 = placeLeftX;
+          computedDirection = "left";
+        }
+      }
+    }
+  }
+  if (position2 === "auto") x2 = confineHorizontally(x2);
+  const arrowY = arrow ? placeArrowVertical({
+    menuY: y2,
+    arrowRef,
+    anchorRect,
+    containerRect,
+    menuRect
+  }) : void 0;
+  return {
+    arrowY,
+    x: x2,
+    y: y2,
+    computedDirection
+  };
+};
+const placeArrowHorizontal = ({
+  arrowRef,
+  menuX,
+  anchorRect,
+  containerRect,
+  menuRect
+}) => {
+  let x2 = anchorRect.left - containerRect.left - menuX + anchorRect.width / 2;
+  const offset = arrowRef.current.offsetWidth * 1.25;
+  x2 = Math.max(offset, x2);
+  x2 = Math.min(x2, menuRect.width - offset);
+  return x2;
+};
+const placeToporBottom = ({
+  anchorRect,
+  containerRect,
+  menuRect,
+  placeToporBottomX,
+  placeTopY,
+  placeBottomY,
+  getTopOverflow,
+  getBottomOverflow,
+  confineHorizontally,
+  confineVertically,
+  arrowRef,
+  arrow,
+  direction,
+  position: position2
+}) => {
+  let computedDirection = direction === "top" ? "top" : "bottom";
+  let x2 = placeToporBottomX;
+  if (position2 !== "initial") {
+    x2 = confineHorizontally(x2);
+    if (position2 === "anchor") {
+      x2 = Math.min(x2, anchorRect.right - containerRect.left);
+      x2 = Math.max(x2, anchorRect.left - containerRect.left - menuRect.width);
+    }
+  }
+  let y2, topOverflow, bottomOverflow;
+  if (computedDirection === "top") {
+    y2 = placeTopY;
+    if (position2 !== "initial") {
+      topOverflow = getTopOverflow(y2);
+      if (topOverflow < 0) {
+        bottomOverflow = getBottomOverflow(placeBottomY);
+        if (bottomOverflow <= 0 || -topOverflow > bottomOverflow) {
+          y2 = placeBottomY;
+          computedDirection = "bottom";
+        }
+      }
+    }
+  } else {
+    y2 = placeBottomY;
+    if (position2 !== "initial") {
+      bottomOverflow = getBottomOverflow(y2);
+      if (bottomOverflow > 0) {
+        topOverflow = getTopOverflow(placeTopY);
+        if (topOverflow >= 0 || -topOverflow < bottomOverflow) {
+          y2 = placeTopY;
+          computedDirection = "top";
+        }
+      }
+    }
+  }
+  if (position2 === "auto") y2 = confineVertically(y2);
+  const arrowX = arrow ? placeArrowHorizontal({
+    menuX: x2,
+    arrowRef,
+    anchorRect,
+    containerRect,
+    menuRect
+  }) : void 0;
+  return {
+    arrowX,
+    x: x2,
+    y: y2,
+    computedDirection
+  };
+};
+const positionMenu = ({
+  arrow,
+  align,
+  direction,
+  gap,
+  shift,
+  position: position2,
+  anchorRect,
+  arrowRef,
+  positionHelpers
+}) => {
+  const {
+    menuRect,
+    containerRect
+  } = positionHelpers;
+  const isHorizontal = direction === "left" || direction === "right";
+  let horizontalOffset = isHorizontal ? gap : shift;
+  let verticalOffset = isHorizontal ? shift : gap;
+  if (arrow) {
+    const arrowElt = arrowRef.current;
+    if (isHorizontal) {
+      horizontalOffset += arrowElt.offsetWidth;
+    } else {
+      verticalOffset += arrowElt.offsetHeight;
+    }
+  }
+  const placeLeftX = anchorRect.left - containerRect.left - menuRect.width - horizontalOffset;
+  const placeRightX = anchorRect.right - containerRect.left + horizontalOffset;
+  const placeTopY = anchorRect.top - containerRect.top - menuRect.height - verticalOffset;
+  const placeBottomY = anchorRect.bottom - containerRect.top + verticalOffset;
+  let placeToporBottomX, placeLeftorRightY;
+  if (align === "end") {
+    placeToporBottomX = anchorRect.right - containerRect.left - menuRect.width;
+    placeLeftorRightY = anchorRect.bottom - containerRect.top - menuRect.height;
+  } else if (align === "center") {
+    placeToporBottomX = anchorRect.left - containerRect.left - (menuRect.width - anchorRect.width) / 2;
+    placeLeftorRightY = anchorRect.top - containerRect.top - (menuRect.height - anchorRect.height) / 2;
+  } else {
+    placeToporBottomX = anchorRect.left - containerRect.left;
+    placeLeftorRightY = anchorRect.top - containerRect.top;
+  }
+  placeToporBottomX += horizontalOffset;
+  placeLeftorRightY += verticalOffset;
+  const options = {
+    ...positionHelpers,
+    anchorRect,
+    placeLeftX,
+    placeRightX,
+    placeLeftorRightY,
+    placeTopY,
+    placeBottomY,
+    placeToporBottomX,
+    arrowRef,
+    arrow,
+    direction,
+    position: position2
+  };
+  switch (direction) {
+    case "left":
+    case "right":
+      return placeLeftorRight(options);
+    case "top":
+    case "bottom":
+    default:
+      return placeToporBottom(options);
+  }
+};
+const useIsomorphicLayoutEffect = typeof window !== "undefined" && typeof window.document !== "undefined" && typeof window.document.createElement !== "undefined" ? reactExports.useLayoutEffect : reactExports.useEffect;
+function setRef(ref, instance) {
+  typeof ref === "function" ? ref(instance) : ref.current = instance;
+}
+const useCombinedRef = (refA, refB) => reactExports.useMemo(() => {
+  if (!refA) return refB;
+  if (!refB) return refA;
+  return (instance) => {
+    setRef(refA, instance);
+    setRef(refB, instance);
+  };
+}, [refA, refB]);
+const offScreen = -9999;
+const MenuList = ({
+  ariaLabel,
+  menuClassName,
+  menuStyle,
+  arrow,
+  arrowProps = {},
+  anchorPoint,
+  anchorRef,
+  containerRef,
+  containerProps,
+  externalRef,
+  parentScrollingRef,
+  align = "start",
+  direction = "bottom",
+  position: position2 = "auto",
+  overflow = "visible",
+  setDownOverflow,
+  repositionFlag,
+  captureFocus = true,
+  state,
+  endTransition,
+  isDisabled,
+  menuItemFocus,
+  gap = 0,
+  shift = 0,
+  children,
+  onClose,
+  focusProps: _1,
+  ...restProps
+}) => {
+  const [menuPosition, setMenuPosition] = reactExports.useState({
+    x: offScreen,
+    y: offScreen
+  });
+  const [arrowPosition, setArrowPosition] = reactExports.useState({});
+  const [overflowData, setOverflowData] = reactExports.useState();
+  const [expandedDirection, setExpandedDirection] = reactExports.useState(direction);
+  const [submenuCtx] = reactExports.useState(createSubmenuCtx);
+  const [reposSubmenu, forceReposSubmenu] = reactExports.useReducer((c2) => c2 + 1, 1);
+  const {
+    transition,
+    boundingBoxRef,
+    boundingBoxPadding,
+    rootMenuRef,
+    rootAnchorRef,
+    scrollNodesRef,
+    reposition,
+    viewScroll,
+    submenuCloseDelay
+  } = reactExports.useContext(SettingsContext);
+  const {
+    submenuCtx: parentSubmenuCtx,
+    reposSubmenu: reposFlag = repositionFlag
+  } = reactExports.useContext(MenuListContext);
+  const menuRef = reactExports.useRef();
+  const arrowRef = reactExports.useRef();
+  const prevOpen = reactExports.useRef(false);
+  const {
+    hoverItem,
+    dispatch,
+    updateItems
+  } = useItems(menuRef);
+  const isOpen = isMenuOpen(state);
+  const openTransition = getTransition(transition, "open");
+  const closeTransition = getTransition(transition, "close");
+  const scrollNodes = scrollNodesRef.current;
+  const onKeyDown = (e) => {
+    switch (e.key) {
+      case Keys.HOME:
+        dispatch(HoverActionTypes.FIRST);
+        break;
+      case Keys.END:
+        dispatch(HoverActionTypes.LAST);
+        break;
+      case Keys.UP:
+        dispatch(HoverActionTypes.DECREASE, hoverItem);
+        break;
+      case Keys.DOWN:
+        dispatch(HoverActionTypes.INCREASE, hoverItem);
+        break;
+      case Keys.SPACE:
+        if (e.target && e.target.className.indexOf(menuClass) !== -1) {
+          e.preventDefault();
+        }
+        return;
+      default:
+        return;
+    }
+    e.preventDefault();
+    e.stopPropagation();
+  };
+  const onAnimationEnd = () => {
+    if (state === "closing") {
+      setOverflowData();
+    }
+    safeCall(endTransition);
+  };
+  const onPointerMove = (e) => {
+    e.stopPropagation();
+    submenuCtx.on(submenuCloseDelay, () => {
+      dispatch(HoverActionTypes.RESET);
+      menuRef.current.focus(noScrollFocus);
+    });
+  };
+  const onPointerLeave = (e) => {
+    if (e.target === e.currentTarget) submenuCtx.off();
+  };
+  const handlePosition = reactExports.useCallback((noOverflowCheck) => {
+    const anchorRect = anchorRef ? anchorRef.current?.getBoundingClientRect() : anchorPoint ? {
+      left: anchorPoint.x,
+      right: anchorPoint.x,
+      top: anchorPoint.y,
+      bottom: anchorPoint.y,
+      width: 0,
+      height: 0
+    } : null;
+    if (!anchorRect) {
+      return;
+    }
+    if (!scrollNodes.menu) {
+      scrollNodes.menu = (boundingBoxRef ? boundingBoxRef.current : getScrollAncestor(rootMenuRef.current)) || window;
+    }
+    const positionHelpers = getPositionHelpers(containerRef, menuRef, scrollNodes.menu, boundingBoxPadding);
+    let {
+      arrowX,
+      arrowY,
+      x: x2,
+      y: y2,
+      computedDirection
+    } = positionMenu({
+      arrow,
+      align,
+      direction,
+      gap,
+      shift,
+      position: position2,
+      anchorRect,
+      arrowRef,
+      positionHelpers
+    });
+    const {
+      menuRect
+    } = positionHelpers;
+    const menuHeight = menuRect.height;
+    if (!noOverflowCheck && overflow !== "visible") {
+      const {
+        getTopOverflow,
+        getBottomOverflow
+      } = positionHelpers;
+      let height, overflowAmt2;
+      const bottomOverflow = getBottomOverflow(y2);
+      if (bottomOverflow > 0) {
+        height = menuHeight - bottomOverflow;
+        overflowAmt2 = bottomOverflow;
+      } else {
+        const topOverflow = getTopOverflow(y2);
+        if (topOverflow < 0) {
+          height = menuHeight + topOverflow;
+          overflowAmt2 = 0 - topOverflow;
+          if (height >= 0) y2 -= topOverflow;
+        }
+      }
+      if (height >= 0) {
+        setOverflowData({
+          height,
+          overflowAmt: overflowAmt2
+        });
+      }
+    }
+    if (arrow) setArrowPosition({
+      x: arrowX,
+      y: arrowY
+    });
+    setMenuPosition({
+      x: x2,
+      y: y2
+    });
+    setExpandedDirection(computedDirection);
+  }, [arrow, align, boundingBoxPadding, direction, gap, shift, position2, overflow, anchorPoint, anchorRef, containerRef, boundingBoxRef, rootMenuRef, scrollNodes]);
+  useIsomorphicLayoutEffect(() => {
+    if (isOpen) {
+      handlePosition();
+      if (prevOpen.current) forceReposSubmenu();
+    }
+    prevOpen.current = isOpen;
+  }, [isOpen, handlePosition, reposFlag]);
+  useIsomorphicLayoutEffect(() => {
+    if (overflowData && !setDownOverflow) menuRef.current.scrollTop = 0;
+  }, [overflowData, setDownOverflow]);
+  useIsomorphicLayoutEffect(() => updateItems, [updateItems]);
+  reactExports.useEffect(() => {
+    let {
+      menu: menuScroll
+    } = scrollNodes;
+    if (!isOpen || !menuScroll) return;
+    menuScroll = menuScroll.addEventListener ? menuScroll : window;
+    if (!scrollNodes.anchors) {
+      scrollNodes.anchors = [];
+      let anchorScroll = getScrollAncestor(rootAnchorRef && rootAnchorRef.current);
+      while (anchorScroll && anchorScroll !== menuScroll) {
+        scrollNodes.anchors.push(anchorScroll);
+        anchorScroll = getScrollAncestor(anchorScroll);
+      }
+    }
+    let scroll = viewScroll;
+    if (scrollNodes.anchors.length && scroll === "initial") scroll = "auto";
+    if (scroll === "initial") return;
+    const handleScroll = () => {
+      if (scroll === "auto") {
+        batchedUpdates(() => handlePosition(true));
+      } else {
+        safeCall(onClose, {
+          reason: CloseReason.SCROLL
+        });
+      }
+    };
+    const scrollObservers = scrollNodes.anchors.concat(viewScroll !== "initial" ? menuScroll : []);
+    scrollObservers.forEach((o) => o.addEventListener("scroll", handleScroll));
+    return () => scrollObservers.forEach((o) => o.removeEventListener("scroll", handleScroll));
+  }, [rootAnchorRef, scrollNodes, isOpen, onClose, viewScroll, handlePosition]);
+  const hasOverflow = !!overflowData && overflowData.overflowAmt > 0;
+  reactExports.useEffect(() => {
+    if (hasOverflow || !isOpen || !parentScrollingRef) return;
+    const handleScroll = () => batchedUpdates(handlePosition);
+    const parentScroll = parentScrollingRef.current;
+    parentScroll.addEventListener("scroll", handleScroll);
+    return () => parentScroll.removeEventListener("scroll", handleScroll);
+  }, [isOpen, hasOverflow, parentScrollingRef, handlePosition]);
+  reactExports.useEffect(() => {
+    if (!isOpen || typeof ResizeObserver !== "function" || reposition === "initial") return;
+    const targetList = [];
+    const resizeObserver = new ResizeObserver((entries) => entries.forEach(({
+      target
+    }) => {
+      if (targetList.indexOf(target) < 0) {
+        targetList.push(target);
+      } else {
+        reactDomExports.flushSync(() => {
+          handlePosition();
+          forceReposSubmenu();
+        });
+      }
+    }));
+    const resizeObserverOptions = {
+      box: "border-box"
+    };
+    resizeObserver.observe(menuRef.current, resizeObserverOptions);
+    const anchor = anchorRef?.current;
+    anchor && resizeObserver.observe(anchor, resizeObserverOptions);
+    return () => resizeObserver.disconnect();
+  }, [isOpen, reposition, anchorRef, handlePosition]);
+  reactExports.useEffect(() => {
+    if (!isOpen) {
+      dispatch(HoverActionTypes.RESET);
+      if (!closeTransition) setOverflowData();
+      return;
+    }
+    const {
+      position: position22,
+      alwaysUpdate
+    } = menuItemFocus || {};
+    const setItemFocus = () => {
+      if (position22 === FocusPositions.FIRST) {
+        dispatch(HoverActionTypes.FIRST);
+      } else if (position22 === FocusPositions.LAST) {
+        dispatch(HoverActionTypes.LAST);
+      } else if (position22 >= -1) {
+        dispatch(HoverActionTypes.SET_INDEX, void 0, position22);
+      }
+    };
+    if (alwaysUpdate) {
+      setItemFocus();
+    } else if (captureFocus) {
+      const id2 = setTimeout(() => {
+        const menuElt = menuRef.current;
+        if (menuElt && !menuElt.contains(document.activeElement)) {
+          menuElt.focus(noScrollFocus);
+          setItemFocus();
+        }
+      }, openTransition ? 170 : 100);
+      return () => clearTimeout(id2);
+    }
+  }, [isOpen, openTransition, closeTransition, captureFocus, menuItemFocus, dispatch]);
+  const itemContext = reactExports.useMemo(() => ({
+    isParentOpen: isOpen,
+    submenuCtx,
+    dispatch,
+    updateItems
+  }), [isOpen, submenuCtx, dispatch, updateItems]);
+  let maxHeight, overflowAmt;
+  if (overflowData) {
+    setDownOverflow ? overflowAmt = overflowData.overflowAmt : maxHeight = overflowData.height;
+  }
+  const listContext = reactExports.useMemo(() => ({
+    reposSubmenu,
+    submenuCtx,
+    overflow,
+    overflowAmt,
+    parentMenuRef: menuRef,
+    parentDir: expandedDirection
+  }), [reposSubmenu, submenuCtx, overflow, overflowAmt, expandedDirection]);
+  const overflowStyle = maxHeight >= 0 ? {
+    maxHeight,
+    overflow
+  } : void 0;
+  const modifiers = reactExports.useMemo(() => ({
+    state,
+    align,
+    dir: expandedDirection
+  }), [state, align, expandedDirection]);
+  const arrowModifiers = reactExports.useMemo(() => ({
+    dir: expandedDirection
+  }), [expandedDirection]);
+  const _arrowClassName = useBEM({
+    block: menuClass,
+    element: menuArrowClass,
+    modifiers: arrowModifiers,
+    className: arrowProps.className
+  });
+  const menu = /* @__PURE__ */ jsxRuntimeExports.jsxs("ul", {
+    role: "menu",
+    "aria-label": ariaLabel,
+    ...commonProps(isDisabled),
+    ...mergeProps({
+      onPointerEnter: parentSubmenuCtx?.off,
+      onPointerMove,
+      onPointerLeave,
+      onKeyDown,
+      onAnimationEnd
+    }, restProps),
+    ref: useCombinedRef(externalRef, menuRef),
+    className: useBEM({
+      block: menuClass,
+      modifiers,
+      className: menuClassName
+    }),
+    style: {
+      ...menuStyle,
+      ...overflowStyle,
+      margin: 0,
+      display: state === "closed" ? "none" : void 0,
+      position: positionAbsolute,
+      left: menuPosition.x,
+      top: menuPosition.y
+    },
+    children: [arrow && /* @__PURE__ */ jsxRuntimeExports.jsx("li", {
+      "aria-hidden": true,
+      ...arrowProps,
+      className: _arrowClassName,
+      style: {
+        display: "block",
+        position: positionAbsolute,
+        left: arrowPosition.x,
+        top: arrowPosition.y,
+        ...arrowProps.style
+      },
+      ref: arrowRef
+    }), /* @__PURE__ */ jsxRuntimeExports.jsx(MenuListContext.Provider, {
+      value: listContext,
+      children: /* @__PURE__ */ jsxRuntimeExports.jsx(MenuListItemContext.Provider, {
+        value: itemContext,
+        children: /* @__PURE__ */ jsxRuntimeExports.jsx(HoverItemContext.Provider, {
+          value: hoverItem,
+          children: safeCall(children, modifiers)
+        })
+      })
+    })]
+  });
+  return containerProps ? /* @__PURE__ */ jsxRuntimeExports.jsx(MenuContainer, {
+    ...containerProps,
+    isOpen,
+    children: menu
+  }) : menu;
+};
+const ControlledMenu = /* @__PURE__ */ reactExports.forwardRef(function ControlledMenu2({
+  "aria-label": ariaLabel,
+  className,
+  containerProps,
+  initialMounted,
+  unmountOnClose,
+  transition,
+  transitionTimeout,
+  boundingBoxRef,
+  boundingBoxPadding,
+  reposition = "auto",
+  submenuOpenDelay = 300,
+  submenuCloseDelay = 150,
+  viewScroll = "initial",
+  portal,
+  theming,
+  onItemClick,
+  ...restProps
+}, externalRef) {
+  const containerRef = reactExports.useRef(null);
+  const scrollNodesRef = reactExports.useRef({});
+  const {
+    anchorRef,
+    state,
+    onClose
+  } = restProps;
+  const settings = reactExports.useMemo(() => ({
+    initialMounted,
+    unmountOnClose,
+    transition,
+    transitionTimeout,
+    boundingBoxRef,
+    boundingBoxPadding,
+    rootMenuRef: containerRef,
+    rootAnchorRef: anchorRef,
+    scrollNodesRef,
+    reposition,
+    viewScroll,
+    submenuOpenDelay,
+    submenuCloseDelay
+  }), [initialMounted, unmountOnClose, transition, transitionTimeout, anchorRef, boundingBoxRef, boundingBoxPadding, reposition, viewScroll, submenuOpenDelay, submenuCloseDelay]);
+  const eventHandlers = reactExports.useMemo(() => ({
+    handleClick(event, isCheckorRadio) {
+      if (!event.stopPropagation) safeCall(onItemClick, event);
+      let keepOpen = event.keepOpen;
+      if (keepOpen === void 0) {
+        keepOpen = isCheckorRadio && event.key === Keys.SPACE;
+      }
+      if (!keepOpen) {
+        safeCall(onClose, {
+          value: event.value,
+          key: event.key,
+          reason: CloseReason.CLICK
+        });
+      }
+    },
+    handleClose(key) {
+      safeCall(onClose, {
+        key,
+        reason: CloseReason.CLICK
+      });
+    }
+  }), [onItemClick, onClose]);
+  if (!state) return null;
+  const menuList = /* @__PURE__ */ jsxRuntimeExports.jsx(SettingsContext.Provider, {
+    value: settings,
+    children: /* @__PURE__ */ jsxRuntimeExports.jsx(EventHandlersContext.Provider, {
+      value: eventHandlers,
+      children: /* @__PURE__ */ jsxRuntimeExports.jsx(MenuList, {
+        ...restProps,
+        ariaLabel: ariaLabel || "Menu",
+        externalRef,
+        containerRef,
+        containerProps: {
+          className,
+          containerRef,
+          containerProps,
+          theming,
+          transition,
+          onClose
+        }
+      })
+    })
+  });
+  if (portal === true && typeof document !== "undefined") {
+    return /* @__PURE__ */ reactDomExports.createPortal(menuList, document.body);
+  } else if (portal) {
+    return portal.target ? /* @__PURE__ */ reactDomExports.createPortal(menuList, portal.target) : portal.stablePosition ? null : menuList;
+  }
+  return menuList;
+});
+const PRE_ENTER = 0;
+const ENTERING = 1;
+const ENTERED = 2;
+const PRE_EXIT = 3;
+const EXITING = 4;
+const EXITED = 5;
+const UNMOUNTED = 6;
+const STATUS = ["preEnter", "entering", "entered", "preExit", "exiting", "exited", "unmounted"];
+const getState = (status) => ({
+  _s: status,
+  status: STATUS[status],
+  isEnter: status < PRE_EXIT,
+  isMounted: status !== UNMOUNTED,
+  isResolved: status === ENTERED || status > EXITING
+});
+const startOrEnd = (unmounted) => unmounted ? UNMOUNTED : EXITED;
+const getEndStatus = (status, unmountOnExit) => {
+  switch (status) {
+    case ENTERING:
+    case PRE_ENTER:
+      return ENTERED;
+    case EXITING:
+    case PRE_EXIT:
+      return startOrEnd(unmountOnExit);
+  }
+};
+const getTimeout = (timeout) => typeof timeout === "object" ? [timeout.enter, timeout.exit] : [timeout, timeout];
+const nextTick = (transitState, status) => setTimeout(() => {
+  isNaN(document.body.offsetTop) || transitState(status + 1);
+}, 0);
+const updateState = (status, setState, latestState, timeoutId, onChange) => {
+  clearTimeout(timeoutId.current);
+  const state = getState(status);
+  setState(state);
+  latestState.current = state;
+  onChange && onChange({
+    current: state
+  });
+};
+const useTransitionState = ({
+  enter = true,
+  exit = true,
+  preEnter,
+  preExit,
+  timeout,
+  initialEntered,
+  mountOnEnter,
+  unmountOnExit,
+  onStateChange: onChange
+} = {}) => {
+  const [state, setState] = reactExports.useState(() => getState(initialEntered ? ENTERED : startOrEnd(mountOnEnter)));
+  const latestState = reactExports.useRef(state);
+  const timeoutId = reactExports.useRef();
+  const [enterTimeout, exitTimeout] = getTimeout(timeout);
+  const endTransition = reactExports.useCallback(() => {
+    const status = getEndStatus(latestState.current._s, unmountOnExit);
+    status && updateState(status, setState, latestState, timeoutId, onChange);
+  }, [onChange, unmountOnExit]);
+  const toggle = reactExports.useCallback((toEnter) => {
+    const transitState = (status) => {
+      updateState(status, setState, latestState, timeoutId, onChange);
+      switch (status) {
+        case ENTERING:
+          if (enterTimeout >= 0) timeoutId.current = setTimeout(endTransition, enterTimeout);
+          break;
+        case EXITING:
+          if (exitTimeout >= 0) timeoutId.current = setTimeout(endTransition, exitTimeout);
+          break;
+        case PRE_ENTER:
+        case PRE_EXIT:
+          timeoutId.current = nextTick(transitState, status);
+          break;
+      }
+    };
+    const enterStage = latestState.current.isEnter;
+    if (typeof toEnter !== "boolean") toEnter = !enterStage;
+    if (toEnter) {
+      !enterStage && transitState(enter ? preEnter ? PRE_ENTER : ENTERING : ENTERED);
+    } else {
+      enterStage && transitState(exit ? preExit ? PRE_EXIT : EXITING : startOrEnd(unmountOnExit));
+    }
+  }, [endTransition, onChange, enter, exit, preEnter, preExit, enterTimeout, exitTimeout, unmountOnExit]);
+  reactExports.useEffect(() => () => clearTimeout(timeoutId.current), []);
+  return [state, toggle, endTransition];
+};
+const useMenuState = ({
+  initialOpen,
+  initialMounted,
+  unmountOnClose,
+  transition,
+  transitionTimeout = 500,
+  onMenuChange
+} = {}) => {
+  const enter = getTransition(transition, "open");
+  const exit = getTransition(transition, "close");
+  const [{
+    status
+  }, toggleMenu, endTransition] = useTransitionState({
+    initialEntered: initialOpen,
+    mountOnEnter: !initialMounted,
+    unmountOnExit: unmountOnClose,
+    timeout: transitionTimeout,
+    enter,
+    exit,
+    onStateChange: reactExports.useCallback(({
+      current: {
+        isEnter,
+        isResolved
+      }
+    }) => {
+      if (!onMenuChange || isEnter && enter && isResolved || !isEnter && exit && isResolved) {
+        return;
+      }
+      onMenuChange({
+        open: isEnter
+      });
+    }, [onMenuChange, enter, exit])
+  });
+  return [{
+    state: MenuStateMap[status],
+    endTransition
+  }, toggleMenu];
+};
+const useMenuStateAndFocus = (options) => {
+  const [menuProps, toggleMenu] = useMenuState(options);
+  const [menuItemFocus, setMenuItemFocus] = reactExports.useState();
+  const openMenu = (position2, alwaysUpdate) => {
+    setMenuItemFocus({
+      position: position2,
+      alwaysUpdate
+    });
+    toggleMenu(true);
+  };
+  return [{
+    menuItemFocus,
+    ...menuProps
+  }, toggleMenu, openMenu];
+};
+const useClick = (state, onToggle) => {
+  const [skipOpen] = reactExports.useState({});
+  return {
+    onMouseDown: () => {
+      skipOpen.v = state && state !== "closed";
+    },
+    onClick: (e) => skipOpen.v ? skipOpen.v = false : onToggle(true, e)
+  };
+};
+const isLegacyReact = parseInt(reactExports.version) < 19;
+const Menu = /* @__PURE__ */ reactExports.forwardRef(function Menu2({
+  "aria-label": ariaLabel,
+  captureFocus: _2,
+  initialOpen: _1,
+  menuButton,
+  instanceRef,
+  onMenuChange,
+  ...restProps
+}, externalRef) {
+  const [stateProps, toggleMenu, openMenu] = useMenuStateAndFocus({
+    ...restProps,
+    onMenuChange
+  });
+  const {
+    state
+  } = stateProps;
+  const isOpen = isMenuOpen(state);
+  const buttonRef = reactExports.useRef(null);
+  const anchorProps = useClick(state, (_3, e) => openMenu(!e.detail ? FocusPositions.FIRST : void 0));
+  const handleClose = reactExports.useCallback((e) => {
+    toggleMenu(false);
+    if (e.key) buttonRef.current.focus();
+  }, [toggleMenu]);
+  const onKeyDown = (e) => {
+    switch (e.key) {
+      case Keys.UP:
+        openMenu(FocusPositions.LAST);
+        break;
+      case Keys.DOWN:
+        openMenu(FocusPositions.FIRST);
+        break;
+      default:
+        return;
+    }
+    e.preventDefault();
+  };
+  const button = safeCall(menuButton, {
+    open: isOpen
+  });
+  if (!button || !button.type) throw new Error("Menu requires a menuButton prop.");
+  const buttonProps = {
+    ...mergeProps({
+      onKeyDown,
+      ...anchorProps
+    }, button.props),
+    ref: useCombinedRef(isLegacyReact ? button.ref : button.props.ref, buttonRef)
+  };
+  if (getName(button.type) === "MenuButton") {
+    buttonProps.isOpen = isOpen;
+  }
+  const renderButton = /* @__PURE__ */ reactExports.cloneElement(button, buttonProps);
+  reactExports.useImperativeHandle(instanceRef, () => ({
+    openMenu,
+    closeMenu: () => toggleMenu(false)
+  }));
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(reactExports.Fragment, {
+    children: [renderButton, /* @__PURE__ */ jsxRuntimeExports.jsx(ControlledMenu, {
+      ...restProps,
+      ...stateProps,
+      "aria-label": ariaLabel || (typeof button.props.children === "string" ? button.props.children : "Menu"),
+      anchorRef: buttonRef,
+      ref: externalRef,
+      onClose: handleClose
+    })]
+  });
+});
+const withHovering = (name, WrappedComponent) => {
+  const Component = /* @__PURE__ */ reactExports.memo(WrappedComponent);
+  const WithHovering = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
+    const itemRef = reactExports.useRef(null);
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(Component, {
+      ...props,
+      itemRef,
+      externalRef: ref,
+      isHovering: reactExports.useContext(HoverItemContext) === itemRef.current
+    });
+  });
+  WithHovering.displayName = `WithHovering(${name})`;
+  return WithHovering;
+};
+const useItemEffect = (isDisabled, itemRef, updateItems) => {
+  useIsomorphicLayoutEffect(() => {
+    if (isDisabled) return;
+    const item = itemRef.current;
+    updateItems(item, true);
+    return () => {
+      updateItems(item);
+    };
+  }, [isDisabled, itemRef, updateItems]);
+};
+const SubMenu = /* @__PURE__ */ withHovering("SubMenu", function SubMenu2({
+  "aria-label": ariaLabel,
+  className,
+  disabled,
+  direction,
+  label,
+  openTrigger,
+  onMenuChange,
+  isHovering,
+  instanceRef,
+  itemRef,
+  captureFocus: _1,
+  repositionFlag: _2,
+  itemProps = {},
+  ...restProps
+}) {
+  const settings = reactExports.useContext(SettingsContext);
+  const {
+    rootMenuRef,
+    submenuOpenDelay,
+    submenuCloseDelay
+  } = settings;
+  const {
+    parentMenuRef,
+    parentDir,
+    overflow: parentOverflow
+  } = reactExports.useContext(MenuListContext);
+  const {
+    isParentOpen,
+    submenuCtx,
+    dispatch,
+    updateItems
+  } = reactExports.useContext(MenuListItemContext);
+  const isPortal = parentOverflow !== "visible";
+  const [stateProps, toggleMenu, _openMenu] = useMenuStateAndFocus({
+    ...settings,
+    onMenuChange
+  });
+  const {
+    state
+  } = stateProps;
+  const isDisabled = !!disabled;
+  const isOpen = isMenuOpen(state);
+  const containerRef = reactExports.useRef(null);
+  const [timerId] = reactExports.useState({
+    v: 0
+  });
+  const stopTimer = () => {
+    submenuCtx.off();
+    if (timerId.v) {
+      clearTimeout(timerId.v);
+      timerId.v = 0;
+    }
+  };
+  const openMenu = (...args) => {
+    stopTimer();
+    setHover();
+    !isDisabled && _openMenu(...args);
+  };
+  const setHover = () => !isHovering && !isDisabled && dispatch(HoverActionTypes.SET, itemRef.current);
+  const delayOpen = (delay) => {
+    setHover();
+    if (!openTrigger) timerId.v = setTimeout(() => batchedUpdates(openMenu), Math.max(delay, 0));
+  };
+  const onPointerMove = (e) => {
+    if (isDisabled) return;
+    e.stopPropagation();
+    if (timerId.v || isOpen) return;
+    submenuCtx.on(submenuCloseDelay, () => delayOpen(submenuOpenDelay - submenuCloseDelay), () => delayOpen(submenuOpenDelay));
+  };
+  const onPointerLeave = () => {
+    stopTimer();
+    if (!isOpen) dispatch(HoverActionTypes.UNSET, itemRef.current);
+  };
+  const onKeyDown = (e) => {
+    if (!isHovering) return;
+    switch (e.key) {
+      case Keys.ENTER:
+        e.preventDefault();
+      case Keys.SPACE:
+      case Keys.RIGHT:
+        openTrigger !== "none" && openMenu(FocusPositions.FIRST);
+    }
+  };
+  const onKeyDownOfRoot = (e) => {
+    let handled = false;
+    switch (e.key) {
+      case Keys.LEFT:
+        if (isOpen) {
+          itemRef.current.focus();
+          toggleMenu(false);
+          handled = true;
+        }
+        break;
+      case Keys.RIGHT:
+        if (!isOpen) handled = true;
+        break;
+    }
+    if (handled) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  };
+  useItemEffect(isDisabled, itemRef, updateItems);
+  reactExports.useEffect(() => submenuCtx.toggle(isOpen), [submenuCtx, isOpen]);
+  reactExports.useEffect(() => () => clearTimeout(timerId.v), [timerId]);
+  reactExports.useEffect(() => {
+    if (isHovering && isParentOpen) {
+      itemRef.current.focus();
+    } else {
+      toggleMenu(false);
+    }
+  }, [isHovering, isParentOpen, toggleMenu, itemRef]);
+  reactExports.useImperativeHandle(instanceRef, () => ({
+    openMenu: (...args) => {
+      isParentOpen && openMenu(...args);
+    },
+    closeMenu: () => {
+      if (isOpen) {
+        itemRef.current.focus();
+        toggleMenu(false);
+      }
+    }
+  }));
+  const modifiers = reactExports.useMemo(() => ({
+    open: isOpen,
+    hover: isHovering,
+    disabled: isDisabled,
+    submenu: true
+  }), [isOpen, isHovering, isDisabled]);
+  const {
+    ref: externalItemRef,
+    className: itemClassName,
+    ...restItemProps
+  } = itemProps;
+  const mergedItemProps = mergeProps({
+    onPointerEnter: submenuCtx.off,
+    onPointerMove,
+    onPointerLeave,
+    onKeyDown,
+    onClick: () => openTrigger !== "none" && openMenu()
+  }, restItemProps);
+  const getMenuList = () => {
+    const menuList = /* @__PURE__ */ jsxRuntimeExports.jsx(MenuList, {
+      ...restProps,
+      ...stateProps,
+      ariaLabel: ariaLabel || (typeof label === "string" ? label : "Submenu"),
+      anchorRef: itemRef,
+      containerRef: isPortal ? rootMenuRef : containerRef,
+      direction: direction || (parentDir === "right" || parentDir === "left" ? parentDir : "right"),
+      parentScrollingRef: isPortal && parentMenuRef,
+      isDisabled
+    });
+    const container = rootMenuRef.current;
+    return isPortal && container ? /* @__PURE__ */ reactDomExports.createPortal(menuList, container) : menuList;
+  };
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("li", {
+    className: useBEM({
+      block: menuClass,
+      element: subMenuClass,
+      className
+    }),
+    style: {
+      position: "relative"
+    },
+    role: roleNone,
+    ref: containerRef,
+    onKeyDown: onKeyDownOfRoot,
+    children: [/* @__PURE__ */ jsxRuntimeExports.jsx("div", {
+      role: roleMenuitem,
+      "aria-haspopup": true,
+      "aria-expanded": isOpen,
+      ...commonProps(isDisabled, isHovering),
+      ...mergedItemProps,
+      ref: useCombinedRef(externalItemRef, itemRef),
+      className: useBEM({
+        block: menuClass,
+        element: menuItemClass,
+        modifiers,
+        className: itemClassName
+      }),
+      children: reactExports.useMemo(() => safeCall(label, modifiers), [label, modifiers])
+    }), state && getMenuList()]
+  });
+});
+const useItemState = (itemRef, focusRef, isHovering, isDisabled) => {
+  const {
+    submenuCloseDelay
+  } = reactExports.useContext(SettingsContext);
+  const {
+    isParentOpen,
+    submenuCtx,
+    dispatch,
+    updateItems
+  } = reactExports.useContext(MenuListItemContext);
+  const setHover = () => {
+    !isHovering && !isDisabled && dispatch(HoverActionTypes.SET, itemRef.current);
+  };
+  const unsetHover = () => {
+    !isDisabled && dispatch(HoverActionTypes.UNSET, itemRef.current);
+  };
+  const onBlur = (e) => {
+    if (isHovering && !e.currentTarget.contains(e.relatedTarget)) unsetHover();
+  };
+  const onPointerMove = (e) => {
+    if (!isDisabled) {
+      e.stopPropagation();
+      submenuCtx.on(submenuCloseDelay, setHover, setHover);
+    }
+  };
+  const onPointerLeave = (_2, keepHover) => {
+    submenuCtx.off();
+    !keepHover && unsetHover();
+  };
+  useItemEffect(isDisabled, itemRef, updateItems);
+  reactExports.useEffect(() => {
+    if (isHovering && isParentOpen) {
+      focusRef.current && focusRef.current.focus();
+    }
+  }, [focusRef, isHovering, isParentOpen]);
+  return {
+    setHover,
+    onBlur,
+    onPointerMove,
+    onPointerLeave
+  };
+};
+const MenuItem = /* @__PURE__ */ withHovering("MenuItem", function MenuItem2({
+  className,
+  value,
+  href,
+  type,
+  checked,
+  disabled,
+  children,
+  onClick,
+  isHovering,
+  itemRef,
+  externalRef,
+  ...restProps
+}) {
+  const isDisabled = !!disabled;
+  const {
+    setHover,
+    ...restStateProps
+  } = useItemState(itemRef, itemRef, isHovering, isDisabled);
+  const eventHandlers = reactExports.useContext(EventHandlersContext);
+  const radioGroup = reactExports.useContext(RadioGroupContext);
+  const isRadio = type === "radio";
+  const isCheckBox = type === "checkbox";
+  const isAnchor = !!href && !isDisabled && !isRadio && !isCheckBox;
+  const isChecked = isRadio ? radioGroup.value === value : isCheckBox ? !!checked : false;
+  const handleClick = (e) => {
+    if (isDisabled) {
+      e.stopPropagation();
+      e.preventDefault();
+      return;
+    }
+    const event = {
+      value,
+      syntheticEvent: e
+    };
+    if (e.key !== void 0) event.key = e.key;
+    if (isCheckBox) event.checked = !isChecked;
+    if (isRadio) event.name = radioGroup.name;
+    safeCall(onClick, event);
+    if (isRadio) safeCall(radioGroup.onRadioChange, event);
+    eventHandlers.handleClick(event, isCheckBox || isRadio);
+  };
+  const handleKeyDown = (e) => {
+    if (!isHovering) return;
+    switch (e.key) {
+      case Keys.ENTER:
+        e.preventDefault();
+      case Keys.SPACE:
+        isAnchor ? itemRef.current.click() : handleClick(e);
+    }
+  };
+  const modifiers = reactExports.useMemo(() => ({
+    type,
+    disabled: isDisabled,
+    hover: isHovering,
+    checked: isChecked,
+    anchor: isAnchor
+  }), [type, isDisabled, isHovering, isChecked, isAnchor]);
+  const mergedProps = mergeProps({
+    ...restStateProps,
+    onPointerDown: setHover,
+    onKeyDown: handleKeyDown,
+    onClick: handleClick
+  }, restProps);
+  const menuItemProps = {
+    role: isRadio ? "menuitemradio" : isCheckBox ? "menuitemcheckbox" : roleMenuitem,
+    "aria-checked": isRadio || isCheckBox ? isChecked : void 0,
+    ...commonProps(isDisabled, isHovering),
+    ...mergedProps,
+    ref: useCombinedRef(externalRef, itemRef),
+    className: useBEM({
+      block: menuClass,
+      element: menuItemClass,
+      modifiers,
+      className
+    }),
+    children: reactExports.useMemo(() => safeCall(children, modifiers), [children, modifiers])
+  };
+  return isAnchor ? /* @__PURE__ */ jsxRuntimeExports.jsx("li", {
+    role: roleNone,
+    children: /* @__PURE__ */ jsxRuntimeExports.jsx("a", {
+      href,
+      ...menuItemProps
+    })
+  }) : /* @__PURE__ */ jsxRuntimeExports.jsx("li", {
+    ...menuItemProps
+  });
+});
+var papaparse_min = { exports: {} };
+/* @license
+Papa Parse
+v5.5.2
+https://github.com/mholt/PapaParse
+License: MIT
+*/
+(function(module, exports) {
+  ((e, t2) => {
+    module.exports = t2();
+  })(commonjsGlobal, function r2() {
+    var n2 = "undefined" != typeof self ? self : "undefined" != typeof window ? window : void 0 !== n2 ? n2 : {};
+    var d2, s2 = !n2.document && !!n2.postMessage, a = n2.IS_PAPA_WORKER || false, o = {}, h2 = 0, v2 = {};
+    function u2(e) {
+      this._handle = null, this._finished = false, this._completed = false, this._halted = false, this._input = null, this._baseIndex = 0, this._partialLine = "", this._rowCount = 0, this._start = 0, this._nextChunk = null, this.isFirstChunk = true, this._completeResults = { data: [], errors: [], meta: {} }, function(e2) {
+        var t2 = w2(e2);
+        t2.chunkSize = parseInt(t2.chunkSize), e2.step || e2.chunk || (t2.chunkSize = null);
+        this._handle = new i2(t2), (this._handle.streamer = this)._config = t2;
+      }.call(this, e), this.parseChunk = function(t2, e2) {
+        var i3 = parseInt(this._config.skipFirstNLines) || 0;
+        if (this.isFirstChunk && 0 < i3) {
+          let e3 = this._config.newline;
+          e3 || (r3 = this._config.quoteChar || '"', e3 = this._handle.guessLineEndings(t2, r3)), t2 = [...t2.split(e3).slice(i3)].join(e3);
+        }
+        this.isFirstChunk && U2(this._config.beforeFirstChunk) && void 0 !== (r3 = this._config.beforeFirstChunk(t2)) && (t2 = r3), this.isFirstChunk = false, this._halted = false;
+        var i3 = this._partialLine + t2, r3 = (this._partialLine = "", this._handle.parse(i3, this._baseIndex, !this._finished));
+        if (!this._handle.paused() && !this._handle.aborted()) {
+          t2 = r3.meta.cursor, i3 = (this._finished || (this._partialLine = i3.substring(t2 - this._baseIndex), this._baseIndex = t2), r3 && r3.data && (this._rowCount += r3.data.length), this._finished || this._config.preview && this._rowCount >= this._config.preview);
+          if (a) n2.postMessage({ results: r3, workerId: v2.WORKER_ID, finished: i3 });
+          else if (U2(this._config.chunk) && !e2) {
+            if (this._config.chunk(r3, this._handle), this._handle.paused() || this._handle.aborted()) return void (this._halted = true);
+            this._completeResults = r3 = void 0;
+          }
+          return this._config.step || this._config.chunk || (this._completeResults.data = this._completeResults.data.concat(r3.data), this._completeResults.errors = this._completeResults.errors.concat(r3.errors), this._completeResults.meta = r3.meta), this._completed || !i3 || !U2(this._config.complete) || r3 && r3.meta.aborted || (this._config.complete(this._completeResults, this._input), this._completed = true), i3 || r3 && r3.meta.paused || this._nextChunk(), r3;
+        }
+        this._halted = true;
+      }, this._sendError = function(e2) {
+        U2(this._config.error) ? this._config.error(e2) : a && this._config.error && n2.postMessage({ workerId: v2.WORKER_ID, error: e2, finished: false });
+      };
+    }
+    function f2(e) {
+      var r3;
+      (e = e || {}).chunkSize || (e.chunkSize = v2.RemoteChunkSize), u2.call(this, e), this._nextChunk = s2 ? function() {
+        this._readChunk(), this._chunkLoaded();
+      } : function() {
+        this._readChunk();
+      }, this.stream = function(e2) {
+        this._input = e2, this._nextChunk();
+      }, this._readChunk = function() {
+        if (this._finished) this._chunkLoaded();
+        else {
+          if (r3 = new XMLHttpRequest(), this._config.withCredentials && (r3.withCredentials = this._config.withCredentials), s2 || (r3.onload = y2(this._chunkLoaded, this), r3.onerror = y2(this._chunkError, this)), r3.open(this._config.downloadRequestBody ? "POST" : "GET", this._input, !s2), this._config.downloadRequestHeaders) {
+            var e2, t2 = this._config.downloadRequestHeaders;
+            for (e2 in t2) r3.setRequestHeader(e2, t2[e2]);
+          }
+          var i3;
+          this._config.chunkSize && (i3 = this._start + this._config.chunkSize - 1, r3.setRequestHeader("Range", "bytes=" + this._start + "-" + i3));
+          try {
+            r3.send(this._config.downloadRequestBody);
+          } catch (e3) {
+            this._chunkError(e3.message);
+          }
+          s2 && 0 === r3.status && this._chunkError();
+        }
+      }, this._chunkLoaded = function() {
+        4 === r3.readyState && (r3.status < 200 || 400 <= r3.status ? this._chunkError() : (this._start += this._config.chunkSize || r3.responseText.length, this._finished = !this._config.chunkSize || this._start >= ((e2) => null !== (e2 = e2.getResponseHeader("Content-Range")) ? parseInt(e2.substring(e2.lastIndexOf("/") + 1)) : -1)(r3), this.parseChunk(r3.responseText)));
+      }, this._chunkError = function(e2) {
+        e2 = r3.statusText || e2;
+        this._sendError(new Error(e2));
+      };
+    }
+    function l2(e) {
+      (e = e || {}).chunkSize || (e.chunkSize = v2.LocalChunkSize), u2.call(this, e);
+      var i3, r3, n3 = "undefined" != typeof FileReader;
+      this.stream = function(e2) {
+        this._input = e2, r3 = e2.slice || e2.webkitSlice || e2.mozSlice, n3 ? ((i3 = new FileReader()).onload = y2(this._chunkLoaded, this), i3.onerror = y2(this._chunkError, this)) : i3 = new FileReaderSync(), this._nextChunk();
+      }, this._nextChunk = function() {
+        this._finished || this._config.preview && !(this._rowCount < this._config.preview) || this._readChunk();
+      }, this._readChunk = function() {
+        var e2 = this._input, t2 = (this._config.chunkSize && (t2 = Math.min(this._start + this._config.chunkSize, this._input.size), e2 = r3.call(e2, this._start, t2)), i3.readAsText(e2, this._config.encoding));
+        n3 || this._chunkLoaded({ target: { result: t2 } });
+      }, this._chunkLoaded = function(e2) {
+        this._start += this._config.chunkSize, this._finished = !this._config.chunkSize || this._start >= this._input.size, this.parseChunk(e2.target.result);
+      }, this._chunkError = function() {
+        this._sendError(i3.error);
+      };
+    }
+    function c2(e) {
+      var i3;
+      u2.call(this, e = e || {}), this.stream = function(e2) {
+        return i3 = e2, this._nextChunk();
+      }, this._nextChunk = function() {
+        var e2, t2;
+        if (!this._finished) return e2 = this._config.chunkSize, i3 = e2 ? (t2 = i3.substring(0, e2), i3.substring(e2)) : (t2 = i3, ""), this._finished = !i3, this.parseChunk(t2);
+      };
+    }
+    function p2(e) {
+      u2.call(this, e = e || {});
+      var t2 = [], i3 = true, r3 = false;
+      this.pause = function() {
+        u2.prototype.pause.apply(this, arguments), this._input.pause();
+      }, this.resume = function() {
+        u2.prototype.resume.apply(this, arguments), this._input.resume();
+      }, this.stream = function(e2) {
+        this._input = e2, this._input.on("data", this._streamData), this._input.on("end", this._streamEnd), this._input.on("error", this._streamError);
+      }, this._checkIsFinished = function() {
+        r3 && 1 === t2.length && (this._finished = true);
+      }, this._nextChunk = function() {
+        this._checkIsFinished(), t2.length ? this.parseChunk(t2.shift()) : i3 = true;
+      }, this._streamData = y2(function(e2) {
+        try {
+          t2.push("string" == typeof e2 ? e2 : e2.toString(this._config.encoding)), i3 && (i3 = false, this._checkIsFinished(), this.parseChunk(t2.shift()));
+        } catch (e3) {
+          this._streamError(e3);
+        }
+      }, this), this._streamError = y2(function(e2) {
+        this._streamCleanUp(), this._sendError(e2);
+      }, this), this._streamEnd = y2(function() {
+        this._streamCleanUp(), r3 = true, this._streamData("");
+      }, this), this._streamCleanUp = y2(function() {
+        this._input.removeListener("data", this._streamData), this._input.removeListener("end", this._streamEnd), this._input.removeListener("error", this._streamError);
+      }, this);
+    }
+    function i2(m3) {
+      var n3, s3, a2, t2, o2 = Math.pow(2, 53), h3 = -o2, u3 = /^\s*-?(\d+\.?|\.\d+|\d+\.\d+)([eE][-+]?\d+)?\s*$/, d3 = /^((\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z)))$/, i3 = this, r3 = 0, f3 = 0, l3 = false, e = false, c3 = [], p3 = { data: [], errors: [], meta: {} };
+      function y3(e2) {
+        return "greedy" === m3.skipEmptyLines ? "" === e2.join("").trim() : 1 === e2.length && 0 === e2[0].length;
+      }
+      function g3() {
+        if (p3 && a2 && (k2("Delimiter", "UndetectableDelimiter", "Unable to auto-detect delimiting character; defaulted to '" + v2.DefaultDelimiter + "'"), a2 = false), m3.skipEmptyLines && (p3.data = p3.data.filter(function(e3) {
+          return !y3(e3);
+        })), _3()) {
+          let t3 = function(e3, t4) {
+            U2(m3.transformHeader) && (e3 = m3.transformHeader(e3, t4)), c3.push(e3);
+          };
+          if (p3) if (Array.isArray(p3.data[0])) {
+            for (var e2 = 0; _3() && e2 < p3.data.length; e2++) p3.data[e2].forEach(t3);
+            p3.data.splice(0, 1);
+          } else p3.data.forEach(t3);
+        }
+        function i4(e3, t3) {
+          for (var i5 = m3.header ? {} : [], r5 = 0; r5 < e3.length; r5++) {
+            var n4 = r5, s4 = e3[r5], s4 = ((e4, t4) => ((e5) => (m3.dynamicTypingFunction && void 0 === m3.dynamicTyping[e5] && (m3.dynamicTyping[e5] = m3.dynamicTypingFunction(e5)), true === (m3.dynamicTyping[e5] || m3.dynamicTyping)))(e4) ? "true" === t4 || "TRUE" === t4 || "false" !== t4 && "FALSE" !== t4 && (((e5) => {
+              if (u3.test(e5)) {
+                e5 = parseFloat(e5);
+                if (h3 < e5 && e5 < o2) return 1;
+              }
+            })(t4) ? parseFloat(t4) : d3.test(t4) ? new Date(t4) : "" === t4 ? null : t4) : t4)(n4 = m3.header ? r5 >= c3.length ? "__parsed_extra" : c3[r5] : n4, s4 = m3.transform ? m3.transform(s4, n4) : s4);
+            "__parsed_extra" === n4 ? (i5[n4] = i5[n4] || [], i5[n4].push(s4)) : i5[n4] = s4;
+          }
+          return m3.header && (r5 > c3.length ? k2("FieldMismatch", "TooManyFields", "Too many fields: expected " + c3.length + " fields but parsed " + r5, f3 + t3) : r5 < c3.length && k2("FieldMismatch", "TooFewFields", "Too few fields: expected " + c3.length + " fields but parsed " + r5, f3 + t3)), i5;
+        }
+        var r4;
+        p3 && (m3.header || m3.dynamicTyping || m3.transform) && (r4 = 1, !p3.data.length || Array.isArray(p3.data[0]) ? (p3.data = p3.data.map(i4), r4 = p3.data.length) : p3.data = i4(p3.data, 0), m3.header && p3.meta && (p3.meta.fields = c3), f3 += r4);
+      }
+      function _3() {
+        return m3.header && 0 === c3.length;
+      }
+      function k2(e2, t3, i4, r4) {
+        e2 = { type: e2, code: t3, message: i4 };
+        void 0 !== r4 && (e2.row = r4), p3.errors.push(e2);
+      }
+      U2(m3.step) && (t2 = m3.step, m3.step = function(e2) {
+        p3 = e2, _3() ? g3() : (g3(), 0 !== p3.data.length && (r3 += e2.data.length, m3.preview && r3 > m3.preview ? s3.abort() : (p3.data = p3.data[0], t2(p3, i3))));
+      }), this.parse = function(e2, t3, i4) {
+        var r4 = m3.quoteChar || '"', r4 = (m3.newline || (m3.newline = this.guessLineEndings(e2, r4)), a2 = false, m3.delimiter ? U2(m3.delimiter) && (m3.delimiter = m3.delimiter(e2), p3.meta.delimiter = m3.delimiter) : ((r4 = ((e3, t4, i5, r5, n4) => {
+          var s4, a3, o3, h4;
+          n4 = n4 || [",", "	", "|", ";", v2.RECORD_SEP, v2.UNIT_SEP];
+          for (var u4 = 0; u4 < n4.length; u4++) {
+            for (var d4, f4 = n4[u4], l4 = 0, c4 = 0, p4 = 0, g4 = (o3 = void 0, new E2({ comments: r5, delimiter: f4, newline: t4, preview: 10 }).parse(e3)), _4 = 0; _4 < g4.data.length; _4++) i5 && y3(g4.data[_4]) ? p4++ : (d4 = g4.data[_4].length, c4 += d4, void 0 === o3 ? o3 = d4 : 0 < d4 && (l4 += Math.abs(d4 - o3), o3 = d4));
+            0 < g4.data.length && (c4 /= g4.data.length - p4), (void 0 === a3 || l4 <= a3) && (void 0 === h4 || h4 < c4) && 1.99 < c4 && (a3 = l4, s4 = f4, h4 = c4);
+          }
+          return { successful: !!(m3.delimiter = s4), bestDelimiter: s4 };
+        })(e2, m3.newline, m3.skipEmptyLines, m3.comments, m3.delimitersToGuess)).successful ? m3.delimiter = r4.bestDelimiter : (a2 = true, m3.delimiter = v2.DefaultDelimiter), p3.meta.delimiter = m3.delimiter), w2(m3));
+        return m3.preview && m3.header && r4.preview++, n3 = e2, s3 = new E2(r4), p3 = s3.parse(n3, t3, i4), g3(), l3 ? { meta: { paused: true } } : p3 || { meta: { paused: false } };
+      }, this.paused = function() {
+        return l3;
+      }, this.pause = function() {
+        l3 = true, s3.abort(), n3 = U2(m3.chunk) ? "" : n3.substring(s3.getCharIndex());
+      }, this.resume = function() {
+        i3.streamer._halted ? (l3 = false, i3.streamer.parseChunk(n3, true)) : setTimeout(i3.resume, 3);
+      }, this.aborted = function() {
+        return e;
+      }, this.abort = function() {
+        e = true, s3.abort(), p3.meta.aborted = true, U2(m3.complete) && m3.complete(p3), n3 = "";
+      }, this.guessLineEndings = function(e2, t3) {
+        e2 = e2.substring(0, 1048576);
+        var t3 = new RegExp(P2(t3) + "([^]*?)" + P2(t3), "gm"), i4 = (e2 = e2.replace(t3, "")).split("\r"), t3 = e2.split("\n"), e2 = 1 < t3.length && t3[0].length < i4[0].length;
+        if (1 === i4.length || e2) return "\n";
+        for (var r4 = 0, n4 = 0; n4 < i4.length; n4++) "\n" === i4[n4][0] && r4++;
+        return r4 >= i4.length / 2 ? "\r\n" : "\r";
+      };
+    }
+    function P2(e) {
+      return e.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    }
+    function E2(C2) {
+      var S2 = (C2 = C2 || {}).delimiter, O2 = C2.newline, x2 = C2.comments, I2 = C2.step, A2 = C2.preview, T2 = C2.fastMode, D2 = null, L2 = false, F2 = null == C2.quoteChar ? '"' : C2.quoteChar, j2 = F2;
+      if (void 0 !== C2.escapeChar && (j2 = C2.escapeChar), ("string" != typeof S2 || -1 < v2.BAD_DELIMITERS.indexOf(S2)) && (S2 = ","), x2 === S2) throw new Error("Comment character same as delimiter");
+      true === x2 ? x2 = "#" : ("string" != typeof x2 || -1 < v2.BAD_DELIMITERS.indexOf(x2)) && (x2 = false), "\n" !== O2 && "\r" !== O2 && "\r\n" !== O2 && (O2 = "\n");
+      var z2 = 0, M2 = false;
+      this.parse = function(i3, t2, r3) {
+        if ("string" != typeof i3) throw new Error("Input must be a string");
+        var n3 = i3.length, e = S2.length, s3 = O2.length, a2 = x2.length, o2 = U2(I2), h3 = [], u3 = [], d3 = [], f3 = z2 = 0;
+        if (!i3) return b2();
+        if (T2 || false !== T2 && -1 === i3.indexOf(F2)) {
+          for (var l3 = i3.split(O2), c3 = 0; c3 < l3.length; c3++) {
+            if (d3 = l3[c3], z2 += d3.length, c3 !== l3.length - 1) z2 += O2.length;
+            else if (r3) return b2();
+            if (!x2 || d3.substring(0, a2) !== x2) {
+              if (o2) {
+                if (h3 = [], k2(d3.split(S2)), R2(), M2) return b2();
+              } else k2(d3.split(S2));
+              if (A2 && A2 <= c3) return h3 = h3.slice(0, A2), b2(true);
+            }
+          }
+          return b2();
+        }
+        for (var p3 = i3.indexOf(S2, z2), g3 = i3.indexOf(O2, z2), _3 = new RegExp(P2(j2) + P2(F2), "g"), m3 = i3.indexOf(F2, z2); ; ) if (i3[z2] === F2) for (m3 = z2, z2++; ; ) {
+          if (-1 === (m3 = i3.indexOf(F2, m3 + 1))) return r3 || u3.push({ type: "Quotes", code: "MissingQuotes", message: "Quoted field unterminated", row: h3.length, index: z2 }), E3();
+          if (m3 === n3 - 1) return E3(i3.substring(z2, m3).replace(_3, F2));
+          if (F2 === j2 && i3[m3 + 1] === j2) m3++;
+          else if (F2 === j2 || 0 === m3 || i3[m3 - 1] !== j2) {
+            -1 !== p3 && p3 < m3 + 1 && (p3 = i3.indexOf(S2, m3 + 1));
+            var y3 = v3(-1 === (g3 = -1 !== g3 && g3 < m3 + 1 ? i3.indexOf(O2, m3 + 1) : g3) ? p3 : Math.min(p3, g3));
+            if (i3.substr(m3 + 1 + y3, e) === S2) {
+              d3.push(i3.substring(z2, m3).replace(_3, F2)), i3[z2 = m3 + 1 + y3 + e] !== F2 && (m3 = i3.indexOf(F2, z2)), p3 = i3.indexOf(S2, z2), g3 = i3.indexOf(O2, z2);
+              break;
+            }
+            y3 = v3(g3);
+            if (i3.substring(m3 + 1 + y3, m3 + 1 + y3 + s3) === O2) {
+              if (d3.push(i3.substring(z2, m3).replace(_3, F2)), w3(m3 + 1 + y3 + s3), p3 = i3.indexOf(S2, z2), m3 = i3.indexOf(F2, z2), o2 && (R2(), M2)) return b2();
+              if (A2 && h3.length >= A2) return b2(true);
+              break;
+            }
+            u3.push({ type: "Quotes", code: "InvalidQuotes", message: "Trailing quote on quoted field is malformed", row: h3.length, index: z2 }), m3++;
+          }
+        }
+        else if (x2 && 0 === d3.length && i3.substring(z2, z2 + a2) === x2) {
+          if (-1 === g3) return b2();
+          z2 = g3 + s3, g3 = i3.indexOf(O2, z2), p3 = i3.indexOf(S2, z2);
+        } else if (-1 !== p3 && (p3 < g3 || -1 === g3)) d3.push(i3.substring(z2, p3)), z2 = p3 + e, p3 = i3.indexOf(S2, z2);
+        else {
+          if (-1 === g3) break;
+          if (d3.push(i3.substring(z2, g3)), w3(g3 + s3), o2 && (R2(), M2)) return b2();
+          if (A2 && h3.length >= A2) return b2(true);
+        }
+        return E3();
+        function k2(e2) {
+          h3.push(e2), f3 = z2;
+        }
+        function v3(e2) {
+          var t3 = 0;
+          return t3 = -1 !== e2 && (e2 = i3.substring(m3 + 1, e2)) && "" === e2.trim() ? e2.length : t3;
+        }
+        function E3(e2) {
+          return r3 || (void 0 === e2 && (e2 = i3.substring(z2)), d3.push(e2), z2 = n3, k2(d3), o2 && R2()), b2();
+        }
+        function w3(e2) {
+          z2 = e2, k2(d3), d3 = [], g3 = i3.indexOf(O2, z2);
+        }
+        function b2(e2) {
+          if (C2.header && !t2 && h3.length && !L2) {
+            var s4 = h3[0], a3 = {}, o3 = new Set(s4);
+            let n4 = false;
+            for (let r4 = 0; r4 < s4.length; r4++) {
+              let i4 = s4[r4];
+              if (a3[i4 = U2(C2.transformHeader) ? C2.transformHeader(i4, r4) : i4]) {
+                let e3, t3 = a3[i4];
+                for (; e3 = i4 + "_" + t3, t3++, o3.has(e3); ) ;
+                o3.add(e3), s4[r4] = e3, a3[i4]++, n4 = true, (D2 = null === D2 ? {} : D2)[e3] = i4;
+              } else a3[i4] = 1, s4[r4] = i4;
+              o3.add(i4);
+            }
+            n4 && console.warn("Duplicate headers found and renamed."), L2 = true;
+          }
+          return { data: h3, errors: u3, meta: { delimiter: S2, linebreak: O2, aborted: M2, truncated: !!e2, cursor: f3 + (t2 || 0), renamedHeaders: D2 } };
+        }
+        function R2() {
+          I2(b2()), h3 = [], u3 = [];
+        }
+      }, this.abort = function() {
+        M2 = true;
+      }, this.getCharIndex = function() {
+        return z2;
+      };
+    }
+    function g2(e) {
+      var t2 = e.data, i3 = o[t2.workerId], r3 = false;
+      if (t2.error) i3.userError(t2.error, t2.file);
+      else if (t2.results && t2.results.data) {
+        var n3 = { abort: function() {
+          r3 = true, _2(t2.workerId, { data: [], errors: [], meta: { aborted: true } });
+        }, pause: m2, resume: m2 };
+        if (U2(i3.userStep)) {
+          for (var s3 = 0; s3 < t2.results.data.length && (i3.userStep({ data: t2.results.data[s3], errors: t2.results.errors, meta: t2.results.meta }, n3), !r3); s3++) ;
+          delete t2.results;
+        } else U2(i3.userChunk) && (i3.userChunk(t2.results, n3, t2.file), delete t2.results);
+      }
+      t2.finished && !r3 && _2(t2.workerId, t2.results);
+    }
+    function _2(e, t2) {
+      var i3 = o[e];
+      U2(i3.userComplete) && i3.userComplete(t2), i3.terminate(), delete o[e];
+    }
+    function m2() {
+      throw new Error("Not implemented.");
+    }
+    function w2(e) {
+      if ("object" != typeof e || null === e) return e;
+      var t2, i3 = Array.isArray(e) ? [] : {};
+      for (t2 in e) i3[t2] = w2(e[t2]);
+      return i3;
+    }
+    function y2(e, t2) {
+      return function() {
+        e.apply(t2, arguments);
+      };
+    }
+    function U2(e) {
+      return "function" == typeof e;
+    }
+    return v2.parse = function(e, t2) {
+      var i3 = (t2 = t2 || {}).dynamicTyping || false;
+      U2(i3) && (t2.dynamicTypingFunction = i3, i3 = {});
+      if (t2.dynamicTyping = i3, t2.transform = !!U2(t2.transform) && t2.transform, !t2.worker || !v2.WORKERS_SUPPORTED) return i3 = null, v2.NODE_STREAM_INPUT, "string" == typeof e ? (e = ((e2) => 65279 !== e2.charCodeAt(0) ? e2 : e2.slice(1))(e), i3 = new (t2.download ? f2 : c2)(t2)) : true === e.readable && U2(e.read) && U2(e.on) ? i3 = new p2(t2) : (n2.File && e instanceof File || e instanceof Object) && (i3 = new l2(t2)), i3.stream(e);
+      (i3 = (() => {
+        var e2;
+        return !!v2.WORKERS_SUPPORTED && (e2 = (() => {
+          var e3 = n2.URL || n2.webkitURL || null, t3 = r2.toString();
+          return v2.BLOB_URL || (v2.BLOB_URL = e3.createObjectURL(new Blob(["var global = (function() { if (typeof self !== 'undefined') { return self; } if (typeof window !== 'undefined') { return window; } if (typeof global !== 'undefined') { return global; } return {}; })(); global.IS_PAPA_WORKER=true; ", "(", t3, ")();"], { type: "text/javascript" })));
+        })(), (e2 = new n2.Worker(e2)).onmessage = g2, e2.id = h2++, o[e2.id] = e2);
+      })()).userStep = t2.step, i3.userChunk = t2.chunk, i3.userComplete = t2.complete, i3.userError = t2.error, t2.step = U2(t2.step), t2.chunk = U2(t2.chunk), t2.complete = U2(t2.complete), t2.error = U2(t2.error), delete t2.worker, i3.postMessage({ input: e, config: t2, workerId: i3.id });
+    }, v2.unparse = function(e, t2) {
+      var n3 = false, _3 = true, m3 = ",", y3 = "\r\n", s3 = '"', a2 = s3 + s3, i3 = false, r3 = null, o2 = false, h3 = ((() => {
+        if ("object" == typeof t2) {
+          if ("string" != typeof t2.delimiter || v2.BAD_DELIMITERS.filter(function(e2) {
+            return -1 !== t2.delimiter.indexOf(e2);
+          }).length || (m3 = t2.delimiter), "boolean" != typeof t2.quotes && "function" != typeof t2.quotes && !Array.isArray(t2.quotes) || (n3 = t2.quotes), "boolean" != typeof t2.skipEmptyLines && "string" != typeof t2.skipEmptyLines || (i3 = t2.skipEmptyLines), "string" == typeof t2.newline && (y3 = t2.newline), "string" == typeof t2.quoteChar && (s3 = t2.quoteChar), "boolean" == typeof t2.header && (_3 = t2.header), Array.isArray(t2.columns)) {
+            if (0 === t2.columns.length) throw new Error("Option columns is empty");
+            r3 = t2.columns;
+          }
+          void 0 !== t2.escapeChar && (a2 = t2.escapeChar + s3), t2.escapeFormulae instanceof RegExp ? o2 = t2.escapeFormulae : "boolean" == typeof t2.escapeFormulae && t2.escapeFormulae && (o2 = /^[=+\-@\t\r].*$/);
+        }
+      })(), new RegExp(P2(s3), "g"));
+      "string" == typeof e && (e = JSON.parse(e));
+      if (Array.isArray(e)) {
+        if (!e.length || Array.isArray(e[0])) return u3(null, e, i3);
+        if ("object" == typeof e[0]) return u3(r3 || Object.keys(e[0]), e, i3);
+      } else if ("object" == typeof e) return "string" == typeof e.data && (e.data = JSON.parse(e.data)), Array.isArray(e.data) && (e.fields || (e.fields = e.meta && e.meta.fields || r3), e.fields || (e.fields = Array.isArray(e.data[0]) ? e.fields : "object" == typeof e.data[0] ? Object.keys(e.data[0]) : []), Array.isArray(e.data[0]) || "object" == typeof e.data[0] || (e.data = [e.data])), u3(e.fields || [], e.data || [], i3);
+      throw new Error("Unable to serialize unrecognized input");
+      function u3(e2, t3, i4) {
+        var r4 = "", n4 = ("string" == typeof e2 && (e2 = JSON.parse(e2)), "string" == typeof t3 && (t3 = JSON.parse(t3)), Array.isArray(e2) && 0 < e2.length), s4 = !Array.isArray(t3[0]);
+        if (n4 && _3) {
+          for (var a3 = 0; a3 < e2.length; a3++) 0 < a3 && (r4 += m3), r4 += k2(e2[a3], a3);
+          0 < t3.length && (r4 += y3);
+        }
+        for (var o3 = 0; o3 < t3.length; o3++) {
+          var h4 = (n4 ? e2 : t3[o3]).length, u4 = false, d3 = n4 ? 0 === Object.keys(t3[o3]).length : 0 === t3[o3].length;
+          if (i4 && !n4 && (u4 = "greedy" === i4 ? "" === t3[o3].join("").trim() : 1 === t3[o3].length && 0 === t3[o3][0].length), "greedy" === i4 && n4) {
+            for (var f3 = [], l3 = 0; l3 < h4; l3++) {
+              var c3 = s4 ? e2[l3] : l3;
+              f3.push(t3[o3][c3]);
+            }
+            u4 = "" === f3.join("").trim();
+          }
+          if (!u4) {
+            for (var p3 = 0; p3 < h4; p3++) {
+              0 < p3 && !d3 && (r4 += m3);
+              var g3 = n4 && s4 ? e2[p3] : p3;
+              r4 += k2(t3[o3][g3], p3);
+            }
+            o3 < t3.length - 1 && (!i4 || 0 < h4 && !d3) && (r4 += y3);
+          }
+        }
+        return r4;
+      }
+      function k2(e2, t3) {
+        var i4, r4;
+        return null == e2 ? "" : e2.constructor === Date ? JSON.stringify(e2).slice(1, 25) : (r4 = false, o2 && "string" == typeof e2 && o2.test(e2) && (e2 = "'" + e2, r4 = true), i4 = e2.toString().replace(h3, a2), (r4 = r4 || true === n3 || "function" == typeof n3 && n3(e2, t3) || Array.isArray(n3) && n3[t3] || ((e3, t4) => {
+          for (var i5 = 0; i5 < t4.length; i5++) if (-1 < e3.indexOf(t4[i5])) return true;
+          return false;
+        })(i4, v2.BAD_DELIMITERS) || -1 < i4.indexOf(m3) || " " === i4.charAt(0) || " " === i4.charAt(i4.length - 1)) ? s3 + i4 + s3 : i4);
+      }
+    }, v2.RECORD_SEP = String.fromCharCode(30), v2.UNIT_SEP = String.fromCharCode(31), v2.BYTE_ORDER_MARK = "\uFEFF", v2.BAD_DELIMITERS = ["\r", "\n", '"', v2.BYTE_ORDER_MARK], v2.WORKERS_SUPPORTED = !s2 && !!n2.Worker, v2.NODE_STREAM_INPUT = 1, v2.LocalChunkSize = 10485760, v2.RemoteChunkSize = 5242880, v2.DefaultDelimiter = ",", v2.Parser = E2, v2.ParserHandle = i2, v2.NetworkStreamer = f2, v2.FileStreamer = l2, v2.StringStreamer = c2, v2.ReadableStreamStreamer = p2, n2.jQuery && ((d2 = n2.jQuery).fn.parse = function(o2) {
+      var i3 = o2.config || {}, h3 = [];
+      return this.each(function(e2) {
+        if (!("INPUT" === d2(this).prop("tagName").toUpperCase() && "file" === d2(this).attr("type").toLowerCase() && n2.FileReader) || !this.files || 0 === this.files.length) return true;
+        for (var t2 = 0; t2 < this.files.length; t2++) h3.push({ file: this.files[t2], inputElem: this, instanceConfig: d2.extend({}, i3) });
+      }), e(), this;
+      function e() {
+        if (0 === h3.length) U2(o2.complete) && o2.complete();
+        else {
+          var e2, t2, i4, r3, n3 = h3[0];
+          if (U2(o2.before)) {
+            var s3 = o2.before(n3.file, n3.inputElem);
+            if ("object" == typeof s3) {
+              if ("abort" === s3.action) return e2 = "AbortError", t2 = n3.file, i4 = n3.inputElem, r3 = s3.reason, void (U2(o2.error) && o2.error({ name: e2 }, t2, i4, r3));
+              if ("skip" === s3.action) return void u3();
+              "object" == typeof s3.config && (n3.instanceConfig = d2.extend(n3.instanceConfig, s3.config));
+            } else if ("skip" === s3) return void u3();
+          }
+          var a2 = n3.instanceConfig.complete;
+          n3.instanceConfig.complete = function(e3) {
+            U2(a2) && a2(e3, n3.file, n3.inputElem), u3();
+          }, v2.parse(n3.file, n3.instanceConfig);
+        }
+      }
+      function u3() {
+        h3.splice(0, 1), e();
+      }
+    }), a && (n2.onmessage = function(e) {
+      e = e.data;
+      void 0 === v2.WORKER_ID && e && (v2.WORKER_ID = e.workerId);
+      "string" == typeof e.input ? n2.postMessage({ workerId: v2.WORKER_ID, results: v2.parse(e.input, e.config), finished: true }) : (n2.File && e.input instanceof File || e.input instanceof Object) && (e = v2.parse(e.input, e.config)) && n2.postMessage({ workerId: v2.WORKER_ID, results: e, finished: true });
+    }), (f2.prototype = Object.create(u2.prototype)).constructor = f2, (l2.prototype = Object.create(u2.prototype)).constructor = l2, (c2.prototype = Object.create(c2.prototype)).constructor = c2, (p2.prototype = Object.create(u2.prototype)).constructor = p2, v2;
+  });
+})(papaparse_min);
+var papaparse_minExports = papaparse_min.exports;
+const Papa = /* @__PURE__ */ getDefaultExportFromCjs(papaparse_minExports);
 function loadAll() {
   BookAction.loadAll();
   UserAction.loadAll();
@@ -11449,20 +13701,88 @@ function App() {
   ] });
 }
 function TopBar() {
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { className: "navbar w-full relative", children: [
+  const CopyFuncs = {
+    uploadToServer: () => {
+      y$2.promise(
+        window.db.mega.uploadDB(),
+        {
+          pending: "جاري نسخ البيانات",
+          success: "تم نسخ البيانات",
+          error: "حدثت مشكلة , يرجى اعادة المحاولة او الاتصال بخبير"
+        }
+      );
+    },
+    downloadFromServer: () => {
+      y$2.promise(
+        window.db.mega.downloadDB(),
+        {
+          pending: "جاري تحميل البيانات",
+          success: "تم تحميل البيانات بنجاح",
+          error: "حدثت مشكلة , يرجى اعادة المحاولة او الاتصال بخبير"
+        }
+      );
+    },
+    switchDB: async () => {
+      const status = await window.db.mega.switchDB();
+      if (status == 0) {
+        window.location.reload();
+      } else {
+        showToast(y$2.error, "حدثت مشكلة, هل حملت db؟");
+      }
+    }
+  };
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { className: "navbar w-full relative z-[50]", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "z-0 absolute nav-bg w-full h-full opacity-10", style: { backgroundImage: `url(${nav_bg})` } }),
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "navbar-content flex items-center justify-between px-20 z-10 absolute w-full h-full", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "navbar-content flex items-center justify-between pr-20 pl-4 z-10 absolute w-full h-full", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex-1 w-fit flex  justify-start gap-8", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("img", { src: text_logo, alt: "text_logo", width: 300 }),
         /* @__PURE__ */ jsxRuntimeExports.jsx(NavBar, {})
       ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { children: /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: async () => {
-        showToast(y$2.loading, "جاري ملأ البيانات");
-        window.db.db_fake.books_fillDB();
-        window.db.db_fake.users_fillDB();
-        showToast(y$2.success, "تم ملأ البيانات");
-        loadAll();
-      }, className: "p-2 hover:bg-gray-200 bg-white rounded-lg font-bold cursor-pointer", children: "املاء بمعلومات تجريبية" }) })
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "z-[999]", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Menu, { menuButton: /* @__PURE__ */ jsxRuntimeExports.jsx(MenuButton, { className: "text-white cursor-pointer", children: "القائمة" }), children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(SubMenu, { label: "النسخ", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(MenuItem, { onClick: () => CopyFuncs.uploadToServer(), children: "انسخ الى سرفر" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(MenuItem, { onClick: () => CopyFuncs.downloadFromServer(), children: "حمل من سرفر" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(MenuItem, { onClick: () => CopyFuncs.switchDB(), children: "فعل اخر db" })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(SubMenu, { label: "ادخل csv", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(MenuItem, { disabled: true, children: "مسؤول" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(MenuItem, { disabled: true, children: "كتب" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(MenuItem, { onClick: async () => {
+            const data = await window.utils.openForCsv();
+            const csv = Papa.parse(data, {
+              header: true,
+              // Set to false if the CSV has no headers
+              skipEmptyLines: true
+            });
+            for (let item of csv.data) {
+              let parseItem = {};
+              parseItem["first_name"] = item["الاسم"] ?? "Unknown";
+              parseItem["last_name"] = item["اللقب"] ?? "Unknown";
+              parseItem["date_of_birth"] = item["تاريخ الميلاد"] ?? "Unknown";
+              parseItem["al_wilaya"] = item["الولاية"] ?? "Unknown";
+              parseItem["phone_number"] = item["رقم الهاتف"] ?? "Unknown";
+              parseItem["email"] = item["البريد الإلكتروني"] ?? "Unknown";
+              parseItem["residense_block_number"] = item["الجناح"] ?? "Unknown";
+              parseItem["residense_room_number"] = item["الغرفة"] ?? "Unknown";
+              if (Number.parseInt(item["رقم الطالب (Matricule)"])) {
+                parseItem["school_matericule"] = Number.parseInt(item["رقم الطالب (Matricule)"]) ?? "Unknown";
+              } else {
+                parseItem["school_matericule"] = item["رقم الطالب (Matricule)"] ?? "Unknown";
+              }
+              parseItem["school"] = item["المؤسسة الجامعية"] ?? "Unknown";
+              parseItem["year_of_study"] = item["السنة الدراسية"] ?? "Unknown";
+              parseItem["study_specialty"] = item["التخصص الدراسي"] ?? "Unknown";
+              parseItem["img_card_personal_url"] = item["صورة شخصية"] ?? "Unknown";
+              parseItem["img_card_residency_url"] = item["بطاقة الإقامة"] ?? "Unknown";
+              parseItem["img_school_certificate_url"] = item["شهادة مدرسية"] ?? "Unknown";
+              UserAction.add(parseItem);
+              console.log(item, parseItem);
+              break;
+            }
+          }, children: "اعضاء" })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(MenuItem, { onClick: () => toggleHelpPopup(), children: "مساعدة" })
+      ] }) })
     ] })
   ] });
 }
