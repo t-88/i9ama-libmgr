@@ -137,6 +137,7 @@ function TopBar() {
             <MenuItem onClick={async () => {
               const data = await (window as any).utils.openForCsv();
 
+
               const csv = Papa.parse(data, {
                 header: true, // Set to false if the CSV has no headers
                 skipEmptyLines: true,
@@ -145,6 +146,9 @@ function TopBar() {
               for (let item of csv.data) {
                 let parseItem = {};
                 parseItem["first_name"] = item["الاسم"] ?? "Unknown";
+                if(parseItem["first_name"].length == 0) {
+                  continue;
+                }
                 parseItem["last_name"] = item["اللقب"] ?? "Unknown";
                 parseItem["date_of_birth"] = item["تاريخ الميلاد"] ?? "Unknown";
                 parseItem["al_wilaya"] = item["الولاية"] ?? "Unknown";
@@ -164,9 +168,6 @@ function TopBar() {
                 parseItem["img_card_residency_url"] = item["بطاقة الإقامة"] ?? "Unknown";
                 parseItem["img_school_certificate_url"] = item["شهادة مدرسية"] ?? "Unknown";
                 UserAction.add(parseItem);
-                console.log(item,parseItem);
-                break;
-
               }
 
             }}>اعضاء</MenuItem>

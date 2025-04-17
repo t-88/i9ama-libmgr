@@ -141,8 +141,11 @@ export function downloadDB() {
         let latestDate = null;
         let latestDateKey = "";
 
+
+
         Object.keys(storage.files).forEach(file => {
             let name = storage.files[file].name;
+            console.log(name);
             if (name.startsWith("data-")) {
                 const timestamp = extractIDFromDB(name);
                 const dateObject = new Date(Number.parseInt(timestamp));
